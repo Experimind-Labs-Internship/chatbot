@@ -9,7 +9,7 @@ export default function OurStory() {
           <div className="overflow-hidden rounded-3xl shadow-xl">
 
             <img
-              src="https://images.unsplash.com/photo-1524504388940-b1c1722653e?w=1000"
+              src="src\assets\images\yumi_sisters.png"
               alt="The Yumi Sisters"
               className="w-full h-[550px] object-cover hover:scale-105 transition duration-700"
             />
