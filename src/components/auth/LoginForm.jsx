@@ -18,7 +18,7 @@ export default function LoginForm() {
     e.preventDefault();
 
     if (!email || !password) {
-      alert("Please enter your email and password.");
+      alert("Please fill all fields.");
       return;
     }
 
@@ -27,26 +27,11 @@ export default function LoginForm() {
 
       await login(email, password);
 
-      alert("Login successful!");
+      alert("Login Successful!");
 
       navigate("/");
     } catch (error) {
-      switch (error.code) {
-        case "auth/invalid-credential":
-          alert("Invalid email or password.");
-          break;
-
-        case "auth/user-not-found":
-          alert("No account found with this email.");
-          break;
-
-        case "auth/wrong-password":
-          alert("Incorrect password.");
-          break;
-
-        default:
-          alert(error.message);
-      }
+      alert(error.message);
     } finally {
       setLoading(false);
     }
@@ -56,6 +41,7 @@ export default function LoginForm() {
     <form onSubmit={handleLogin} className="mt-10 space-y-6">
 
       <div className="relative">
+
         <FiMail className="absolute left-5 top-1/2 -translate-y-1/2 text-[#B89B72]" />
 
         <input
@@ -63,8 +49,9 @@ export default function LoginForm() {
           placeholder="Email Address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded-full border border-[#E6E0D8] py-4 pl-14 outline-none focus:border-[#B89B72]"
+          className="w-full rounded-full border border-[#E6E0D8] py-4 pl-14 outline-none"
         />
+
       </div>
 
       <PasswordInput
@@ -76,7 +63,7 @@ export default function LoginForm() {
       <div className="text-right">
         <Link
           to="/forgot-password"
-          className="text-[#B89B72] text-sm hover:underline"
+          className="text-[#B89B72] text-sm"
         >
           Forgot Password?
         </Link>

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { auth } from "../../firebase/firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import {
   FiSearch,
   FiHeart,
@@ -11,6 +13,7 @@ import {
 
 import AnnouncementBar from "./AnnouncementBar";
 import SearchBar from "./SearchBar";
+import logo from "../../assets/images/logo/logo.png";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -20,6 +23,15 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    setUser(currentUser);
+  });
+
+  return () => unsubscribe();
+}, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,11 +60,12 @@ export default function Navbar() {
 
             {/* Logo */}
 
-            <Link
-              to="/"
-              className="text-4xl font-serif tracking-[5px] text-[#2E2A27]"
-            >
-              YUMI
+            <Link to="/" className="flex items-center">
+             <img
+                src={logo}
+                alt="YUMI DXB Fashion"
+                className="h-20 w-auto"
+              />
             </Link>
 
             {/* Desktop Navigation */}
@@ -268,45 +281,80 @@ export default function Navbar() {
 
       {/* ---------------- ACCOUNT ---------------- */}
 
-      {accountOpen && (
+      {/* ---------------- ACCOUNT ---------------- */}
 
-        <div className="fixed inset-0 z-[999]">
+{accountOpen && (
 
-          <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+  <div className="fixed inset-0 z-[999]">
+
+    <div
+      className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+      onClick={() => setAccountOpen(false)}
+    ></div>
+
+    <div className="absolute right-8 top-28 w-80 bg-white rounded-3xl shadow-2xl p-8">
+
+      {user ? (
+        <>
+          <h2 className="text-3xl font-serif text-[#2E2A27]">
+            Welcome 👋
+          </h2>
+
+          <p className="mt-3 text-[#777]">
+            {user.displayName || user.email}
+          </p>
+
+          <Link
+            to="/profile"
             onClick={() => setAccountOpen(false)}
-          ></div>
+            className="block mt-8 w-full text-center py-3 rounded-full border border-[#2E2A27] hover:bg-[#2E2A27] hover:text-white transition"
+          >
+            My Profile
+          </Link>
 
-          <div className="absolute right-8 top-28 w-80 bg-white rounded-3xl shadow-2xl p-8">
+          <button
+            onClick={async () => {
+              await signOut(auth);
+              setAccountOpen(false);
+            }}
+            className="block mt-4 w-full text-center py-3 rounded-full bg-[#465348] text-white hover:bg-[#39443A] transition"
+          >
+            Logout
+          </button>
+        </>
+      ) : (
+        <>
+          <h2 className="text-3xl font-serif text-[#2E2A27]">
+            Welcome
+          </h2>
 
-            <h2 className="text-3xl font-serif text-[#2E2A27]">
-              Welcome
-            </h2>
+          <p className="mt-2 text-[#777]">
+            Login to access your account.
+          </p>
 
-            <p className="mt-2 text-[#777]">
-              Login to access your account.
-            </p>
+          <Link
+            to="/login"
+            onClick={() => setAccountOpen(false)}
+            className="block mt-8 w-full text-center py-3 rounded-full bg-[#465348] text-white hover:bg-[#39443A] transition"
+          >
+            Login
+          </Link>
 
-            <Link
-              to="/login"
-              className="block mt-8 w-full text-center py-3 rounded-full bg-[#465348] text-white hover:bg-[#39443A] transition"
-            >
-              Login
-            </Link>
-
-            <Link
-              to="/signup"
-              className="block mt-4 w-full text-center py-3 rounded-full border border-[#2E2A27] hover:bg-[#2E2A27] hover:text-white transition"
-            >
-              Create Account
-            </Link>
-
-          </div>
-
-        </div>
-
+          <Link
+            to="/signup"
+            onClick={() => setAccountOpen(false)}
+            className="block mt-4 w-full text-center py-3 rounded-full border border-[#2E2A27] hover:bg-[#2E2A27] hover:text-white transition"
+          >
+            Create Account
+          </Link>
+        </>
       )}
 
+    </div>
+
+  </div>
+
+)}
       {/* ---------------- CART ---------------- */}
 
       {cartOpen && (

@@ -5,7 +5,10 @@ import storyImage from "../../assets/images/story/story.png";
 
 export default function OurStory() {
   return (
-    <section className="py-24 bg-[#FAF8F5]">
+    <section
+      id="our-story"
+      className="py-24 bg-[#FAF8F5]"
+    >
 
       <div className="max-w-7xl mx-auto px-6">
 

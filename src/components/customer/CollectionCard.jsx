@@ -9,48 +9,24 @@ export default function CollectionCard({
   return (
     <Link
       to={link}
-      className="group relative overflow-hidden rounded-[30px] h-[520px] block"
+      className="group block overflow-hidden rounded-3xl"
     >
-      {/* Image */}
+      <div className="overflow-hidden rounded-3xl">
+        <img
+          src={image}
+          alt={title}
+          className="w-full h-[500px] object-cover transition duration-500 group-hover:scale-105"
+        />
+      </div>
 
-      <img
-        src={image}
-        alt={title}
-        className="w-full h-full object-cover transition duration-700 group-hover:scale-110"
-      />
-
-      {/* Gradient */}
-
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-
-      {/* Content */}
-
-      <div className="absolute bottom-10 left-8 right-8 text-white">
-
-        <p className="uppercase tracking-[4px] text-xs text-[#E6D5B6] mb-3">
-          Collection
-        </p>
-
-        <h3 className="text-4xl font-serif">
+      <div className="mt-5">
+        <h3 className="text-2xl font-serif text-[#2E2A27]">
           {title}
         </h3>
 
-        <p className="mt-4 text-sm leading-7 text-gray-200">
+        <p className="mt-2 text-[#6A625B]">
           {description}
         </p>
-
-        <div className="mt-8 flex items-center gap-3">
-
-          <span className="text-sm tracking-wider uppercase">
-            Explore Collection
-          </span>
-
-          <span className="transition duration-300 group-hover:translate-x-2">
-            →
-          </span>
-
-        </div>
-
       </div>
     </Link>
   );

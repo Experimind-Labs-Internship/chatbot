@@ -81,19 +81,19 @@ export default function Hero() {
 
           <div className="mt-12 flex gap-5">
 
-            <Link
+            <Link 
               to="/shop"
-              className="px-10 py-4 bg-[#465348] text-white rounded-full hover:bg-[#39443A] transition"
-            >
-              Shop Collection
+              className="rounded-full bg-[#465348] px-8 py-3 text-white hover:bg-[#39443A] transition"
+              >
+                Shop Collections
             </Link>
 
-            <Link
-              to="/about"
+            <a
+              href="#our-story"
               className="px-10 py-4 border border-[#2E2A27] rounded-full hover:bg-[#2E2A27] hover:text-white transition"
             >
               Our Story
-            </Link>
+          </a>
 
           </div>
 

@@ -5,89 +5,75 @@ export default function ProductCard({
   id,
   image,
   title,
-  fabric,
   price,
-  rating,
-  badge,
 }) {
   return (
-    <div className="group bg-white rounded-[30px] overflow-hidden shadow-sm hover:shadow-xl transition duration-500">
+    <div className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-500">
 
       {/* Image */}
 
-      <div className="relative overflow-hidden bg-[#F8F5F1]">
+      <div className="relative overflow-hidden">
 
         <img
           src={image}
           alt={title}
-          className="w-full h-[430px] object-cover transition duration-700 group-hover:scale-105"
+          className="w-full h-[380px] object-cover transition duration-700 group-hover:scale-105"
         />
-
-        {/* Badge */}
-
-        {badge && (
-          <span className="absolute top-5 left-5 bg-[#465348] text-white text-xs uppercase tracking-widest px-4 py-2 rounded-full">
-            {badge}
-          </span>
-        )}
 
         {/* Wishlist */}
 
-        <button className="absolute top-5 right-5 w-11 h-11 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-[#465348] hover:text-white transition">
+        <button className="absolute top-4 right-4 w-11 h-11 rounded-full bg-white/90 backdrop-blur flex items-center justify-center hover:bg-[#465348] hover:text-white transition">
 
-          <FiHeart />
+          <FiHeart size={18} />
 
         </button>
 
+        {/* Quick View */}
+
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition">
+
+        <Link
+            to={`/product/${id}`}
+            className="bg-[#465348] text-white px-6 py-3 rounded-full"
+          >
+            View Details
+        </Link>
+
+        </div>
+
       </div>
 
-      {/* Content */}
+      {/* Details */}
 
       <div className="p-6">
 
-        <p className="uppercase tracking-[3px] text-xs text-[#B89B72]">
+        <h3 className="font-serif text-2xl text-[#2E2A27]">
 
-          {fabric}
+          {title}
+
+        </h3>
+
+        <p className="mt-3 text-[#6A625B]">
+
+          Elegant • Comfortable • Premium
 
         </p>
 
-        <Link to={`/product/${id}`}>
+        <div className="flex justify-between items-center mt-6">
 
-          <h3 className="mt-3 text-2xl font-serif text-[#2E2A27] hover:text-[#B89B72] transition">
-
-            {title}
-
-          </h3>
-
-        </Link>
-
-        {/* Rating */}
-
-        <div className="flex items-center justify-between mt-5">
-
-          <span className="text-[#B89B72]">
-
-            ★ {rating}
-
-          </span>
-
-          <span className="text-xl font-semibold">
+          <span className="text-2xl font-semibold text-[#B89B72]">
 
             {price}
 
           </span>
 
+          <button className="w-12 h-12 rounded-full bg-[#465348] text-white flex items-center justify-center hover:bg-[#39443A] transition">
+
+            <FiShoppingBag />
+
+          </button>
+
         </div>
-
-        {/* Button */}
-
-        <button className="mt-8 w-full py-3 rounded-full bg-[#465348] hover:bg-[#39443A] text-white transition flex items-center justify-center gap-2">
-
-          <FiShoppingBag />
-
-          Add to Cart
-
-        </button>
 
       </div>
 

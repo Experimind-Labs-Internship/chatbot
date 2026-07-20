@@ -20,13 +20,13 @@ export default function PasswordInput({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className="w-full rounded-full border border-[#E6E0D8] py-4 pl-14 pr-14 outline-none focus:border-[#B89B72]"
+        className="w-full rounded-full border border-[#E6E0D8] py-4 pl-14 pr-14 outline-none"
       />
 
       <button
         type="button"
         onClick={() => setShow(!show)}
-        className="absolute right-5 top-1/2 -translate-y-1/2 text-[#777]"
+        className="absolute right-5 top-1/2 -translate-y-1/2"
       >
         {show ? <FiEyeOff /> : <FiEye />}
       </button>
