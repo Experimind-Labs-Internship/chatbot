@@ -1,120 +1,142 @@
+import { Link } from "react-router-dom";
+import SectionTitle from "../common/SectionTitle";
+
+// Images
+import irisGarden from "../../assets/images/products/iris-garden-model.png";
+import midnightBlossom from "../../assets/images/products/black-model.png";
+import desertRose from "../../assets/images/products/crimson-bloom-model.png";
+import lavenderGrace from "../../assets/images/products/lavender-grace-model.png";
 const products = [
   {
     id: 1,
     name: "Iris Garden Robe",
+    fabric: "Soft Cotton Blend",
     price: "₹999",
-    image:
-      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=700",
+    image: irisGarden,
     badge: "NEW",
   },
   {
     id: 2,
     name: "Midnight Bloom Set",
+    fabric: "Breathable Modal",
     price: "₹999",
-    image:
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=700",
+    image: midnightBlossom,
     badge: "NEW",
   },
   {
     id: 3,
     name: "Desert Rose Kaftan",
+    fabric: "Pure Cotton",
     price: "₹999",
-    image:
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e?w=700",
+    image: desertRose,
     badge: "NEW",
   },
   {
     id: 4,
-    name: "Floral Dreams Co-ord",
+    name: "Vintage Peony Set",
+    fabric: "Premium Rayon",
     price: "₹999",
-    image:
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=700",
+    image: lavenderGrace,
     badge: "NEW",
   },
 ];
 
 export default function NewArrivals() {
   return (
-    <section className="py-24 bg-[#F7F3EE]">
+    <section className="py-24 bg-white">
+
       <div className="max-w-7xl mx-auto px-6">
 
-        {/* Heading */}
-        <div className="text-center mb-16">
-          <p className="uppercase tracking-[4px] text-[#C97B7B] font-semibold">
-            New Collection
-          </p>
+        <SectionTitle
+          subtitle="Just Arrived"
+          title="New Arrivals"
+          description="Thoughtfully designed. Carefully crafted. Made for everyday elegance."
+        />
 
-          <h2 className="text-5xl font-serif text-[#1A1A1A] mt-3">
-            Just Arrived
-          </h2>
-
-          <p className="mt-4 text-gray-600 max-w-2xl mx-auto text-lg">
-            Thoughtfully designed pieces that blend comfort, elegance,
-            and timeless style.
-          </p>
-        </div>
-
-        {/* Product Grid */}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
 
           {products.map((product) => (
+
             <div
               key={product.id}
-              className="group bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition duration-500"
+              className="group rounded-3xl overflow-hidden bg-[#FAF8F5] hover:shadow-xl transition duration-500"
             >
+
               {/* Image */}
+
               <div className="relative overflow-hidden">
 
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-[400px] object-cover group-hover:scale-105 transition duration-700"
+                  className="w-full h-[420px] object-cover transition duration-700 group-hover:scale-105"
                 />
 
-                <span className="absolute top-4 left-4 bg-[#C97B7B] text-white px-3 py-1 rounded-full text-xs font-medium">
+                <span className="absolute top-5 left-5 bg-[#465348] text-white text-xs px-4 py-2 rounded-full tracking-wider">
                   {product.badge}
                 </span>
 
               </div>
 
-              {/* Details */}
+              {/* Content */}
+
               <div className="p-6">
 
-                <h3 className="text-2xl font-serif text-[#1A1A1A]">
-                  {product.name}
-                </h3>
+                <p className="text-sm uppercase tracking-widest text-[#B89B72]">
 
-                <p className="mt-2 text-[#C97B7B] font-bold text-xl">
-                  {product.price}
+                  {product.fabric}
+
                 </p>
 
-                <div className="mt-3 text-yellow-500">
-                  ★★★★★
-                  <span className="text-gray-500 text-sm ml-2">
-                    (4.9)
+                <h3 className="font-serif text-2xl text-[#2E2A27] mt-3">
+
+                  {product.name}
+
+                </h3>
+
+                <div className="flex justify-between items-center mt-6">
+
+                  <span className="text-xl font-semibold text-[#2E2A27]">
+
+                    {product.price}
+
                   </span>
+
+                  <span className="text-[#B89B72]">
+
+                    ★ 4.9
+
+                  </span>
+
                 </div>
 
-                <button className="mt-6 w-full bg-[#1F2A44] text-white py-3 rounded-full hover:bg-[#C97B7B] transition">
-                  Shop Now
+                <button className="mt-8 w-full py-3 rounded-full bg-[#465348] text-white hover:bg-[#39443A] transition">
+
+                  Add to Cart
+
                 </button>
 
               </div>
+
             </div>
+
           ))}
 
         </div>
 
-        {/* Button */}
-        <div className="text-center mt-14">
+        <div className="text-center mt-16">
 
-          <button className="bg-[#C97B7B] hover:bg-[#b66b6b] transition text-white px-8 py-4 rounded-full">
-            View All New Arrivals
-          </button>
+          <Link
+            to="/shop"
+            className="inline-flex items-center px-8 py-4 rounded-full border border-[#2E2A27] hover:bg-[#2E2A27] hover:text-white transition"
+          >
+            View All Products
+          </Link>
 
         </div>
 
       </div>
+
     </section>
   );
 }

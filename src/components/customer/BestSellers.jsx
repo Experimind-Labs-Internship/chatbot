@@ -1,118 +1,129 @@
-const bestSellers = [
+import { Link } from "react-router-dom";
+import SectionTitle from "../common/SectionTitle";
+
+// Import your images
+import irisGarden from "../../assets/images/products/iris-garden-model.png";
+import midnightBlossom from "../../assets/images/products/black-model.png";
+import desertRose from "../../assets/images/products/crimson-bloom-model.png";
+import lavenderGrace from "../../assets/images/products/lavender-grace-model.png";
+
+const products = [
   {
     id: 1,
-    name: "Midnight Bloom Set",
+    name: "Iris Garden",
+    image: irisGarden,
     price: "₹999",
-    image:
-      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600",
-    rating: 4.9,
-    reviews: 82,
+    rating: "4.9",
   },
   {
     id: 2,
-    name: "Iris Garden Robe",
+    name: "Midnight Blossom",
+    image: midnightBlossom,
     price: "₹999",
-    image:
-      "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600",
-    rating: 4.8,
-    reviews: 74,
+    rating: "4.8",
   },
   {
     id: 3,
-    name: "Desert Rose Kaftan",
+    name: "Crimson Bloom",
+    image: desertRose,
     price: "₹999",
-    image:
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600",
-    rating: 5.0,
-    reviews: 95,
+    rating: "4.9",
   },
   {
     id: 4,
-    name: "Floral Dreams Co-ord",
+    name: "Lavender Grace",
+    image: lavenderGrace,
     price: "₹999",
-    image:
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600",
-    rating: 4.9,
-    reviews: 69,
+    rating: "4.8",
   },
 ];
 
 export default function BestSellers() {
   return (
-    <section className="bg-[#F7F3EE] py-20">
+    <section className="py-24 bg-[#FAF8F5]">
+
       <div className="max-w-7xl mx-auto px-6">
 
-        {/* Heading */}
-        <div className="text-center mb-14">
-          <p className="uppercase tracking-[4px] text-[#C97B7B] font-semibold">
-            Customer Favorites
-          </p>
+        <SectionTitle
+          subtitle="Customer Favorites"
+          title="Best Sellers"
+          description="Loved by women who appreciate comfort, quality, and timeless elegance."
+        />
 
-          <h2 className="text-5xl font-serif text-[#1A1A1A] mt-3">
-            Loved by Women Like You
-          </h2>
-
-          <p className="mt-4 text-gray-600 text-lg">
-            Our most-loved pieces, chosen and cherished by our customers.
-          </p>
-        </div>
-
-        {/* Cards */}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
 
-          {bestSellers.map((item) => (
+          {products.map((product) => (
+
             <div
-              key={item.id}
-              className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition duration-300 group"
+              key={product.id}
+              className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-500"
             >
+
               {/* Image */}
-              <div className="relative overflow-hidden">
+
+              <div className="overflow-hidden bg-[#F8F5F1]">
 
                 <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-full h-80 object-cover group-hover:scale-105 transition duration-500"
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-[420px] object-cover transition duration-700 group-hover:scale-105"
                 />
-
-                <span className="absolute top-4 left-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                  ★ Best Seller
-                </span>
 
               </div>
 
-              {/* Content */}
-              <div className="p-5">
+              {/* Details */}
 
-                <h3 className="text-xl font-semibold text-[#1A1A1A]">
-                  {item.name}
+              <div className="p-6">
+
+                <span className="inline-block px-3 py-1 rounded-full bg-[#ECE5DA] text-xs tracking-widest uppercase text-[#8A7A67]">
+                  Best Seller
+                </span>
+
+                <h3 className="mt-4 text-xl font-serif text-[#2E2A27]">
+                  {product.name}
                 </h3>
 
-                <p className="text-[#C97B7B] font-bold text-xl mt-2">
-                  {item.price}
-                </p>
+                <div className="flex items-center justify-between mt-4">
 
-                <p className="mt-2 text-gray-500 text-sm">
-                  ⭐ {item.rating} ({item.reviews} Reviews)
-                </p>
+                  <p className="text-lg font-semibold text-[#2E2A27]">
+                    {product.price}
+                  </p>
 
-                <button className="mt-5 w-full bg-[#1F2A44] hover:bg-[#C97B7B] transition text-white py-3 rounded-full">
-                  Shop Now
+                  <span className="text-[#B89B72]">
+                    ★ {product.rating}
+                  </span>
+
+                </div>
+
+                <button
+                  className="mt-6 w-full py-3 rounded-full bg-[#465348] text-white hover:bg-[#39443A] transition"
+                >
+                  Add to Cart
                 </button>
 
               </div>
+
             </div>
+
           ))}
 
         </div>
 
-        {/* CTA */}
-        <div className="text-center mt-14">
-          <button className="bg-[#C97B7B] hover:bg-[#b46868] transition text-white px-8 py-3 rounded-full">
-            Shop Best Sellers
-          </button>
+        {/* Button */}
+
+        <div className="text-center mt-16">
+
+          <Link
+            to="/shop"
+            className="inline-flex items-center px-8 py-4 border border-[#2E2A27] rounded-full hover:bg-[#2E2A27] hover:text-white transition"
+          >
+            View All Best Sellers
+          </Link>
+
         </div>
 
       </div>
+
     </section>
   );
 }

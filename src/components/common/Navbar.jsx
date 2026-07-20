@@ -1,125 +1,451 @@
-import { Heart, Menu, Search, ShoppingCart, User } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  FiSearch,
+  FiHeart,
+  FiShoppingBag,
+  FiUser,
+  FiMenu,
+  FiChevronDown,
+} from "react-icons/fi";
+
+import AnnouncementBar from "./AnnouncementBar";
+import SearchBar from "./SearchBar";
 
 export default function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [shopOpen, setShopOpen] = useState(false);
+
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 40);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <>
-      {/* Announcement Bar */}
-      <div className="bg-[#1F2A44] text-white text-sm text-center py-2">
-        🚚 Free Shipping on Orders Above ₹1500 | 📞 9591308536
-      </div>
+      <AnnouncementBar />
 
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-[#F7F3EE]/95 backdrop-blur-md shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-8 py-4">
+      <header
+        className={`sticky top-0 z-50 transition-all duration-500 ${
+          scrolled
+            ? "bg-white/95 backdrop-blur-xl border-b border-[#ECE8E3] shadow-sm"
+            : "bg-[#FAF8F5]/80 backdrop-blur-xl"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-8">
 
-          {/* Logo */}
-          <h1 className="text-3xl font-serif font-bold tracking-wide text-[#C97B7B] cursor-pointer">
-            YUMI
-          </h1>
+          <div className="h-20 flex items-center justify-between">
 
-          {/* Menu */}
-          <ul className="hidden md:flex items-center gap-10 text-[#1A1A1A] font-medium">
+            {/* Logo */}
 
-            <li className="hover:text-[#C97B7B] cursor-pointer transition">
-              Home
-            </li>
+            <Link
+              to="/"
+              className="text-4xl font-serif tracking-[5px] text-[#2E2A27]"
+            >
+              YUMI
+            </Link>
 
-            <li className="relative group cursor-pointer">
-              <span className="hover:text-[#C97B7B] transition">
-                Shop ▾
-              </span>
+            {/* Desktop Navigation */}
 
-              <div className="absolute left-0 mt-4 hidden group-hover:block bg-white shadow-xl rounded-xl w-56 p-3">
+            <nav className="hidden lg:flex items-center gap-10 text-[15px] font-medium">
 
-                <p className="py-2 hover:text-[#C97B7B] cursor-pointer">
-                  All Products
-                </p>
+              <Link
+                to="/"
+                className="relative group"
+              >
+                Home
 
-                <p className="py-2 hover:text-[#C97B7B] cursor-pointer">
-                  Nightwear
-                </p>
+                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#C3A274] transition-all duration-300 group-hover:w-full"></span>
 
-                <p className="py-2 hover:text-[#C97B7B] cursor-pointer">
-                  Abayas
-                </p>
+              </Link>
 
-                <p className="py-2 hover:text-[#C97B7B] cursor-pointer">
-                  Kaftans
-                </p>
+              {/* Shop */}
 
-                <p className="py-2 hover:text-[#C97B7B] cursor-pointer">
-                  Co-ord Sets
-                </p>
+              <div
+                className="relative"
+                onMouseEnter={() => setShopOpen(true)}
+                onMouseLeave={() => setShopOpen(false)}
+              >
 
-                <p className="py-2 hover:text-[#C97B7B] cursor-pointer">
-                  New Arrivals
-                </p>
+                <button className="flex items-center gap-1 group">
 
-                <p className="py-2 hover:text-[#C97B7B] cursor-pointer">
-                  Best Sellers
-                </p>
+                  Shop
+
+                  <FiChevronDown
+                    className={`transition duration-300 ${
+                      shopOpen ? "rotate-180" : ""
+                    }`}
+                  />
+
+                </button>
+
+                {shopOpen && (
+
+                  <div className="absolute left-1/2 -translate-x-1/2 top-10 w-[760px] bg-white rounded-3xl shadow-2xl border border-[#ECE8E3] overflow-hidden">
+
+                    <div className="grid grid-cols-2">
+
+                      {/* Left */}
+
+                      <div className="p-10">
+
+                        <p className="uppercase tracking-[4px] text-xs text-[#8A8178] mb-6">
+                          Shop Collections
+                        </p>
+
+                        <div className="space-y-5">
+
+                          <Link to="/shop" className="block hover:text-[#C3A274] transition">
+                            All Products
+                          </Link>
+
+                          <Link to="/nightwear" className="block hover:text-[#C3A274] transition">
+                            Nightwear
+                          </Link>
+
+                          <Link to="/abayas" className="block hover:text-[#C3A274] transition">
+                            Abayas
+                          </Link>
+
+                          <Link to="/kaftans" className="block hover:text-[#C3A274] transition">
+                            Kaftans
+                          </Link>
+
+                          <Link to="/coord-sets" className="block hover:text-[#C3A274] transition">
+                            Co-ord Sets
+                          </Link>
+
+                          <Link to="/new-arrivals" className="block hover:text-[#C3A274] transition">
+                            New Arrivals
+                          </Link>
+
+                          <Link to="/best-sellers" className="block hover:text-[#C3A274] transition">
+                            Best Sellers
+                          </Link>
+
+                        </div>
+
+                      </div>
+
+                      {/* Right */}
+
+                      <div className="bg-[#F8F5F1] p-8">
+
+                        <img
+                          src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=900"
+                          alt="Featured Collection"
+                          className="rounded-2xl h-72 w-full object-cover"
+                        />
+
+                        <h3 className="text-3xl font-serif mt-6 text-[#2E2A27]">
+                          Featured Collection
+                        </h3>
+
+                        <p className="mt-3 text-[#6F6A65] leading-7">
+                          Discover timeless silhouettes designed with
+                          comfort, elegance and everyday luxury in mind.
+                        </p>
+
+                        <Link
+                          to="/shop"
+                          className="inline-block mt-6 text-[#465348] font-medium hover:text-[#C3A274] transition"
+                        >
+                          Explore Collection →
+                        </Link>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                )}
 
               </div>
-            </li>
 
-            <li className="hover:text-[#C97B7B] cursor-pointer transition">
-              Our Story
-            </li>
+              <Link
+                to="/about"
+                className="relative group"
+              >
+                Our Story
 
-            <li className="hover:text-[#C97B7B] cursor-pointer transition">
-              Contact
-            </li>
+                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#C3A274] transition-all duration-300 group-hover:w-full"></span>
 
-          </ul>
+              </Link>
 
-          {/* Icons */}
-          <div className="hidden md:flex items-center gap-6">
+              <Link
+                to="/contact"
+                className="relative group"
+              >
+                Contact
 
-            <Search
-              className="cursor-pointer hover:text-[#C97B7B]"
-              size={22}
-            />
+                <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#C3A274] transition-all duration-300 group-hover:w-full"></span>
 
-            <User
-              className="cursor-pointer hover:text-[#C97B7B]"
-              size={22}
-            />
+              </Link>
 
-            <div className="relative">
-              <Heart
-                className="cursor-pointer hover:text-[#C97B7B]"
-                size={22}
-              />
-              <span className="absolute -top-2 -right-2 bg-[#C97B7B] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
-                0
-              </span>
+            </nav>
+
+            {/* Right Icons */}
+
+            <div className="hidden lg:flex items-center gap-6">
+
+              <button
+                onClick={() => setSearchOpen(true)}
+                className="hover:text-[#C3A274] transition text-xl"
+              >
+                <FiSearch />
+              </button>
+
+              <button
+                onClick={() => setAccountOpen(true)}
+                className="hover:text-[#C3A274] transition text-xl"
+              >
+                <FiUser />
+              </button>
+
+              <button className="relative hover:text-[#C3A274] transition text-xl">
+
+                <FiHeart />
+
+                <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-[#465348] text-white text-[10px] flex items-center justify-center">
+                  2
+                </span>
+
+              </button>
+
+              <button
+                onClick={() => setCartOpen(true)}
+                className="relative hover:text-[#C3A274] transition text-xl"
+              >
+                <FiShoppingBag />
+
+                <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-[#465348] text-white text-[10px] flex items-center justify-center">
+                  1
+                </span>
+
+              </button>
+
+              <button
+                onClick={() => setMobileOpen(true)}
+                className="lg:hidden"
+              >
+                <FiMenu />
+              </button>
+
             </div>
 
-            <div className="relative">
-              <ShoppingCart
-                className="cursor-pointer hover:text-[#C97B7B]"
-                size={22}
-              />
-              <span className="absolute -top-2 -right-2 bg-[#C97B7B] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
-                0
-              </span>
-            </div>
+                        {/* Mobile Menu Button */}
 
-          </div>
-
-          {/* Mobile Menu */}
-          <div className="md:hidden flex items-center gap-4">
-
-            <Search size={22} />
-
-            <ShoppingCart size={22} />
-
-            <Menu size={28} />
+            <button
+              onClick={() => setMobileOpen(true)}
+              className="lg:hidden text-3xl"
+            >
+              <FiMenu />
+            </button>
 
           </div>
 
         </div>
-      </nav>
+
+      </header>
+
+      {/* ---------------- SEARCH ---------------- */}
+
+      <SearchBar
+        isOpen={searchOpen}
+        onClose={() => setSearchOpen(false)}
+      />
+
+      {/* ---------------- ACCOUNT ---------------- */}
+
+      {accountOpen && (
+
+        <div className="fixed inset-0 z-[999]">
+
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setAccountOpen(false)}
+          ></div>
+
+          <div className="absolute right-8 top-28 w-80 bg-white rounded-3xl shadow-2xl p-8">
+
+            <h2 className="text-3xl font-serif text-[#2E2A27]">
+              Welcome
+            </h2>
+
+            <p className="mt-2 text-[#777]">
+              Login to access your account.
+            </p>
+
+            <Link
+              to="/login"
+              className="block mt-8 w-full text-center py-3 rounded-full bg-[#465348] text-white hover:bg-[#39443A] transition"
+            >
+              Login
+            </Link>
+
+            <Link
+              to="/signup"
+              className="block mt-4 w-full text-center py-3 rounded-full border border-[#2E2A27] hover:bg-[#2E2A27] hover:text-white transition"
+            >
+              Create Account
+            </Link>
+
+          </div>
+
+        </div>
+
+      )}
+
+      {/* ---------------- CART ---------------- */}
+
+      {cartOpen && (
+
+        <div className="fixed inset-0 z-[999]">
+
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setCartOpen(false)}
+          ></div>
+
+          <div className="absolute right-0 top-0 h-full w-[430px] bg-white shadow-2xl flex flex-col">
+
+            <div className="flex justify-between items-center p-8 border-b">
+
+              <h2 className="text-3xl font-serif">
+                Shopping Bag
+              </h2>
+
+              <button
+                onClick={() => setCartOpen(false)}
+              >
+                ✕
+              </button>
+
+            </div>
+
+            <div className="flex-1 flex items-center justify-center">
+
+              <div className="text-center">
+
+                <FiShoppingBag
+                  className="mx-auto text-5xl text-gray-300"
+                />
+
+                <p className="mt-6 text-gray-500">
+                  Your shopping bag is empty.
+                </p>
+
+              </div>
+
+            </div>
+
+            <div className="p-8 border-t">
+
+              <Link
+                to="/shop"
+                className="block text-center py-3 rounded-full bg-[#465348] text-white hover:bg-[#39443A]"
+              >
+                Continue Shopping
+              </Link>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      )}
+
+      {/* ---------------- MOBILE MENU ---------------- */}
+
+      {mobileOpen && (
+
+        <div className="fixed inset-0 z-[999] lg:hidden">
+
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setMobileOpen(false)}
+          ></div>
+
+          <div className="absolute left-0 top-0 h-full w-80 bg-white shadow-2xl">
+
+            <div className="flex justify-between items-center p-8 border-b">
+
+              <h2 className="text-3xl font-serif">
+                YUMI
+              </h2>
+
+              <button
+                onClick={() => setMobileOpen(false)}
+              >
+                <FiX size={28} />
+              </button>
+
+            </div>
+
+            <nav className="flex flex-col p-8 gap-8 text-lg">
+
+              <Link
+                to="/"
+                onClick={() => setMobileOpen(false)}
+              >
+                Home
+              </Link>
+
+              <Link
+                to="/shop"
+                onClick={() => setMobileOpen(false)}
+              >
+                Shop
+              </Link>
+
+              <Link
+                to="/about"
+                onClick={() => setMobileOpen(false)}
+              >
+                Our Story
+              </Link>
+
+              <Link
+                to="/contact"
+                onClick={() => setMobileOpen(false)}
+              >
+                Contact
+              </Link>
+
+              <Link
+                to="/wishlist"
+                onClick={() => setMobileOpen(false)}
+              >
+                Wishlist
+              </Link>
+
+              <Link
+                to="/login"
+                onClick={() => setMobileOpen(false)}
+              >
+                Login
+              </Link>
+
+            </nav>
+
+          </div>
+
+        </div>
+
+      )}
+
     </>
   );
 }

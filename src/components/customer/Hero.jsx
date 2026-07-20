@@ -1,52 +1,117 @@
+import { Link } from "react-router-dom";
+
+import hero from "../../assets/images/hero/hero.png";
+
 export default function Hero() {
   return (
-    <section className="relative h-screen">
+    <section className="relative min-h-screen bg-[#F8F4EF] overflow-hidden">
 
-      {/* Background Image */}
-      <img
-        src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=1600"
-        alt="YUMI Hero"
-        className="absolute inset-0 w-full h-full object-cover"
-      />
+      {/* Background */}
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/40"></div>
+      <div className="absolute inset-0">
+        <img
+          src={hero}
+          alt="YUMI"
+          className="w-full h-full object-cover object-right"
+        />
+
+        <div className="absolute inset-0 bg-gradient-to-r from-[#F8F4EF] via-[#F8F4EF]/90 to-transparent"></div>
+      </div>
 
       {/* Content */}
-      <div className="relative z-10 flex items-center h-full">
 
-        <div className="max-w-7xl mx-auto px-6 w-full">
+      <div className="relative z-20 max-w-7xl mx-auto px-8 h-screen flex items-center">
 
-          <div className="max-w-2xl text-white">
+        <div className="max-w-2xl">
 
-            <p className="uppercase tracking-[6px] text-[#F7F3EE] font-medium mb-5">
-              Premium Nightwear & Lifestyle
-            </p>
+          {/* Small Heading */}
 
-            <h1 className="text-6xl md:text-7xl font-serif leading-tight">
+          <p className="uppercase tracking-[6px] text-[#B89B72] text-sm mb-5">
+
+            Premium Nightwear
+
+          </p>
+
+          {/* Main Heading */}
+
+          <h1 className="font-serif text-[#232323] leading-none">
+
+            <span className="block text-6xl md:text-7xl">
               Where Comfort
-              <br />
-              Meets
-              <span className="text-[#C97B7B]"> Elegance</span>
-            </h1>
+            </span>
 
-            <p className="mt-8 text-lg leading-8 text-gray-200">
-              Thoughtfully crafted nightwear, abayas, kaftans and co-ord sets
-              designed by two sisters who believe every woman deserves comfort,
-              confidence and timeless elegance.
-            </p>
+            <span className="block mt-3 text-6xl md:text-7xl">
 
-            <div className="mt-10 flex flex-wrap gap-5">
+              Meets{" "}
 
-              <button className="bg-[#1F2A44] hover:bg-[#C97B7B] transition px-8 py-4 rounded-full text-lg font-medium">
-                Shop Now
-              </button>
+              <span className="italic text-[#C8A26A]">
+                Elegance
+              </span>
 
-              <button className="border border-white hover:bg-white hover:text-[#1A1A1A] transition px-8 py-4 rounded-full text-lg font-medium">
-                Our Story
-              </button>
+            </span>
 
-            </div>
+          </h1>
+
+          {/* Divider */}
+
+          <div className="flex items-center gap-5 mt-10">
+
+            <div className="w-20 h-[1px] bg-[#C8A26A]"></div>
+
+            <div className="w-3 h-3 rounded-full bg-[#C8A26A]"></div>
+
+            <div className="w-20 h-[1px] bg-[#C8A26A]"></div>
+
+          </div>
+
+          {/* Description */}
+
+          <p className="mt-10 text-lg leading-9 text-[#6A625B] max-w-xl">
+
+            Thoughtfully designed for every woman.
+
+            <br />
+
+            Crafted with love by two sisters who believe
+            fashion should feel as beautiful as it looks.
+
+          </p>
+
+          {/* Buttons */}
+
+          <div className="mt-12 flex gap-5">
+
+            <Link
+              to="/shop"
+              className="px-10 py-4 bg-[#465348] text-white rounded-full hover:bg-[#39443A] transition"
+            >
+              Shop Collection
+            </Link>
+
+            <Link
+              to="/about"
+              className="px-10 py-4 border border-[#2E2A27] rounded-full hover:bg-[#2E2A27] hover:text-white transition"
+            >
+              Our Story
+            </Link>
+
+          </div>
+
+          {/* Discover */}
+
+          <div className="mt-16 flex items-center gap-5">
+
+            <button className="w-16 h-16 rounded-full border border-[#B89B72] flex items-center justify-center hover:bg-[#B89B72] hover:text-white transition">
+
+              ▶
+
+            </button>
+
+            <span className="uppercase tracking-[3px] text-sm">
+
+              Discover YUMI
+
+            </span>
 
           </div>
 
@@ -54,12 +119,13 @@ export default function Hero() {
 
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+      {/* Scroll */}
 
-        <div className="w-8 h-14 border-2 border-white rounded-full flex justify-center">
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
 
-          <div className="w-1.5 h-3 bg-white rounded-full mt-3"></div>
+        <div className="w-7 h-12 rounded-full border border-[#B89B72] flex justify-center">
+
+          <div className="w-[3px] h-3 bg-[#B89B72] rounded-full mt-2 animate-bounce"></div>
 
         </div>
 

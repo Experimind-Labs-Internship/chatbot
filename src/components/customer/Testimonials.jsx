@@ -1,105 +1,105 @@
+import SectionTitle from "../common/SectionTitle";
+
 const testimonials = [
   {
     id: 1,
-    name: "Priya S.",
-    city: "Bengaluru",
-    product: "Iris Garden Robe",
+    name: "Priya Sharma",
+    location: "Bengaluru",
     review:
-      "The fabric is incredibly soft and breathable. I feel elegant even while relaxing at home. Absolutely loved the quality!",
-    rating: "★★★★★",
+      "The fabric feels incredibly soft and luxurious. YUMI has become my favourite nightwear brand. Every piece is beautiful and comfortable.",
+    rating: 5,
   },
   {
     id: 2,
-    name: "Anjali M.",
-    city: "Mumbai",
-    product: "Midnight Bloom Set",
+    name: "Aisha Khan",
+    location: "Dubai",
     review:
-      "Beautiful packaging, premium quality and exactly as shown. This has become my favourite nightwear set.",
-    rating: "★★★★★",
+      "Absolutely elegant! The quality exceeded my expectations and the fit was perfect. I received so many compliments.",
+    rating: 5,
   },
   {
     id: 3,
-    name: "Kavya R.",
-    city: "Delhi",
-    product: "Desert Rose Kaftan",
+    name: "Megha Rao",
+    location: "Mangaluru",
     review:
-      "Comfortable, stylish and worth every rupee. The attention to detail is amazing. Highly recommended!",
-    rating: "★★★★★",
+      "Beautiful designs with premium quality. You can truly feel the care and attention behind every collection.",
+    rating: 5,
   },
 ];
 
 export default function Testimonials() {
   return (
-    <section className="bg-[#F7F3EE] py-24">
+    <section className="py-24 bg-[#FAF8F5]">
+
       <div className="max-w-7xl mx-auto px-6">
 
-        {/* Heading */}
-        <div className="text-center mb-16">
+        <SectionTitle
+          subtitle="Client Whispers"
+          title="What Our Customers Say"
+          description="Real stories from women who chose comfort, elegance, and timeless style."
+        />
 
-          <p className="uppercase tracking-[4px] text-[#C97B7B] font-semibold">
-            Client Whispers
-          </p>
-
-          <h2 className="text-5xl font-serif text-[#1A1A1A] mt-4">
-            What Our Customers Say
-          </h2>
-
-          <p className="mt-4 text-lg text-gray-600">
-            Every review inspires us to create with even more love and care.
-          </p>
-
-        </div>
-
-        {/* Cards */}
-
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
           {testimonials.map((item) => (
+
             <div
               key={item.id}
-              className="bg-white rounded-3xl shadow-lg p-8 hover:-translate-y-2 transition duration-300"
+              className="bg-white rounded-[30px] p-8 shadow-sm hover:shadow-xl transition duration-500"
             >
 
-              <div className="text-yellow-500 text-xl mb-5">
-                {item.rating}
+              {/* Stars */}
+
+              <div className="text-[#B89B72] text-xl mb-6">
+
+                {"★".repeat(item.rating)}
+
               </div>
 
-              <p className="text-gray-600 leading-8 italic">
+              {/* Review */}
+
+              <p className="text-[#6A625B] leading-8 italic">
+
                 "{item.review}"
+
               </p>
 
-              <div className="mt-8 border-t pt-6">
+              {/* User */}
 
-                <h3 className="font-semibold text-xl text-[#1A1A1A]">
-                  {item.name}
-                </h3>
+              <div className="flex items-center mt-8">
 
-                <p className="text-gray-500 text-sm">
-                  {item.city}
-                </p>
+                <div className="w-14 h-14 rounded-full bg-[#465348] text-white flex items-center justify-center text-lg font-semibold">
 
-                <p className="mt-2 text-[#C97B7B] text-sm font-medium">
-                  Purchased: {item.product}
-                </p>
+                  {item.name.charAt(0)}
+
+                </div>
+
+                <div className="ml-4">
+
+                  <h4 className="font-semibold text-[#2E2A27]">
+
+                    {item.name}
+
+                  </h4>
+
+                  <p className="text-sm text-[#8A8178]">
+
+                    {item.location}
+
+                  </p>
+
+                </div>
 
               </div>
 
             </div>
+
           ))}
 
         </div>
 
-        {/* Button */}
-
-        <div className="text-center mt-14">
-
-          <button className="bg-[#1F2A44] hover:bg-[#C97B7B] transition text-white px-8 py-4 rounded-full">
-            Read More Reviews
-          </button>
-
-        </div>
-
       </div>
+
     </section>
   );
 }

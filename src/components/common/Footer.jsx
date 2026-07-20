@@ -1,150 +1,154 @@
+import { Link } from "react-router-dom";
+import {
+  FiInstagram,
+  FiFacebook,
+  FiPhone,
+  FiMail,
+  FiMapPin,
+} from "react-icons/fi";
+
 export default function Footer() {
   return (
-    <footer className="bg-[#F7F3EE] text-[#1A1A1A]">
+    <footer className="bg-[#22201D] text-white">
 
       {/* Main Footer */}
-      <div className="max-w-7xl mx-auto px-6 py-16">
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-10">
+      <div className="max-w-7xl mx-auto px-8 py-20">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
+
+          {/* Brand */}
+
+          <div>
+
+            <h2 className="text-4xl font-serif mb-6">
+              YUMI
+            </h2>
+
+            <p className="text-gray-300 leading-8">
+              Where comfort meets elegance.
+              Crafted with love by two sisters,
+              bringing timeless fashion to every woman.
+            </p>
+
+          </div>
 
           {/* About */}
-          <div>
-            <h3 className="text-2xl font-serif mb-5">YUMI</h3>
 
-            <p className="text-gray-600 leading-7">
-              Yumi DXB Fashion is where comfort meets elegance.
-              Founded by two sisters, we create premium nightwear,
-              abayas and kaftans that make every woman feel
-              beautiful, comfortable and confident.
-            </p>
+          <div>
+
+            <h3 className="font-semibold text-lg mb-6">
+              About
+            </h3>
+
+            <ul className="space-y-4 text-gray-300">
+
+              <li>
+                <Link to="/about" className="hover:text-[#C3A274] transition">
+                  Our Story
+                </Link>
+              </li>
+
+              <li>
+                <Link to="/why-yumi" className="hover:text-[#C3A274] transition">
+                  Why Choose YUMI
+                </Link>
+              </li>
+
+              <li>
+                <Link to="/contact" className="hover:text-[#C3A274] transition">
+                  Contact
+                </Link>
+              </li>
+
+            </ul>
+
           </div>
 
           {/* Shop */}
+
           <div>
-            <h3 className="font-semibold text-lg mb-5">
+
+            <h3 className="font-semibold text-lg mb-6">
               Shop
             </h3>
 
-            <ul className="space-y-3 text-gray-600">
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                All Products
-              </li>
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                Nightwear
-              </li>
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                Abayas
-              </li>
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                Kaftans
-              </li>
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                Co-ord Sets
-              </li>
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                New Arrivals
-              </li>
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                Best Sellers
-              </li>
+            <ul className="space-y-4 text-gray-300">
+
+              <li><Link to="/shop">All Products</Link></li>
+              <li><Link to="/nightwear">Nightwear</Link></li>
+              <li><Link to="/abayas">Abayas</Link></li>
+              <li><Link to="/kaftans">Kaftans</Link></li>
+              <li><Link to="/coord-sets">Co-ord Sets</Link></li>
+              <li><Link to="/new-arrivals">New Arrivals</Link></li>
+
             </ul>
+
           </div>
 
           {/* Customer Care */}
+
           <div>
-            <h3 className="font-semibold text-lg mb-5">
+
+            <h3 className="font-semibold text-lg mb-6">
               Customer Care
             </h3>
 
-            <ul className="space-y-3 text-gray-600">
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                FAQs
-              </li>
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                Size Guide
-              </li>
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                Shipping & Delivery
-              </li>
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                Returns & Exchanges
-              </li>
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                Care Instructions
-              </li>
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                Track Order
-              </li>
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                Contact Us
-              </li>
-            </ul>
-          </div>
+            <ul className="space-y-4 text-gray-300">
 
-          {/* My Account */}
-          <div>
-            <h3 className="font-semibold text-lg mb-5">
-              My Account
-            </h3>
+              <li><Link to="/faq">FAQs</Link></li>
+              <li><Link to="/shipping">Shipping</Link></li>
+              <li><Link to="/returns">Returns</Link></li>
+              <li><Link to="/privacy">Privacy Policy</Link></li>
+              <li><Link to="/terms">Terms & Conditions</Link></li>
 
-            <ul className="space-y-3 text-gray-600">
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                Login / Sign Up
-              </li>
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                My Orders
-              </li>
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                Wishlist
-              </li>
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                My Profile
-              </li>
-              <li className="hover:text-[#C97B7B] cursor-pointer">
-                Address Book
-              </li>
             </ul>
+
           </div>
 
           {/* Contact */}
+
           <div>
-            <h3 className="font-semibold text-lg mb-5">
+
+            <h3 className="font-semibold text-lg mb-6">
               Stay Connected
             </h3>
 
-            <div className="space-y-4 text-gray-600">
+            <div className="space-y-5 text-gray-300">
 
-              <p>📞 +91 9591308536</p>
+              <div className="flex items-center gap-3">
+                <FiPhone />
+                <span>+91 9591308536</span>
+              </div>
 
-              <p>📧 hello@yumidxb.com</p>
+              <div className="flex items-center gap-3">
+                <FiMail />
+                <span>hello@yumidxb.com</span>
+              </div>
 
-              <p>📍 Mangaluru, India</p>
-
-              <p>📷 @yumi_dxb</p>
+              <div className="flex items-center gap-3">
+                <FiMapPin />
+                <span>Mangaluru, India</span>
+              </div>
 
             </div>
 
-            <div className="flex gap-4 mt-6">
+            {/* Social */}
+
+            <div className="flex gap-4 mt-8">
 
               <a
                 href="#"
-                className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow hover:bg-[#C97B7B] hover:text-white transition"
+                className="w-10 h-10 rounded-full border border-gray-500 flex items-center justify-center hover:bg-[#C3A274] hover:border-[#C3A274] transition"
               >
-                📷
+                <FiInstagram />
               </a>
 
               <a
                 href="#"
-                className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow hover:bg-[#C97B7B] hover:text-white transition"
+                className="w-10 h-10 rounded-full border border-gray-500 flex items-center justify-center hover:bg-[#C3A274] hover:border-[#C3A274] transition"
               >
-                💬
-              </a>
-
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow hover:bg-[#C97B7B] hover:text-white transition"
-              >
-                👍
+                <FiFacebook />
               </a>
 
             </div>
@@ -155,31 +159,35 @@ export default function Footer() {
 
       </div>
 
-      {/* Trust Badges */}
+      {/* Newsletter */}
 
-      <div className="border-t border-gray-300">
+      <div className="border-t border-gray-700">
 
-        <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col lg:flex-row justify-between items-center gap-6">
+        <div className="max-w-7xl mx-auto px-8 py-16 flex flex-col lg:flex-row items-center justify-between gap-8">
 
-          <div className="flex flex-wrap gap-6 text-gray-600 text-sm">
+          <div>
 
-            <span>🔒 Secure Checkout</span>
+            <h3 className="text-3xl font-serif">
+              Join the YUMI Family
+            </h3>
 
-            <span>✔ 100% Authentic Products</span>
-
-            <span>↩ Easy Returns</span>
+            <p className="text-gray-400 mt-3">
+              Get exclusive offers and new arrivals directly to your inbox.
+            </p>
 
           </div>
 
-          <div className="flex gap-4 text-2xl">
+          <div className="flex w-full lg:w-auto">
 
-            <span>💳</span>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="bg-transparent border border-gray-600 px-5 py-3 rounded-l-full w-full lg:w-80 outline-none"
+            />
 
-            <span>🏦</span>
-
-            <span>📱</span>
-
-            <span>💵</span>
+            <button className="bg-[#465348] hover:bg-[#39443A] px-8 rounded-r-full transition">
+              Subscribe
+            </button>
 
           </div>
 
@@ -189,55 +197,37 @@ export default function Footer() {
 
       {/* Bottom */}
 
-      <div className="border-t border-gray-300">
+      <div className="border-t border-gray-700">
 
-        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col lg:flex-row justify-between items-center gap-4 text-sm text-gray-600">
+        <div className="max-w-7xl mx-auto px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
 
           <p>
             © 2026 YUMI DXB Fashion. All Rights Reserved.
           </p>
 
-          <p className="italic">
-            Crafted with ❤️ in Mangaluru, India
-          </p>
-
           <div className="flex gap-6">
 
-            <a href="#" className="hover:text-[#C97B7B]">
-              Privacy Policy
-            </a>
+            <Link to="/privacy" className="hover:text-white">
+              Privacy
+            </Link>
 
-            <a href="#" className="hover:text-[#C97B7B]">
+            <Link to="/terms" className="hover:text-white">
               Terms
-            </a>
+            </Link>
 
-            <a href="#" className="hover:text-[#C97B7B]">
-              Refund Policy
-            </a>
+            <Link to="/shipping" className="hover:text-white">
+              Shipping
+            </Link>
 
-            <a href="#" className="hover:text-[#C97B7B]">
-              Shipping Policy
-            </a>
+            <Link to="/returns" className="hover:text-white">
+              Returns
+            </Link>
 
           </div>
 
         </div>
 
       </div>
-
-      {/* Back To Top */}
-
-      <button
-        onClick={() =>
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-          })
-        }
-        className="fixed bottom-6 right-6 bg-[#1F2A44] hover:bg-[#C97B7B] text-white w-12 h-12 rounded-full shadow-lg transition"
-      >
-        ↑
-      </button>
 
     </footer>
   );
