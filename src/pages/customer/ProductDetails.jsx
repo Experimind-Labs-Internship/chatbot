@@ -1,223 +1,310 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { FiHeart, FiShoppingBag, FiTruck, FiRefreshCw } from "react-icons/fi";
 
-import productImage from "../../assets/images/products/black-model.png";
+import { getProductById, SIZE_OPTIONS } from "../../firebase/productService";
+import { getApprovedReviewsForProduct } from "../../firebase/reviewService";
+import { useCart } from "../../context/CartContext";
+import Loader from "../../components/common/Loader";
 
 export default function ProductDetails() {
-  const [size, setSize] = useState("M");
-  const [quantity, setQuantity] = useState(1);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
 
-  const sizes = ["XS", "S", "M", "L", "XL"];
+  const [product, setProduct] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeImage, setActiveImage] = useState(0);
+  const [size, setSize] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [added, setAdded] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function load() {
+      const [productData, reviewData] = await Promise.all([
+        getProductById(id),
+        getApprovedReviewsForProduct(id),
+      ]);
+
+      if (!isMounted) return;
+
+      setProduct(productData);
+      setReviews(reviewData);
+
+      if (productData?.sizes) {
+        const firstInStock = SIZE_OPTIONS.find(
+          (s) => (productData.sizes[s]?.stock ?? 0) > 0
+        );
+        setSize(firstInStock || SIZE_OPTIONS[0]);
+      }
+
+      setLoading(false);
+    }
+
+    load();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [id]);
+
+  if (loading) return <Loader />;
+
+  if (!product) {
+    return (
+      <main className="bg-[#FAF8F5] pt-40 pb-24 text-center">
+        <p className="text-[#6A625B] text-lg">Product not found.</p>
+      </main>
+    );
+  }
+
+  const images = product.images?.length ? product.images : [];
+  const stockForSize = product.sizes?.[size]?.stock ?? 0;
+  const isOutOfStock = stockForSize === 0;
+
+  const avgRating = reviews.length
+    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+    : 0;
+
+  const handleAddToCart = () => {
+    if (!size || isOutOfStock) return;
+    addToCart(product, size, quantity);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
+  };
+
+  const formatDate = (timestamp) => {
+    if (!timestamp?.toDate) return "";
+    return timestamp.toDate().toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
 
   return (
     <main className="bg-[#FAF8F5] pt-32 pb-24">
-
       <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16">
-
         {/* Product Image */}
-
         <div>
-
           <div className="rounded-[32px] overflow-hidden bg-white">
-
             <img
-              src={productImage}
-              alt="Nightwear"
+              src={images[activeImage]}
+              alt={product.name}
               className="w-full h-[700px] object-cover"
             />
-
           </div>
 
-          {/* Thumbnails */}
-
-          <div className="flex gap-4 mt-6">
-
-            <img
-              src={productImage}
-              alt=""
-              className="w-24 h-24 rounded-2xl object-cover border cursor-pointer"
-            />
-
-            <img
-              src={productImage}
-              alt=""
-              className="w-24 h-24 rounded-2xl object-cover border cursor-pointer"
-            />
-
-            <img
-              src={productImage}
-              alt=""
-              className="w-24 h-24 rounded-2xl object-cover border cursor-pointer"
-            />
-
-          </div>
-
+          {images.length > 1 && (
+            <div className="flex gap-4 mt-6">
+              {images.map((img, i) => (
+                <img
+                  key={img}
+                  src={img}
+                  alt=""
+                  onClick={() => setActiveImage(i)}
+                  className={`w-24 h-24 rounded-2xl object-cover border cursor-pointer transition ${
+                    activeImage === i ? "border-[#465348] border-2" : ""
+                  }`}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Details */}
-
         <div>
-
           <p className="uppercase tracking-[4px] text-[#B89B72]">
-            Nightwear Collection
+            {product.category}
           </p>
 
           <h1 className="mt-3 text-5xl font-serif text-[#2E2A27]">
-            Midnight Blossom Set
+            {product.name}
           </h1>
 
           <div className="flex items-center gap-3 mt-5">
-
             <span className="text-yellow-500">
-              ★★★★★
+              {"★".repeat(Math.round(avgRating))}
+              {"☆".repeat(5 - Math.round(avgRating))}
             </span>
-
             <span className="text-[#6A625B]">
-              (48 Reviews)
+              {reviews.length > 0
+                ? `${avgRating.toFixed(1)} (${reviews.length} Review${reviews.length > 1 ? "s" : ""})`
+                : "No reviews yet"}
             </span>
-
           </div>
 
           <h2 className="mt-8 text-4xl font-semibold text-[#465348]">
-            ₹999
+            ₹{product.price?.toLocaleString()}
           </h2>
 
           <p className="mt-8 leading-8 text-[#6A625B]">
-
-            Thoughtfully designed for luxurious comfort and timeless
-            elegance. Crafted using premium breathable fabrics,
-            making every evening feel effortlessly beautiful.
-
+            {product.description}
           </p>
 
-          {/* Fabric */}
+          {product.fabric && (
+            <div className="mt-10">
+              <h3 className="font-semibold text-lg">Fabric</h3>
+              <p className="mt-2 text-[#6A625B]">{product.fabric}</p>
+            </div>
+          )}
 
-          <div className="mt-10">
-
-            <h3 className="font-semibold text-lg">
-              Fabric
-            </h3>
-
-            <p className="mt-2 text-[#6A625B]">
-              Premium Cotton Satin
-            </p>
-
-          </div>
+          {product.careInstructions && (
+            <div className="mt-6">
+              <h3 className="font-semibold text-lg">Care Instructions</h3>
+              <p className="mt-2 text-[#6A625B]">{product.careInstructions}</p>
+            </div>
+          )}
 
           {/* Sizes */}
-
           <div className="mt-10">
-
-            <h3 className="font-semibold text-lg mb-4">
-              Select Size
-            </h3>
+            <h3 className="font-semibold text-lg mb-4">Select Size</h3>
 
             <div className="flex gap-3">
+              {SIZE_OPTIONS.map((item) => {
+                const stock = product.sizes?.[item]?.stock ?? 0;
+                const disabled = stock === 0;
 
-              {sizes.map((item) => (
-
-                <button
-                  key={item}
-                  onClick={() => setSize(item)}
-                  className={`w-12 h-12 rounded-full border transition ${
-                    size === item
-                      ? "bg-[#465348] text-white"
-                      : "bg-white"
-                  }`}
-                >
-                  {item}
-                </button>
-
-              ))}
-
+                return (
+                  <button
+                    key={item}
+                    disabled={disabled}
+                    onClick={() => {
+                      setSize(item);
+                      setQuantity(1);
+                    }}
+                    className={`w-12 h-12 rounded-full border transition relative ${
+                      size === item
+                        ? "bg-[#465348] text-white"
+                        : disabled
+                        ? "bg-[#F4F0EB] text-[#C4BEB6] cursor-not-allowed line-through"
+                        : "bg-white"
+                    }`}
+                  >
+                    {item}
+                  </button>
+                );
+              })}
             </div>
 
+            {size && (
+              <p className={`mt-3 text-sm ${isOutOfStock ? "text-red-600" : "text-[#8A8178]"}`}>
+                {isOutOfStock
+                  ? "Out of stock in this size"
+                  : `${stockForSize} in stock`}
+              </p>
+            )}
           </div>
 
           {/* Quantity */}
-
           <div className="mt-10">
-
-            <h3 className="font-semibold text-lg mb-4">
-              Quantity
-            </h3>
+            <h3 className="font-semibold text-lg mb-4">Quantity</h3>
 
             <div className="flex items-center gap-5">
-
               <button
-                onClick={() =>
-                  quantity > 1 && setQuantity(quantity - 1)
-                }
+                onClick={() => quantity > 1 && setQuantity(quantity - 1)}
                 className="w-10 h-10 rounded-full border"
               >
                 -
               </button>
 
-              <span className="text-xl">
-                {quantity}
-              </span>
+              <span className="text-xl">{quantity}</span>
 
               <button
-                onClick={() => setQuantity(quantity + 1)}
-                className="w-10 h-10 rounded-full border"
+                onClick={() =>
+                  quantity < stockForSize && setQuantity(quantity + 1)
+                }
+                disabled={quantity >= stockForSize}
+                className="w-10 h-10 rounded-full border disabled:opacity-40"
               >
                 +
               </button>
-
             </div>
-
           </div>
 
           {/* Buttons */}
-
           <div className="flex gap-4 mt-12">
-
-            <button className="flex-1 rounded-full bg-[#465348] text-white py-4 hover:bg-[#39443A] transition flex justify-center items-center gap-3">
-
+            <button
+              onClick={handleAddToCart}
+              disabled={isOutOfStock}
+              className="flex-1 rounded-full bg-[#465348] text-white py-4 hover:bg-[#39443A] transition flex justify-center items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <FiShoppingBag />
-
-              Add to Cart
-
+              {isOutOfStock ? "Out of Stock" : added ? "Added ✓" : "Add to Cart"}
             </button>
 
             <button className="w-16 rounded-full border flex items-center justify-center">
-
               <FiHeart />
-
             </button>
-
           </div>
+
+          {added && (
+            <button
+              onClick={() => navigate("/cart")}
+              className="mt-4 text-sm text-[#465348] underline hover:text-[#39443A]"
+            >
+              View Cart →
+            </button>
+          )}
 
           {/* Features */}
-
           <div className="mt-14 space-y-5">
-
             <div className="flex items-center gap-4">
-
               <FiTruck size={20} />
-
-              <span>
-                Free Shipping Across India
-              </span>
-
+              <span>Free Shipping Across India</span>
             </div>
 
             <div className="flex items-center gap-4">
-
               <FiRefreshCw size={20} />
-
-              <span>
-                Easy 7-Day Returns
-              </span>
-
+              <span>Easy 7-Day Returns</span>
             </div>
-
           </div>
-
         </div>
-
       </div>
 
+      {/* Reviews Section */}
+      <div className="max-w-4xl mx-auto px-6 mt-24">
+        <h2 className="text-3xl font-serif text-[#2E2A27] mb-8">
+          Customer Reviews {reviews.length > 0 && `(${reviews.length})`}
+        </h2>
+
+        {reviews.length === 0 ? (
+          <p className="text-[#8A8178]">
+            No reviews yet. Be the first to share your experience after your order is delivered.
+          </p>
+        ) : (
+          <div className="space-y-6">
+            {reviews.map((review) => (
+              <div
+                key={review.id}
+                className="bg-white rounded-2xl border border-[#ECE8E3] p-6"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <p className="font-medium text-[#2E2A27]">{review.userName}</p>
+                  <span className="text-yellow-500 text-sm">
+                    {"★".repeat(review.rating)}
+                    {"☆".repeat(5 - review.rating)}
+                  </span>
+                </div>
+
+                <p className="text-xs text-[#8A8178] mb-3">{formatDate(review.createdAt)}</p>
+
+                <p className="text-[#4A453F] leading-7">{review.comment}</p>
+
+                {review.adminReply && (
+                  <div className="bg-[#F8F5F1] rounded-xl p-4 mt-4">
+                    <p className="text-xs text-[#8A8178] mb-1">YUMI's Reply</p>
+                    <p className="text-sm text-[#4A453F]">{review.adminReply}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </main>
   );
 }
