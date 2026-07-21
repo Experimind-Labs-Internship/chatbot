@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { auth } from "../../firebase/firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useAuth } from "../../context/AuthContext";
+import { logout } from "../../services/authService";
 import {
   FiSearch,
   FiHeart,
@@ -15,6 +14,7 @@ import {
 import AnnouncementBar from "./AnnouncementBar";
 import SearchBar from "./SearchBar";
 import logo from "../../assets/images/logo/logo.png";
+
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -309,7 +309,7 @@ export default function Navbar() {
 
           <button
             onClick={async () => {
-              await signOut(auth);
+              await logout();
               setAccountOpen(false);
             }}
             className="block mt-4 w-full text-center py-3 rounded-full bg-[#465348] text-white hover:bg-[#39443A] transition"
