@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { logout } from "../../services/authService";
@@ -19,6 +19,7 @@ import logo from "../../assets/images/logo/logo.png";
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [shopOpen, setShopOpen] = useState(false);
+  const shopMenuRef = useRef(null);
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -28,15 +29,22 @@ export default function Navbar() {
 
   
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
-    };
+useEffect(() => {
+  function handleClickOutside(event) {
+    if (
+      shopMenuRef.current &&
+      !shopMenuRef.current.contains(event.target)
+    ) {
+      setShopOpen(false);
+    }
+  }
 
-    window.addEventListener("scroll", handleScroll);
+  document.addEventListener("mousedown", handleClickOutside);
 
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
 
   return (
     <>
@@ -81,11 +89,14 @@ export default function Navbar() {
 
               <div
                 className="relative"
-                onMouseEnter={() => setShopOpen(true)}
-                onMouseLeave={() => setShopOpen(false)}
+                ref={shopMenuRef}
+                
               >
 
-                <button className="flex items-center gap-1 group">
+               <button
+  onClick={() => setShopOpen(!shopOpen)}
+  className="flex items-center gap-1 group"
+>
 
                   Shop
 
