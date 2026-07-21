@@ -8,32 +8,14 @@ import {
   getDoc,
   serverTimestamp,
 } from "firebase/firestore";
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject,
-} from "firebase/storage";
-import { db, storage } from "./firebase";
+
+import { db } from "./firebase";
 
 const productsRef = collection(db, "products");
 
 export const SIZE_OPTIONS = ["S", "M", "L", "XL"];
 
-export async function uploadProductImage(file) {
-  const fileRef = ref(storage, `products/${Date.now()}-${file.name}`);
-  await uploadBytes(fileRef, file);
-  return getDownloadURL(fileRef);
-}
-
-export async function deleteProductImage(url) {
-  try {
-    const fileRef = ref(storage, url);
-    await deleteObject(fileRef);
-  } catch (err) {
-    console.warn("Image delete skipped:", err.message);
-  }
-}
+// ---------------- ADD PRODUCT ----------------
 
 export async function addProduct(productData) {
   const docRef = await addDoc(productsRef, {
@@ -42,8 +24,11 @@ export async function addProduct(productData) {
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
+
   return docRef.id;
 }
+
+// ---------------- UPDATE PRODUCT ----------------
 
 export async function updateProduct(id, productData) {
   await updateDoc(doc(db, "products", id), {
@@ -52,17 +37,29 @@ export async function updateProduct(id, productData) {
   });
 }
 
-export async function deleteProduct(id, images = []) {
-  await Promise.all(images.map((url) => deleteProductImage(url)));
+// ---------------- DELETE PRODUCT ----------------
+
+export async function deleteProduct(id) {
   await deleteDoc(doc(db, "products", id));
 }
 
+// ---------------- GET ALL PRODUCTS ----------------
+
 export async function getAllProducts() {
   const snapshot = await getDocs(productsRef);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+
+  return snapshot.docs.map((d) => ({
+    id: d.id,
+    ...d.data(),
+  }));
 }
+
+// ---------------- GET PRODUCT BY ID ----------------
 
 export async function getProductById(id) {
   const snap = await getDoc(doc(db, "products", id));
-  return snap.exists() ? { id: snap.id, ...snap.data() } : null;
+
+  return snap.exists()
+    ? { id: snap.id, ...snap.data() }
+    : null;
 }

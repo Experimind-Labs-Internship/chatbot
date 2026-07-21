@@ -1,18 +1,23 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FiUploadCloud, FiX } from "react-icons/fi";
+import { FiX } from "react-icons/fi";
+
 import {
   addProduct,
   updateProduct,
   getProductById,
-  uploadProductImage,
   SIZE_OPTIONS,
 } from "../../firebase/productService";
 
-const CATEGORIES = ["nightwear", "abayas", "kaftans", "coord-sets"];
+const CATEGORIES = [
+  "nightwear",
+  "abayas",
+  "kaftans",
+  "coord-sets",
+];
 
-const emptySizes = SIZE_OPTIONS.reduce((acc, s) => {
-  acc[s] = { stock: 0 };
+const emptySizes = SIZE_OPTIONS.reduce((acc, size) => {
+  acc[size] = { stock: 0 };
   return acc;
 }, {});
 
@@ -31,15 +36,18 @@ export default function ProductForm() {
     sizes: emptySizes,
   });
 
-  const [images, setImages] = useState([]); // existing URLs (edit mode)
-  const [newFiles, setNewFiles] = useState([]); // File objects to upload
+  const [images, setImages] = useState([]);
+  const [imageUrl, setImageUrl] = useState("");
+
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(isEdit);
 
   useEffect(() => {
     if (!isEdit) return;
 
-    getProductById(id).then((product) => {
+    async function loadProduct() {
+      const product = await getProductById(id);
+
       if (product) {
         setForm({
           name: product.name || "",
@@ -50,42 +58,48 @@ export default function ProductForm() {
           category: product.category || CATEGORIES[0],
           sizes: product.sizes || emptySizes,
         });
+
         setImages(product.images || []);
       }
+
       setLoading(false);
-    });
+    }
+
+    loadProduct();
   }, [id, isEdit]);
 
   const handleChange = (field, value) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
+    setForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
   };
 
   const handleSizeChange = (size, stock) => {
     setForm((prev) => ({
       ...prev,
-      sizes: { ...prev.sizes, [size]: { stock: Number(stock) || 0 } },
+      sizes: {
+        ...prev.sizes,
+        [size]: {
+          stock: Number(stock) || 0,
+        },
+      },
     }));
-  };
-
-  const handleFileSelect = (e) => {
-    setNewFiles((prev) => [...prev, ...Array.from(e.target.files)]);
   };
 
   const removeExistingImage = (url) => {
     setImages((prev) => prev.filter((img) => img !== url));
   };
 
-  const removeNewFile = (index) => {
-    setNewFiles((prev) => prev.filter((_, i) => i !== index));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setSaving(true);
 
     try {
-      const uploadedUrls = await Promise.all(newFiles.map(uploadProductImage));
-      const finalImages = [...images, ...uploadedUrls];
+      const finalImages = imageUrl
+        ? [...images, imageUrl]
+        : images;
 
       const payload = {
         ...form,
@@ -101,180 +115,305 @@ export default function ProductForm() {
 
       navigate("/admin/products");
     } catch (err) {
-      alert("Something went wrong: " + err.message);
+      alert(err.message);
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) return <p className="text-[#8A8178]">Loading product...</p>;
-
+  if (loading)
+    return <p className="text-[#8A8178]">Loading product...</p>;
   return (
-    <div className="max-w-3xl">
-      <h1 className="text-3xl font-serif text-[#2E2A27] mb-8">
-        {isEdit ? "Edit Product" : "Add Product"}
-      </h1>
+  <div className="max-w-3xl">
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-white p-6 rounded-2xl border border-[#ECE8E3] space-y-4">
+    <h1 className="text-3xl font-serif text-[#2E2A27] mb-8">
+      {isEdit ? "Edit Product" : "Add Product"}
+    </h1>
+
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6"
+    >
+
+      {/* Product Details */}
+
+      <div className="bg-white p-6 rounded-2xl border border-[#ECE8E3] space-y-5">
+
+        <div>
+
+          <label className="text-sm text-[#6F6A65] mb-1 block">
+            Product Name
+          </label>
+
+          <input
+            type="text"
+            value={form.name}
+            onChange={(e) =>
+              handleChange("name", e.target.value)
+            }
+            className="w-full px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
+            required
+          />
+
+        </div>
+
+        <div>
+
+          <label className="text-sm text-[#6F6A65] mb-1 block">
+            Description
+          </label>
+
+          <textarea
+            rows={4}
+            value={form.description}
+            onChange={(e) =>
+              handleChange("description", e.target.value)
+            }
+            className="w-full px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
+          />
+
+        </div>
+
+        <div className="grid grid-cols-2 gap-5">
+
           <div>
-            <label className="text-sm text-[#6F6A65] mb-1 block">Product Name</label>
+
+            <label className="text-sm text-[#6F6A65] mb-1 block">
+              Price (₹)
+            </label>
+
+            <input
+              type="number"
+              value={form.price}
+              onChange={(e) =>
+                handleChange("price", e.target.value)
+              }
+              className="w-full px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
+              required
+            />
+
+          </div>
+
+          <div>
+
+            <label className="text-sm text-[#6F6A65] mb-1 block">
+              Category
+            </label>
+
+            <select
+              value={form.category}
+              onChange={(e) =>
+                handleChange("category", e.target.value)
+              }
+              className="w-full px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
+            >
+
+              {CATEGORIES.map((cat) => (
+
+                <option
+                  key={cat}
+                  value={cat}
+                >
+                  {cat}
+                </option>
+
+              ))}
+
+            </select>
+
+          </div>
+
+        </div>
+
+        <div className="grid grid-cols-2 gap-5">
+
+          <div>
+
+            <label className="text-sm text-[#6F6A65] mb-1 block">
+              Fabric
+            </label>
+
             <input
               type="text"
-              value={form.name}
-              onChange={(e) => handleChange("name", e.target.value)}
+              value={form.fabric}
+              onChange={(e) =>
+                handleChange("fabric", e.target.value)
+              }
               className="w-full px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
-              required
             />
+
           </div>
 
           <div>
-            <label className="text-sm text-[#6F6A65] mb-1 block">Description</label>
-            <textarea
-              value={form.description}
-              onChange={(e) => handleChange("description", e.target.value)}
-              rows={4}
+
+            <label className="text-sm text-[#6F6A65] mb-1 block">
+              Care Instructions
+            </label>
+
+            <input
+              type="text"
+              value={form.careInstructions}
+              onChange={(e) =>
+                handleChange(
+                  "careInstructions",
+                  e.target.value
+                )
+              }
               className="w-full px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
-              required
             />
+
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm text-[#6F6A65] mb-1 block">Price (₹)</label>
+        </div>
+
+      </div>
+
+      {/* Size Stock */}
+
+      <div className="bg-white p-6 rounded-2xl border border-[#ECE8E3]">
+
+        <h3 className="font-medium text-[#2E2A27] mb-5">
+          Size-wise Stock
+        </h3>
+
+        <div className="grid grid-cols-4 gap-4">
+
+          {SIZE_OPTIONS.map((size) => (
+
+            <div key={size}>
+
+              <label className="text-sm text-[#6F6A65] block mb-2">
+                {size}
+              </label>
+
               <input
                 type="number"
-                value={form.price}
-                onChange={(e) => handleChange("price", e.target.value)}
+                min="0"
+                value={form.sizes[size]?.stock ?? 0}
+                onChange={(e) =>
+                  handleSizeChange(
+                    size,
+                    e.target.value
+                  )
+                }
                 className="w-full px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
-                required
               />
+
             </div>
 
-            <div>
-              <label className="text-sm text-[#6F6A65] mb-1 block">Category</label>
-              <select
-                value={form.category}
-                onChange={(e) => handleChange("category", e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348] capitalize"
+          ))}
+
+        </div>
+
+      </div>
+            {/* Product Images */}
+
+      <div className="bg-white p-6 rounded-2xl border border-[#ECE8E3]">
+
+        <h3 className="font-medium text-[#2E2A27] mb-4">
+          Product Images
+        </h3>
+
+        {/* Existing Images */}
+
+        <div className="flex flex-wrap gap-4 mb-6">
+
+          {images.map((url) => (
+
+            <div
+              key={url}
+              className="relative w-24 h-24"
+            >
+
+              <img
+                src={url}
+                alt="Product"
+                className="w-full h-full object-cover rounded-xl"
+              />
+
+              <button
+                type="button"
+                onClick={() => removeExistingImage(url)}
+                className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-white shadow flex items-center justify-center"
               >
-                {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat} className="capitalize">
-                    {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+                <FiX size={14} />
+              </button>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm text-[#6F6A65] mb-1 block">Fabric</label>
-              <input
-                type="text"
-                value={form.fabric}
-                onChange={(e) => handleChange("fabric", e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
-              />
             </div>
 
-            <div>
-              <label className="text-sm text-[#6F6A65] mb-1 block">Care Instructions</label>
-              <input
-                type="text"
-                value={form.careInstructions}
-                onChange={(e) => handleChange("careInstructions", e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
-              />
-            </div>
-          </div>
+          ))}
+
         </div>
 
-        {/* Sizes & Stock */}
-        <div className="bg-white p-6 rounded-2xl border border-[#ECE8E3]">
-          <h3 className="font-medium text-[#2E2A27] mb-4">Size-wise Stock</h3>
-          <div className="grid grid-cols-4 gap-4">
-            {SIZE_OPTIONS.map((size) => (
-              <div key={size}>
-                <label className="text-sm text-[#6F6A65] mb-1 block">{size}</label>
-                <input
-                  type="number"
-                  min="0"
-                  value={form.sizes[size]?.stock ?? 0}
-                  onChange={(e) => handleSizeChange(size, e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Paste Image URL */}
 
-        {/* Images */}
-        <div className="bg-white p-6 rounded-2xl border border-[#ECE8E3]">
-          <h3 className="font-medium text-[#2E2A27] mb-4">Product Images</h3>
+        <label className="text-sm text-[#6F6A65] mb-2 block">
+          Image URL
+        </label>
 
-          <div className="flex flex-wrap gap-4 mb-4">
-            {images.map((url) => (
-              <div key={url} className="relative w-24 h-24">
-                <img src={url} className="w-full h-full object-cover rounded-xl" />
-                <button
-                  type="button"
-                  onClick={() => removeExistingImage(url)}
-                  className="absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full shadow flex items-center justify-center"
-                >
-                  <FiX size={14} />
-                </button>
-              </div>
-            ))}
+        <input
+          type="text"
+          placeholder="https://example.com/image.jpg"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          className="w-full px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
+        />
 
-            {newFiles.map((file, i) => (
-              <div key={i} className="relative w-24 h-24">
-                <img
-                  src={URL.createObjectURL(file)}
-                  className="w-full h-full object-cover rounded-xl"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeNewFile(i)}
-                  className="absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full shadow flex items-center justify-center"
-                >
-                  <FiX size={14} />
-                </button>
-              </div>
-            ))}
-          </div>
+        {/* Preview */}
 
-          <label className="flex items-center gap-2 w-fit px-5 py-3 rounded-full border border-dashed border-[#C3A274] text-[#C3A274] cursor-pointer hover:bg-[#FAF6F0] transition">
-            <FiUploadCloud />
-            Upload Images
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleFileSelect}
-              className="hidden"
+        {imageUrl && (
+
+          <div className="mt-6">
+
+            <p className="text-sm text-[#6F6A65] mb-2">
+              Preview
+            </p>
+
+            <img
+              src={imageUrl}
+              alt="Preview"
+              className="w-40 h-40 rounded-xl object-cover border border-[#ECE8E3]"
+              onLoad={() => console.log("Image loaded")}
+              onError={(e) => {
+                console.log("Image failed");
+                console.log(e.currentTarget.src);
+              }}
             />
-          </label>
-        </div>
 
-        <div className="flex gap-4">
-          <button
-            type="submit"
-            disabled={saving}
-            className="px-8 py-3 rounded-full bg-[#465348] text-white hover:bg-[#39443A] transition disabled:opacity-60"
-          >
-            {saving ? "Saving..." : isEdit ? "Update Product" : "Add Product"}
-          </button>
+          </div>
 
-          <button
-            type="button"
-            onClick={() => navigate("/admin/products")}
-            className="px-8 py-3 rounded-full border border-[#2E2A27] text-[#2E2A27] hover:bg-[#2E2A27] hover:text-white transition"
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
-    </div>
-  );
+        )}
+
+      </div>
+
+      {/* Buttons */}
+
+      <div className="flex gap-4">
+
+        <button
+          type="submit"
+          disabled={saving}
+          className="px-8 py-3 rounded-full bg-[#465348] text-white hover:bg-[#39443A] transition disabled:opacity-50"
+        >
+          {saving
+            ? "Saving..."
+            : isEdit
+            ? "Update Product"
+            : "Add Product"}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => navigate("/admin/products")}
+          className="px-8 py-3 rounded-full border border-[#2E2A27] hover:bg-[#2E2A27] hover:text-white transition"
+        >
+          Cancel
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+);
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FiGrid,
   FiFilter,
@@ -6,53 +6,42 @@ import {
   FiSearch,
 } from "react-icons/fi";
 
-import ProductCard from "../../components/customer/ProductCard";
+import { getAllProducts } from "../../firebase/productService";
 
-import nightwear from "../../assets/images/collections/nightwear.png";
-import abaya from "../../assets/images/collections/abaya.jpeg";
-import kaftan from "../../assets/images/collections/kaftan.jpeg";
-import coordSet from "../../assets/images/collections/coord-set.jpeg";
+import ProductCard from "../../components/customer/ProductCard";
 
 export default function Shop() {
   const [category, setCategory] = useState("All");
+const [products, setProducts] = useState([]);
 
-  const products = [
-    {
-      id: 1,
-      title: "Midnight Blossom Set",
-      category: "Nightwear",
-      price: "₹999",
-      image: nightwear,
-    },
-    {
-      id: 2,
-      title: "Elegant Abaya",
-      category: "Abayas",
-      price: "₹1,499",
-      image: abaya,
-    },
-    {
-      id: 3,
-      title: "Luxury Kaftan",
-      category: "Kaftans",
-      price: "₹1,299",
-      image: kaftan,
-    },
-    {
-      id: 4,
-      title: "Classic Co-ord Set",
-      category: "Co-ord Sets",
-      price: "₹1,199",
-      image: coordSet,
-    },
-  ];
+useEffect(() => {
+  async function loadProducts() {
+    try {
+      const data = await getAllProducts();
+      setProducts(data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  loadProducts();
+}, []);
 
   const filteredProducts =
-    category === "All"
-      ? products
-      : products.filter(
-          (product) => product.category === category
-        );
+  category === "All"
+    ? products
+    : products.filter(
+        (product) =>
+          product.category?.toLowerCase() ===
+          category.toLowerCase().replace(" ", "-")
+      );
+  const categories = [
+  { label: "All", value: "All" },
+  { label: "Nightwear", value: "nightwear" },
+  { label: "Abayas", value: "abayas" },
+  { label: "Kaftans", value: "kaftans" },
+  { label: "Co-ord Sets", value: "coord-sets" },
+];
 
   return (
     <main className="bg-[#FAF8F5] pt-32 pb-24">
@@ -86,25 +75,18 @@ export default function Shop() {
           {/* Categories */}
 
           <div className="flex flex-wrap gap-3">
-
-            {[
-              "All",
-              "Nightwear",
-              "Abayas",
-              "Kaftans",
-              "Co-ord Sets",
-            ].map((item) => (
+            {categories.map((item) => (
 
               <button
-                key={item}
-                onClick={() => setCategory(item)}
+                key={item.value}
+                onClick={() => setCategory(item.value)}
                 className={`px-6 py-3 rounded-full transition ${
-                  category === item
+                  category === item.value
                     ? "bg-[#465348] text-white"
                     : "bg-white border border-[#E6E0D8] hover:border-[#B89B72]"
                 }`}
               >
-                {item}
+                {item.label}
               </button>
 
             ))}
@@ -162,9 +144,9 @@ export default function Shop() {
             <ProductCard
               key={product.id}
               id={product.id}
-              image={product.image}
-              title={product.title}
-              price={product.price}
+              image={product.images?.[0]}
+              title={product.name}
+              price={`₹${product.price}`}
             />
 
           ))}
