@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiHeart, FiShoppingBag } from "react-icons/fi";
+import { useState, useEffect } from "react";
 
 export default function ProductCard({
   id,
@@ -7,6 +8,42 @@ export default function ProductCard({
   title,
   price,
 }) {
+  const [liked, setLiked] = useState(false);
+
+  useEffect(() => {
+    const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+    setLiked(wishlist.some((item) => item.id === id));
+  }, [id]);
+
+  const handleWishlist = () => {
+    const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+    if (liked) {
+      const updated = wishlist.filter((item) => item.id !== id);
+
+      localStorage.setItem("wishlist", JSON.stringify(updated));
+
+      // Update navbar count immediately
+      window.dispatchEvent(new Event("storage"));
+
+      setLiked(false);
+    } else {
+      wishlist.push({
+        id,
+        image,
+        title,
+        price,
+      });
+
+      localStorage.setItem("wishlist", JSON.stringify(wishlist));
+
+      // Update navbar count immediately
+      window.dispatchEvent(new Event("storage"));
+
+      setLiked(true);
+    }
+  };
+
   return (
     <div className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-500">
 
@@ -22,22 +59,27 @@ export default function ProductCard({
 
         {/* Wishlist */}
 
-        <button className="absolute top-4 right-4 w-11 h-11 rounded-full bg-white/90 backdrop-blur flex items-center justify-center hover:bg-[#465348] hover:text-white transition">
-
+        <button
+          onClick={handleWishlist}
+          className={`absolute top-4 right-4 w-11 h-11 rounded-full backdrop-blur flex items-center justify-center transition ${
+            liked
+              ? "bg-red-500 text-white"
+              : "bg-white/90 hover:bg-[#465348] hover:text-white"
+          }`}
+        >
           <FiHeart size={18} />
-
         </button>
 
         {/* Quick View */}
 
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition">
 
-        <Link
+          <Link
             to={`/product/${id}`}
             className="bg-[#465348] text-white px-6 py-3 rounded-full"
           >
             View Details
-        </Link>
+          </Link>
 
         </div>
 
@@ -48,29 +90,21 @@ export default function ProductCard({
       <div className="p-6">
 
         <h3 className="font-serif text-2xl text-[#2E2A27]">
-
           {title}
-
         </h3>
 
         <p className="mt-3 text-[#6A625B]">
-
           Elegant • Comfortable • Premium
-
         </p>
 
         <div className="flex justify-between items-center mt-6">
 
           <span className="text-2xl font-semibold text-[#B89B72]">
-
             {price}
-
           </span>
 
           <button className="w-12 h-12 rounded-full bg-[#465348] text-white flex items-center justify-center hover:bg-[#39443A] transition">
-
             <FiShoppingBag />
-
           </button>
 
         </div>

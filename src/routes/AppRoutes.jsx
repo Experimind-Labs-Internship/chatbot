@@ -10,6 +10,7 @@ import Login from "../pages/customer/Login";
 import Signup from "../pages/customer/Signup";
 import OurStory from "../components/customer/OurStory";
 import Contact from "../pages/customer/Contact";
+import Wishlist from "../pages/customer/Wishlist";
 
 export default function AppRoutes() {
   return (
@@ -23,6 +24,7 @@ export default function AppRoutes() {
   <Route path="/login" element={<Login />} />
   <Route path="/signup" element={<Signup />} />
   <Route path="/contact" element={<Contact />} />
+  <Route path="/wishlist" element={<Wishlist />} />
 </Routes>
 
       <Footer />

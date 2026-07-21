@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { logout } from "../../services/authService";
+
 import {
   FiSearch,
   FiHeart,
@@ -9,6 +10,7 @@ import {
   FiUser,
   FiMenu,
   FiChevronDown,
+  FiX,
 } from "react-icons/fi";
 
 import AnnouncementBar from "./AnnouncementBar";
@@ -25,6 +27,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [wishlistCount, setWishlistCount] = useState(0);
   const { user } = useAuth();
 
   
@@ -43,6 +46,22 @@ useEffect(() => {
 
   return () => {
     document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
+useEffect(() => {
+  const updateWishlist = () => {
+    const wishlist =
+      JSON.parse(localStorage.getItem("wishlist")) || [];
+
+    setWishlistCount(wishlist.length);
+  };
+
+  updateWishlist();
+
+  window.addEventListener("storage", updateWishlist);
+
+  return () => {
+    window.removeEventListener("storage", updateWishlist);
   };
 }, []);
 
@@ -214,7 +233,9 @@ useEffect(() => {
 
             </nav>
 
-            {/* Right Icons */}
+            
+
+              {/* Right Icons */}
 
             <div className="hidden lg:flex items-center gap-6">
 
@@ -232,15 +253,18 @@ useEffect(() => {
                 <FiUser />
               </button>
 
-              <button className="relative hover:text-[#C3A274] transition text-xl">
+              <Link
+  to="/wishlist"
+  className="relative hover:text-[#C3A274] transition text-xl"
+>
+  <FiHeart />
 
-                <FiHeart />
-
-                <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-[#465348] text-white text-[10px] flex items-center justify-center">
-                  2
-                </span>
-
-              </button>
+ {wishlistCount > 0 && (
+  <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-[#465348] text-white text-[10px] flex items-center justify-center">
+    {wishlistCount}
+  </span>
+)}
+</Link>
 
               <button
                 onClick={() => setCartOpen(true)}
