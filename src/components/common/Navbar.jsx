@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { auth } from "../../firebase/firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { useAuth } from "../../context/AuthContext";
+import { logout } from "../../services/authService";
+
 import {
   FiSearch,
   FiHeart,
@@ -9,39 +10,60 @@ import {
   FiUser,
   FiMenu,
   FiChevronDown,
+  FiX,
 } from "react-icons/fi";
 
 import AnnouncementBar from "./AnnouncementBar";
 import SearchBar from "./SearchBar";
 import logo from "../../assets/images/logo/logo.png";
 
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [shopOpen, setShopOpen] = useState(false);
+  const shopMenuRef = useRef(null);
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-  const [user, setUser] = useState(null);
+  const [wishlistCount, setWishlistCount] = useState(0);
+  const { user } = useAuth();
 
-  useEffect(() => {
-  const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-    setUser(currentUser);
-  });
+  
 
-  return () => unsubscribe();
+useEffect(() => {
+  function handleClickOutside(event) {
+    if (
+      shopMenuRef.current &&
+      !shopMenuRef.current.contains(event.target)
+    ) {
+      setShopOpen(false);
+    }
+  }
+
+  document.addEventListener("mousedown", handleClickOutside);
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
 }, []);
+useEffect(() => {
+  const updateWishlist = () => {
+    const wishlist =
+      JSON.parse(localStorage.getItem("wishlist")) || [];
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
-    };
+    setWishlistCount(wishlist.length);
+  };
 
-    window.addEventListener("scroll", handleScroll);
+  updateWishlist();
 
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  window.addEventListener("storage", updateWishlist);
+
+  return () => {
+    window.removeEventListener("storage", updateWishlist);
+  };
+}, []);
 
   return (
     <>
@@ -86,11 +108,14 @@ export default function Navbar() {
 
               <div
                 className="relative"
-                onMouseEnter={() => setShopOpen(true)}
-                onMouseLeave={() => setShopOpen(false)}
+                ref={shopMenuRef}
+                
               >
 
-                <button className="flex items-center gap-1 group">
+               <button
+  onClick={() => setShopOpen(!shopOpen)}
+  className="flex items-center gap-1 group"
+>
 
                   Shop
 
@@ -208,7 +233,9 @@ export default function Navbar() {
 
             </nav>
 
-            {/* Right Icons */}
+            
+
+              {/* Right Icons */}
 
             <div className="hidden lg:flex items-center gap-6">
 
@@ -226,15 +253,18 @@ export default function Navbar() {
                 <FiUser />
               </button>
 
-              <button className="relative hover:text-[#C3A274] transition text-xl">
+              <Link
+  to="/wishlist"
+  className="relative hover:text-[#C3A274] transition text-xl"
+>
+  <FiHeart />
 
-                <FiHeart />
-
-                <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-[#465348] text-white text-[10px] flex items-center justify-center">
-                  2
-                </span>
-
-              </button>
+ {wishlistCount > 0 && (
+  <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-[#465348] text-white text-[10px] flex items-center justify-center">
+    {wishlistCount}
+  </span>
+)}
+</Link>
 
               <button
                 onClick={() => setCartOpen(true)}
@@ -314,7 +344,7 @@ export default function Navbar() {
 
           <button
             onClick={async () => {
-              await signOut(auth);
+              await logout();
               setAccountOpen(false);
             }}
             className="block mt-4 w-full text-center py-3 rounded-full bg-[#465348] text-white hover:bg-[#39443A] transition"

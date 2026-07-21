@@ -5,6 +5,11 @@ import {
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "../firebase/firebase";
+import { signOut } from "firebase/auth";
+
+export async function logout() {
+  await signOut(auth);
+}
 
 export async function signup(name, email, password) {
   const userCredential = await createUserWithEmailAndPassword(auth, email, password);

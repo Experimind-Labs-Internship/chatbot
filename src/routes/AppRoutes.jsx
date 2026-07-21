@@ -9,6 +9,8 @@ import Shop from "../pages/customer/Shop";
 import ProductDetails from "../pages/customer/ProductDetails";
 import Login from "../pages/customer/Login";
 import Signup from "../pages/customer/Signup";
+import Contact from "../pages/customer/Contact";
+import Wishlist from "../pages/customer/Wishlist";
 import Cart from "../pages/customer/Cart";
 import Checkout from "../pages/customer/Checkout";
 import OrderConfirmation from "../pages/customer/OrderConfirmation";
@@ -48,6 +50,8 @@ export default function AppRoutes() {
         <Route path="/product/:id" element={<CustomerLayout><ProductDetails /></CustomerLayout>} />
         <Route path="/login" element={<CustomerLayout><Login /></CustomerLayout>} />
         <Route path="/signup" element={<CustomerLayout><Signup /></CustomerLayout>} />
+        <Route path="/contact" element={<CustomerLayout><Contact /></CustomerLayout>} />
+        <Route path="/wishlist" element={<CustomerLayout><Wishlist /></CustomerLayout>} />
         <Route path="/cart" element={<CustomerLayout><Cart /></CustomerLayout>} />
         <Route path="/checkout" element={<CustomerLayout><Checkout /></CustomerLayout>} />
         <Route
