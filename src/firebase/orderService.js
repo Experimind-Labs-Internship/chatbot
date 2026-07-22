@@ -1,52 +1,41 @@
 import {
   collection,
   addDoc,
+  getDoc,
+  getDocs,
   updateDoc,
   doc,
-  getDocs,
-  getDoc,
   query,
   where,
   orderBy,
   serverTimestamp,
 } from "firebase/firestore";
+
 import { db } from "./firebase";
 
-const ordersRef = collection(db, "orders");
+const orderRef = collection(db, "orders");
+
+/* ===============================
+   ORDER STATUS OPTIONS
+================================ */
 
 export const ORDER_STATUSES = [
-  "pending",
-  "processing",
-  "packed",
-  "shipped",
-  "delivered",
-  "cancelled",
-  "refunded",
+  "Processing",
+  "Confirmed",
+  "Packed",
+  "Shipped",
+  "Delivered",
+  "Cancelled",
 ];
 
-export async function createOrder({
-  userId,
-  guestEmail,
-  items,
-  shippingAddress,
-  subtotal,
-  discount,
-  total,
-  couponCode,
-  paymentId,
-}) {
-  const docRef = await addDoc(ordersRef, {
-    userId: userId || null,
-    guestEmail: guestEmail || null,
-    items,
-    shippingAddress,
-    subtotal,
-    discount: discount || 0,
-    total,
-    couponCode: couponCode || null,
-    paymentId: paymentId || null,
-    paymentStatus: "paid",
-    status: "pending",
+/* ===============================
+   CREATE ORDER
+================================ */
+
+export async function createOrder(orderData) {
+  const docRef = await addDoc(orderRef, {
+    ...orderData,
+    status: "Processing",
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
@@ -54,24 +43,66 @@ export async function createOrder({
   return docRef.id;
 }
 
-export async function getOrderById(id) {
-  const snap = await getDoc(doc(db, "orders", id));
-  return snap.exists() ? { id: snap.id, ...snap.data() } : null;
+/* ===============================
+   GET SINGLE ORDER
+================================ */
+
+export async function getOrderById(orderId) {
+  const snapshot = await getDoc(doc(db, "orders", orderId));
+
+  if (!snapshot.exists()) return null;
+
+  return {
+    id: snapshot.id,
+    ...snapshot.data(),
+  };
 }
+
+/* ===============================
+   GET USER ORDERS
+================================ */
+
+export async function getUserOrders(userId) {
+  const q = query(
+    orderRef,
+    where("userId", "==", userId),
+    orderBy("createdAt", "desc")
+  );
+
+  const snapshot = await getDocs(q);
+
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+}
+
+/* ===============================
+   GET ALL ORDERS
+================================ */
 
 export async function getAllOrders() {
-  const q = query(ordersRef, orderBy("createdAt", "desc"));
+  const q = query(
+    orderRef,
+    orderBy("createdAt", "desc")
+  );
+
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
 }
 
-export async function getOrdersByUser(userId) {
-  const q = query(ordersRef, where("userId", "==", userId), orderBy("createdAt", "desc"));
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
-}
+/* ===============================
+   UPDATE STATUS
+================================ */
 
-export async function updateOrderStatus(orderId, status) {
+export async function updateOrderStatus(
+  orderId,
+  status
+) {
   await updateDoc(doc(db, "orders", orderId), {
     status,
     updatedAt: serverTimestamp(),

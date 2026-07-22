@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
 import { FiHeart, FiShoppingBag } from "react-icons/fi";
 import { useState, useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
+import {
+  addToWishlist,
+  getWishlist,
+  removeWishlistItem,
+} from "../../firebase/wishlistService";
 
 export default function ProductCard({
   id,
@@ -9,67 +15,65 @@ export default function ProductCard({
   price,
 }) {
   const [liked, setLiked] = useState(false);
+  const { user } = useAuth();
+  const [wishlistDocId, setWishlistDocId] = useState(null);
 
   useEffect(() => {
-    const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-    setLiked(wishlist.some((item) => item.id === id));
-  }, [id]);
+  if (!user) return;
+
+  loadWishlist();
+}, [user, id]);
+
+async function loadWishlist() {
+  const wishlist = await getWishlist(user.uid);
+
+  const existing = wishlist.find(
+    (item) => item.productId === id
+  );
+
+  if (existing) {
+    setLiked(true);
+    setWishlistDocId(existing.id);
+  } else {
+    setLiked(false);
+    setWishlistDocId(null);
+  }
+}
 
   // ---------------- WISHLIST ----------------
 
-  const handleWishlist = () => {
-    const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+  const handleWishlist = async () => {
+  if (!user) {
+    alert("Please login first.");
+    return;
+  }
 
-    if (liked) {
-      const updated = wishlist.filter((item) => item.id !== id);
+  if (liked) {
+    await removeWishlistItem(wishlistDocId);
 
-      localStorage.setItem("wishlist", JSON.stringify(updated));
+    setLiked(false);
+    setWishlistDocId(null);
 
-      window.dispatchEvent(new Event("storage"));
+    return;
+  }
 
-      setLiked(false);
-    } else {
-      wishlist.push({
-        id,
-        image,
-        title,
-        price,
-      });
+  await addToWishlist({
+    userId: user.uid,
+    productId: id,
+    name: title,
+    image,
+    price:
+      typeof price === "string"
+        ? Number(price.replace(/[₹,]/g, ""))
+        : price,
+  });
 
-      localStorage.setItem("wishlist", JSON.stringify(wishlist));
-
-      window.dispatchEvent(new Event("storage"));
-
-      setLiked(true);
-    }
-  };
+  loadWishlist();
+};
 
   // ---------------- CART ----------------
 
-  const handleCart = () => {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    const existingProduct = cart.find((item) => item.id === id);
-
-    if (existingProduct) {
-      existingProduct.quantity += 1;
-    } else {
-      cart.push({
-        id,
-        image,
-        title,
-        price,
-        quantity: 1,
-      });
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    window.dispatchEvent(new Event("storage"));
-
-    alert("Product added to cart!");
-  };
-
+  
   return (
     <div className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition duration-500">
 
@@ -129,12 +133,12 @@ export default function ProductCard({
             {price}
           </span>
 
-          <button
-            onClick={handleCart}
+          <Link
+            to={`/product/${id}`}
             className="w-12 h-12 rounded-full bg-[#465348] text-white flex items-center justify-center hover:bg-[#39443A] transition"
           >
-            <FiShoppingBag />
-          </button>
+  <FiShoppingBag />
+</Link>
 
         </div>
 

@@ -4,6 +4,7 @@ import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
 
 // Customer pages
+import Profile from "../pages/customer/Profile";
 import Home from "../pages/customer/Home";
 import Shop from "../pages/customer/Shop";
 import ProductDetails from "../pages/customer/ProductDetails";
@@ -55,6 +56,7 @@ export default function AppRoutes() {
         <Route path="/contact" element={<CustomerLayout><Contact /></CustomerLayout>} />
         <Route path="/wishlist" element={<CustomerLayout><Wishlist /></CustomerLayout>} />
         <Route path="/cart" element={<CustomerLayout><Cart /></CustomerLayout>} />
+        <Route path="/profile" element={<CustomerLayout><Profile /></CustomerLayout>}/>
         <Route path="/checkout" element={<CustomerLayout><Checkout /></CustomerLayout>} />
         <Route
           path="/order-confirmation/:orderId"
