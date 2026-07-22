@@ -44,13 +44,13 @@ export default function Footer() {
             <ul className="space-y-4 text-gray-300">
 
               <li>
-                <Link to="/about" className="hover:text-[#C3A274] transition">
+                <Link to="/our-story" className="hover:text-[#C3A274] transition">
                   Our Story
                 </Link>
               </li>
 
               <li>
-                <Link to="/why-yumi" className="hover:text-[#C3A274] transition">
+                <Link to="/our-story" className="hover:text-[#C3A274] transition">
                   Why Choose YUMI
                 </Link>
               </li>
@@ -144,12 +144,6 @@ export default function Footer() {
                 <FiInstagram />
               </a>
 
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full border border-gray-500 flex items-center justify-center hover:bg-[#C3A274] hover:border-[#C3A274] transition"
-              >
-                <FiFacebook />
-              </a>
 
             </div>
 

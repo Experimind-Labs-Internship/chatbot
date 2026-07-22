@@ -25,6 +25,11 @@ import OurStoryPage from "../pages/customer/OurStoryPage";
 import OrderDetails from "../pages/customer/OrderDetails";
 import OrderHistory from "../pages/customer/OrderHistory";
 import SearchResults from "../pages/customer/SearchResults";
+import FAQ from "../pages/customer/FAQ";
+import Shipping from "../pages/customer/Shipping";
+import Returns from "../pages/customer/Returns";
+import PrivacyPolicy from "../pages/customer/PrivacyPolicy";
+import Terms from "../pages/customer/Terms";
 // Admin
 import AdminLayout from "../components/admin/AdminLayout";
 import ProtectedAdminRoute from "../components/admin/ProtectedAdminRoute";
@@ -77,18 +82,15 @@ export default function AppRoutes() {
         <Route path="/profile/orders" element={ <CustomerLayout><OrderHistory /></CustomerLayout>}/>
         <Route path="/profile/orders/:orderId" element={ <CustomerLayout><OrderDetails /></CustomerLayout>}/>
         <Route path="/order-confirmation/:orderId" element={<CustomerLayout><OrderConfirmation /></CustomerLayout>}/>
-        <Route
-  path="/search" element={ <CustomerLayout><SearchResults /></CustomerLayout> }/>
+        <Route path="/search" element={ <CustomerLayout><SearchResults /></CustomerLayout> }/>
+        <Route path="/faq" element={ <CustomerLayout><FAQ /></CustomerLayout> }/>
+        <Route path="/shipping" element={ <CustomerLayout><Shipping /></CustomerLayout> }/>
+        <Route path="/returns" element={ <CustomerLayout><Returns /></CustomerLayout>}/>
+        <Route path="/privacy" element={<CustomerLayout><PrivacyPolicy /></CustomerLayout>}/>
+        <Route path="/terms" element={ <CustomerLayout><Terms /></CustomerLayout>}/>
 
         {/* ---------- Admin ---------- */}
-        <Route
-          path="/admin"
-          element={
-            <ProtectedAdminRoute>
-              <AdminLayout />
-            </ProtectedAdminRoute>
-          }
-        >
+          <Route path="/admin" element={ <ProtectedAdminRoute> <AdminLayout /></ProtectedAdminRoute>}/>
           <Route path="/admin/coupons" element={<Coupons />} />
 
           <Route path="/admin/coupons/new" element={<CouponForm />} />
@@ -114,8 +116,7 @@ export default function AppRoutes() {
 
           {/* Coupons, Newsletter, Reports
               routes will be added here as we build each module */}
-        </Route>
-      </Routes>
+        </Routes>
     </BrowserRouter>
   );
 }
