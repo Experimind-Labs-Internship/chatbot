@@ -1,47 +1,32 @@
 import { Link } from "react-router-dom";
 import SectionTitle from "../common/SectionTitle";
-
+import { useEffect, useState } from "react";
+import { getAllProducts } from "../../firebase/productService";
 // Images
-import irisGarden from "../../assets/images/products/iris-garden-model.png";
-import midnightBlossom from "../../assets/images/products/black-model.png";
-import desertRose from "../../assets/images/products/crimson-bloom-model.png";
-import lavenderGrace from "../../assets/images/products/lavender-grace-model.png";
-const products = [
-  {
-    id: 1,
-    name: "Iris Garden Robe",
-    fabric: "Soft Cotton Blend",
-    price: "₹999",
-    image: irisGarden,
-    badge: "NEW",
-  },
-  {
-    id: 2,
-    name: "Midnight Bloom Set",
-    fabric: "Breathable Modal",
-    price: "₹999",
-    image: midnightBlossom,
-    badge: "NEW",
-  },
-  {
-    id: 3,
-    name: "Desert Rose Kaftan",
-    fabric: "Pure Cotton",
-    price: "₹999",
-    image: desertRose,
-    badge: "NEW",
-  },
-  {
-    id: 4,
-    name: "Vintage Peony Set",
-    fabric: "Premium Rayon",
-    price: "₹999",
-    image: lavenderGrace,
-    badge: "NEW",
-  },
-];
+
+
 
 export default function NewArrivals() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    loadProducts();
+  }, []);
+
+  async function loadProducts() {
+    const data = await getAllProducts();
+
+    const latestProducts = [...data]
+      .sort(
+        (a, b) =>
+          (b.createdAt?.seconds || 0) -
+          (a.createdAt?.seconds || 0)
+      )
+      .slice(0, 4);
+
+    setProducts(latestProducts);
+  }
+
   return (
     <section className="py-24 bg-white">
 
@@ -67,13 +52,13 @@ export default function NewArrivals() {
               <div className="relative overflow-hidden">
 
                 <img
-                  src={product.image}
+                  src={product.images?.[0]}
                   alt={product.name}
                   className="w-full h-[420px] object-cover transition duration-700 group-hover:scale-105"
                 />
 
                 <span className="absolute top-5 left-5 bg-[#465348] text-white text-xs px-4 py-2 rounded-full tracking-wider">
-                  {product.badge}
+                  NEW
                 </span>
 
               </div>
@@ -98,7 +83,7 @@ export default function NewArrivals() {
 
                   <span className="text-xl font-semibold text-[#2E2A27]">
 
-                    {product.price}
+                    ₹{product.price}
 
                   </span>
 
@@ -110,11 +95,12 @@ export default function NewArrivals() {
 
                 </div>
 
-                <button className="mt-8 w-full py-3 rounded-full bg-[#465348] text-white hover:bg-[#39443A] transition">
-
-                  Add to Cart
-
-                </button>
+                <Link
+                  to={`/product/${product.id}`}
+                  className="block mt-8 w-full py-3 rounded-full bg-[#465348] text-white text-center hover:bg-[#39443A] transition"
+                  >
+                    View Product
+                </Link>
 
               </div>
 
@@ -127,10 +113,10 @@ export default function NewArrivals() {
         <div className="text-center mt-16">
 
           <Link
-            to="/shop"
-            className="inline-flex items-center px-8 py-4 rounded-full border border-[#2E2A27] hover:bg-[#2E2A27] hover:text-white transition"
+          to="/new-arrivals"
+          className="inline-flex items-center px-8 py-4 rounded-full border border-[#2E2A27] hover:bg-[#2E2A27] hover:text-white transition"
           >
-            View All Products
+            View All New Arrivals
           </Link>
 
         </div>

@@ -15,7 +15,12 @@ import Wishlist from "../pages/customer/Wishlist";
 import Cart from "../pages/customer/Cart";
 import Checkout from "../pages/customer/Checkout";
 import OrderConfirmation from "../pages/customer/OrderConfirmation";
-
+import Nightwear from "../pages/customer/Nightwear";
+import Abayas from "../pages/customer/Abayas";
+import Kaftans from "../pages/customer/Kaftans";
+import CoordSets from "../pages/customer/CoordSets";
+import NewArrivals from "../pages/customer/NewArrivals";
+import BestSellerPage from "../pages/customer/BestSellerPage";
 // Admin
 import AdminLayout from "../components/admin/AdminLayout";
 import ProtectedAdminRoute from "../components/admin/ProtectedAdminRoute";
@@ -57,10 +62,16 @@ export default function AppRoutes() {
         <Route path="/cart" element={<CustomerLayout><Cart /></CustomerLayout>} />
         <Route path="/profile" element={<CustomerLayout><Profile /></CustomerLayout>}/>
         <Route path="/checkout" element={<CustomerLayout><Checkout /></CustomerLayout>} />
-        <Route
-          path="/order-confirmation/:orderId"
-          element={<CustomerLayout><OrderConfirmation /></CustomerLayout>}
-        />
+        <Route path="/nightwear" element={<CustomerLayout> <Nightwear /> </CustomerLayout>}/>
+        <Route path="/abayas" element={<CustomerLayout><Abayas /></CustomerLayout>}/>
+        <Route path="/kaftans" element={<CustomerLayout><Kaftans /></CustomerLayout>}/>
+        <Route path="/coord-sets" element={<CustomerLayout><CoordSets /></CustomerLayout>}/>
+        <Route path="/new-arrivals" element={<CustomerLayout><NewArrivals /></CustomerLayout>}/>
+        <Route path="/best-sellers" element={<CustomerLayout><BestSellerPage /></CustomerLayout>}/>
+        
+        
+        
+        <Route path="/order-confirmation/:orderId" element={<CustomerLayout><OrderConfirmation /></CustomerLayout>}/>
 
         {/* ---------- Admin ---------- */}
         <Route

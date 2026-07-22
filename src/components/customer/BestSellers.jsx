@@ -1,44 +1,28 @@
 import { Link } from "react-router-dom";
 import SectionTitle from "../common/SectionTitle";
+import { useEffect, useState } from "react";
+import { getAllProducts } from "../../firebase/productService";
 
-// Import your images
-import irisGarden from "../../assets/images/products/iris-garden-model.png";
-import midnightBlossom from "../../assets/images/products/black-model.png";
-import desertRose from "../../assets/images/products/crimson-bloom-model.png";
-import lavenderGrace from "../../assets/images/products/lavender-grace-model.png";
 
-const products = [
-  {
-    id: 1,
-    name: "Iris Garden",
-    image: irisGarden,
-    price: "₹999",
-    rating: "4.9",
-  },
-  {
-    id: 2,
-    name: "Midnight Blossom",
-    image: midnightBlossom,
-    price: "₹999",
-    rating: "4.8",
-  },
-  {
-    id: 3,
-    name: "Crimson Bloom",
-    image: desertRose,
-    price: "₹999",
-    rating: "4.9",
-  },
-  {
-    id: 4,
-    name: "Lavender Grace",
-    image: lavenderGrace,
-    price: "₹999",
-    rating: "4.8",
-  },
-];
 
 export default function BestSellers() {
+
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    loadProducts();
+  }, []);
+
+  async function loadProducts() {
+    const data = await getAllProducts();
+
+    const bestProducts = data
+      .filter((product) => product.bestSeller === true)
+      .slice(0, 4);
+
+    setProducts(bestProducts);
+  }
+
   return (
     <section className="py-24 bg-[#FAF8F5]">
 
@@ -64,7 +48,7 @@ export default function BestSellers() {
               <div className="overflow-hidden bg-[#F8F5F1]">
 
                 <img
-                  src={product.image}
+                  src={product.images?.[0]}
                   alt={product.name}
                   className="w-full h-[420px] object-cover transition duration-700 group-hover:scale-105"
                 />
@@ -86,20 +70,21 @@ export default function BestSellers() {
                 <div className="flex items-center justify-between mt-4">
 
                   <p className="text-lg font-semibold text-[#2E2A27]">
-                    {product.price}
+                    ₹{product.price}
                   </p>
 
                   <span className="text-[#B89B72]">
-                    ★ {product.rating}
+                    ★  4.9
                   </span>
 
                 </div>
 
-                <button
-                  className="mt-6 w-full py-3 rounded-full bg-[#465348] text-white hover:bg-[#39443A] transition"
-                >
-                  Add to Cart
-                </button>
+                <Link
+                  to={`/product/${product.id}`}
+                  className="block mt-6 w-full py-3 rounded-full bg-[#465348] text-white text-center hover:bg-[#39443A] transition"
+                >  
+                  View Product
+                </Link>
 
               </div>
 
@@ -114,7 +99,7 @@ export default function BestSellers() {
         <div className="text-center mt-16">
 
           <Link
-            to="/shop"
+            to="/best-sellers"
             className="inline-flex items-center px-8 py-4 border border-[#2E2A27] rounded-full hover:bg-[#2E2A27] hover:text-white transition"
           >
             View All Best Sellers

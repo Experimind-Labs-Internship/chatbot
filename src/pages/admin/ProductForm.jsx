@@ -36,6 +36,7 @@ export default function ProductForm() {
     sizes: emptySizes,
   });
 
+  const [bestSeller, setBestSeller] = useState(false);
   const [images, setImages] = useState([]);
   const [imageUrl, setImageUrl] = useState("");
 
@@ -60,6 +61,7 @@ export default function ProductForm() {
         });
 
         setImages(product.images || []);
+        setBestSeller(product.bestSeller || false);
       }
 
       setLoading(false);
@@ -105,6 +107,7 @@ export default function ProductForm() {
         ...form,
         price: Number(form.price),
         images: finalImages,
+        bestSeller,
       };
 
       if (isEdit) {
@@ -263,6 +266,24 @@ export default function ProductForm() {
             />
 
           </div>
+          <div className="flex items-center gap-3 pt-2">
+
+  <input
+    type="checkbox"
+    id="bestSeller"
+    checked={bestSeller}
+    onChange={(e) => setBestSeller(e.target.checked)}
+    className="w-5 h-5"
+  />
+
+  <label
+    htmlFor="bestSeller"
+    className="text-[#2E2A27]"
+  >
+    Mark as Best Seller
+  </label>
+
+</div>
 
         </div>
 

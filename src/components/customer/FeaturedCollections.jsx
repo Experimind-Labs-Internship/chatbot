@@ -23,28 +23,28 @@ export default function FeaturedCollections() {
             image={nightwear}
             title="Nightwear"
             description="Elegant nightwear crafted for luxurious comfort."
-            link="/shop/nightwear"
+            link="/nightwear"
           />
 
           <CollectionCard
             image={abaya}
             title="Abayas"
             description="Graceful silhouettes designed for timeless beauty."
-            link="/shop/abayas"
+            link="/abayas"
           />
 
           <CollectionCard
             image={kaftan}
             title="Kaftans"
             description="Relaxed elegance for every occasion."
-            link="/shop/kaftans"
+            link="/kaftans"
           />
 
           <CollectionCard
             image={coordSet}
             title="Co-ord Sets"
             description="Perfectly paired outfits with effortless sophistication."
-            link="/shop/coord-sets"
+            link="/coord-sets"
           />
 
         </div>
