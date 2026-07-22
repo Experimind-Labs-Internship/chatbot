@@ -1,6 +1,7 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
 } from "firebase/auth";
 
@@ -10,7 +11,11 @@ import {
   getDoc,
 } from "firebase/firestore";
 
-import { auth, db } from "../firebase/firebase";
+import {
+  auth,
+  db,
+  googleProvider,
+} from "../firebase/firebase";
 
 export const signup = async (name, email, password) => {
   const userCredential = await createUserWithEmailAndPassword(
@@ -39,6 +44,30 @@ export const login = async (email, password) => {
     );
 
   return userCredential.user;
+};
+export const loginWithGoogle = async () => {
+  const result = await signInWithPopup(
+    auth,
+    googleProvider
+  );
+
+  const user = result.user;
+
+  const userRef = doc(db, "users", user.uid);
+
+  const snap = await getDoc(userRef);
+
+  if (!snap.exists()) {
+    await setDoc(userRef, {
+      uid: user.uid,
+      name: user.displayName || "",
+      email: user.email,
+      role: "customer",
+      createdAt: new Date(),
+    });
+  }
+
+  return user;
 };
 
 export const logout = () => signOut(auth);
