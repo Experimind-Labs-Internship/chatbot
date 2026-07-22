@@ -8,6 +8,7 @@ import {
   getDoc,
   serverTimestamp,
 } from "firebase/firestore";
+import { increment } from "firebase/firestore";
 
 import { db } from "./firebase";
 
@@ -33,6 +34,17 @@ export async function addProduct(productData) {
 export async function updateProduct(id, productData) {
   await updateDoc(doc(db, "products", id), {
     ...productData,
+    updatedAt: serverTimestamp(),
+  });
+}
+
+// ---------------- UPDATE PRODUCT STOCK ----------------
+
+export async function updateProductStock(productId, size, quantity) {
+  const productRef = doc(db, "products", productId);
+
+  await updateDoc(productRef, {
+    [`sizes.${size}.stock`]: increment(-quantity),
     updatedAt: serverTimestamp(),
   });
 }

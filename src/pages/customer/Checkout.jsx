@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { auth } from "../../firebase/firebase";
 import { createOrder } from "../../firebase/orderService";
+import { updateProductStock } from "../../firebase/productService";
 
 export default function Checkout() {
   const { items, subtotal, clearCart } = useCart();
@@ -66,6 +67,14 @@ export default function Checkout() {
         couponCode,
         paymentId: simulatedPaymentId,
       });
+      // Reduce stock for each purchased item
+      for (const item of items) {
+        await updateProductStock(
+          item.productId,
+          item.size,
+          item.quantity
+        );
+      }
 
       clearCart();
       navigate(`/order-confirmation/${orderId}`);
