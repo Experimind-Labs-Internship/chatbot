@@ -7,6 +7,7 @@ import {
 import {
   doc,
   setDoc,
+  getDoc,
 } from "firebase/firestore";
 
 import { auth, db } from "../firebase/firebase";
@@ -22,6 +23,7 @@ export const signup = async (name, email, password) => {
     uid: userCredential.user.uid,
     name,
     email,
+    role: "customer",
     createdAt: new Date(),
   });
 
@@ -40,3 +42,8 @@ export const login = async (email, password) => {
 };
 
 export const logout = () => signOut(auth);
+
+export const getUserRole = async (uid) => {
+  const snap = await getDoc(doc(db, "users", uid));
+  return snap.exists() ? snap.data().role : "customer";
+};

@@ -1,12 +1,8 @@
-import { useSecretTrigger } from "../../hooks/useSecretTrigger";
-
 export default function AuthBanner({
   subtitle,
   title,
   description,
 }) {
-  const handleSecretClick = useSecretTrigger("/admin/login", 5, 2000);
-
   return (
     <>
 
@@ -16,10 +12,7 @@ export default function AuthBanner({
 
       </p>
 
-      <h1
-        onClick={handleSecretClick}
-        className="mt-4 text-5xl font-serif text-[#2E2A27] select-none"
-      >
+      <h1 className="mt-4 text-5xl font-serif text-[#2E2A27]">
 
         {title}
 

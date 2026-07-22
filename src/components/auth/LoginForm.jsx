@@ -5,7 +5,7 @@ import { FiMail } from "react-icons/fi";
 import PasswordInput from "./PasswordInput";
 import SocialLogin from "./SocialLogin";
 
-import { login } from "../../services/authService";
+import { login, getUserRole } from "../../services/authService";
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -25,11 +25,14 @@ export default function LoginForm() {
     try {
       setLoading(true);
 
-      await login(email, password);
+      const user = await login(email, password);
+      const role = await getUserRole(user.uid);
 
-      alert("Login Successful!");
-
-      navigate("/");
+      if (role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       alert(error.message);
     } finally {

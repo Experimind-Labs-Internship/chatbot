@@ -17,7 +17,6 @@ import Checkout from "../pages/customer/Checkout";
 import OrderConfirmation from "../pages/customer/OrderConfirmation";
 
 // Admin
-import AdminLogin from "../pages/admin/AdminLogin";
 import AdminLayout from "../components/admin/AdminLayout";
 import ProtectedAdminRoute from "../components/admin/ProtectedAdminRoute";
 import Dashboard from "../pages/admin/Dashboard";
@@ -64,8 +63,6 @@ export default function AppRoutes() {
         />
 
         {/* ---------- Admin ---------- */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-
         <Route
           path="/admin"
           element={

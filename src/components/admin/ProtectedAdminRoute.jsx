@@ -8,7 +8,7 @@ export default function ProtectedAdminRoute({ children }) {
   if (loading) return <Loader />;
 
   if (!user || !isAdmin) {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return children;
