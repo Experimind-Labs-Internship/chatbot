@@ -69,12 +69,24 @@ export default function ProductDetails() {
     ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
     : 0;
 
-  const handleAddToCart = () => {
-    if (!size || isOutOfStock) return;
-    addToCart(product, size, quantity);
+  const handleAddToCart = async () => {
+  console.log("Button Clicked");
+
+  if (!size || isOutOfStock) {
+    console.log("Size not selected or out of stock");
+    return;
+  }
+
+  try {
+    await addToCart(product, size, quantity);
+    console.log("Added Successfully");
+
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
-  };
+  } catch (err) {
+    console.error("Add To Cart Error:", err);
+  }
+};
 
   const formatDate = (timestamp) => {
     if (!timestamp?.toDate) return "";

@@ -39,20 +39,26 @@ export function CartProvider({ children }) {
   }
 
   async function addToCart(product, size, quantity = 1) {
+    console.log("USER:", user);
+    console.log("PRODUCT:", product);
     if (!user) {
       alert("Please login first.");
       return;
     }
 
-    await addCartItem({
-      userId: user.uid,
-      productId: product.id,
-      name: product.name,
-      image: product.images?.[0] || "",
-      price: product.price,
-      size,
-      quantity,
-    });
+  const cartData = {
+    userId: user.uid,
+    productId: product.id,
+    name: product.name,
+    image: product.images?.[0] || "",
+    price: product.price,
+    size,
+    quantity,
+};
+
+console.log("Cart Data:", cartData);
+
+await addCartItem(cartData);
 
     await loadCart();
   }

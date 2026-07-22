@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { validateCoupon } from "../../firebase/couponService";
 import { Link } from "react-router-dom";
+import { useCart } from "../../context/CartContext";
 import {
   FiTrash2,
   FiMinus,
@@ -8,78 +10,44 @@ import {
 } from "react-icons/fi";
 
 export default function Cart() {
-  const [cart, setCart] = useState([]);
+  const {
+  items: cart,
+  updateQuantity,
+  removeFromCart,
+  subtotal,
+} = useCart();
   const [coupon, setCoupon] = useState("");
   const [discount, setDiscount] = useState(0);
-
-  useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("cart")) || [];
-    setCart(data);
-  }, []);
-
-  const saveCart = (updatedCart) => {
-    setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-
-    // Update Navbar Badge
-    window.dispatchEvent(new Event("storage"));
-  };
-
-  const increaseQuantity = (id) => {
-    const updated = cart.map((item) =>
-      item.id === id
-        ? {
-            ...item,
-            quantity: item.quantity + 1,
-          }
-        : item
-    );
-
-    saveCart(updated);
-  };
-
-  const decreaseQuantity = (id) => {
-    const updated = cart
-      .map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: item.quantity - 1,
-            }
-          : item
-      )
-      .filter((item) => item.quantity > 0);
-
-    saveCart(updated);
-  };
-
-  const removeItem = (id) => {
-    const updated = cart.filter(
-      (item) => item.id !== id
-    );
-
-    saveCart(updated);
-  };
-
-  const subtotal = cart.reduce((total, item) => {
-    return (
-      total +
-      Number(item.price.replace(/[₹,]/g, "")) *
-        item.quantity
-    );
-  }, 0);
+       
 
 const total = Math.max(subtotal - discount, 0);
 
-  const applyCoupon = () => {
-    if (coupon === "WELCOME10") {
-      setDiscount(subtotal * 0.1);
-      alert("Coupon Applied!");
-    } else {
-      setDiscount(0);
-      alert("Invalid Coupon");
-    }
-  };
+  const applyCoupon = async () => {
+  const result = await validateCoupon(coupon);
+
+  if (!result) {
+    setDiscount(0);
+    alert("Invalid or Expired Coupon");
+    return;
+  }
+
+  if (subtotal < result.minOrder) {
+    alert(`Minimum order should be ₹${result.minOrder}`);
+    return;
+  }
+
+  let discountAmount = 0;
+
+  if (result.type === "percentage") {
+    discountAmount = (subtotal * result.discount) / 100;
+  } else {
+    discountAmount = result.discount;
+  }
+
+  setDiscount(discountAmount);
+
+  alert("Coupon Applied Successfully!");
+};
 
   if (cart.length === 0) {
     return (
@@ -134,18 +102,18 @@ const total = Math.max(subtotal - discount, 0);
 
                 <img
                   src={item.image}
-                  alt={item.title}
+                  alt={item.name}
                   className="w-32 h-40 object-cover rounded-2xl"
                 />
 
                 <div className="flex-1">
 
                   <h2 className="text-2xl font-serif text-[#2E2A27]">
-                    {item.title}
+                    {item.name}
                   </h2>
 
                   <p className="mt-3 text-[#B89B72] text-xl font-semibold">
-                    {item.price}
+                    ₹{item.price}
                   </p>
 
                   {/* Quantity */}
@@ -153,7 +121,9 @@ const total = Math.max(subtotal - discount, 0);
                   <div className="flex items-center gap-4 mt-6">
 
                     <button
-                      onClick={() => decreaseQuantity(item.id)}
+                      onClick={() =>
+                        updateQuantity(item.id, item.quantity - 1)
+                      }
                       className="w-10 h-10 rounded-full border hover:bg-[#465348] hover:text-white transition"
                     >
                       <FiMinus />
@@ -164,7 +134,9 @@ const total = Math.max(subtotal - discount, 0);
                     </span>
 
                     <button
-                      onClick={() => increaseQuantity(item.id)}
+                      onClick={() =>
+                        updateQuantity(item.id, item.quantity + 1)
+}
                       className="w-10 h-10 rounded-full border hover:bg-[#465348] hover:text-white transition"
                     >
                       <FiPlus />
@@ -177,7 +149,7 @@ const total = Math.max(subtotal - discount, 0);
                 {/* Remove */}
 
                 <button
-                  onClick={() => removeItem(item.id)}
+                  onClick={() => removeFromCart(item.id)}
                   className="text-red-500 hover:text-red-700 transition"
                 >
                   <FiTrash2 size={22} />
