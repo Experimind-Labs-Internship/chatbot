@@ -12,23 +12,24 @@ export default function NewArrivals() {
   }, []);
 
   async function loadProducts() {
-    try {
-      const data = await getAllProducts();
+  try {
+    const data = await getAllProducts();
 
-      // Sort newest first
-      const latestProducts = [...data].sort((a, b) => {
-        const dateA = a.createdAt?.seconds || 0;
-        const dateB = b.createdAt?.seconds || 0;
-        return dateB - dateA;
-      });
+    const latestProducts = [...data]
+      .sort(
+        (a, b) =>
+          (b.createdAt?.seconds || 0) -
+          (a.createdAt?.seconds || 0)
+      )
+      .slice(0, 3);
 
-      setProducts(latestProducts);
-    } catch (err) {
-      console.error(err);
-    }
-
-    setLoading(false);
+    setProducts(latestProducts);
+  } catch (err) {
+    console.error(err);
   }
+
+  setLoading(false);
+}
 
   if (loading) return <Loader />;
 
@@ -70,8 +71,7 @@ export default function NewArrivals() {
           </div>
         ) : (
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {products.map((product) => (
               <ProductCard
                 key={product.id}

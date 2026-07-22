@@ -14,9 +14,11 @@ export default function NewArrivals() {
   }, []);
 
   async function loadProducts() {
+  try {
     const data = await getAllProducts();
 
-    const latestProducts = [...data]
+    const latestProducts = data
+      .filter((product) => product.status === "active")
       .sort(
         (a, b) =>
           (b.createdAt?.seconds || 0) -
@@ -25,8 +27,10 @@ export default function NewArrivals() {
       .slice(0, 4);
 
     setProducts(latestProducts);
+  } catch (err) {
+    console.error("Failed to load products:", err);
   }
-
+}
   return (
     <section className="py-24 bg-white">
 
@@ -69,7 +73,7 @@ export default function NewArrivals() {
 
                 <p className="text-sm uppercase tracking-widest text-[#B89B72]">
 
-                  {product.fabric}
+                  {product.fabric || product.category}
 
                 </p>
 

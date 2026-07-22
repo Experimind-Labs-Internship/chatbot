@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import {
   getUserProfile,
@@ -8,6 +9,7 @@ import {
 
 export default function ProfileInfo() {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
 
@@ -181,7 +183,27 @@ export default function ProfileInfo() {
       >
         Save Changes
       </button>
+      {/* My Orders */}
 
-    </div>
+<div
+  onClick={() => navigate("/profile/orders")}
+  className="mt-10 cursor-pointer rounded-3xl border border-[#ECE8E3] p-6 hover:shadow-lg transition flex items-center justify-between"
+>
+  <div>
+    <h3 className="text-2xl font-serif text-[#2E2A27]">
+      📦 My Orders
+    </h3>
+
+    <p className="mt-2 text-[#6A625B]">
+      View your orders and track their delivery status.
+    </p>
+  </div>
+
+  <span className="text-3xl text-[#465348]">
+    →
+  </span>
+</div>
+
+</div>
   );
 }

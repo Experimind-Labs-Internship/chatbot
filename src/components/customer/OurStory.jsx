@@ -119,7 +119,7 @@ export default function OurStory() {
             {/* Button */}
 
             <Link
-              to="/about"
+              to="/our-story"
               className="inline-block mt-14 px-8 py-4 rounded-full bg-[#465348] text-white hover:bg-[#39443A] transition"
             >
               Read Our Story

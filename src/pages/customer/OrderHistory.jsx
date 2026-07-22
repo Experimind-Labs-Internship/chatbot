@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { FiPackage } from "react-icons/fi";
 import { useAuth } from "../../context/AuthContext";
 import { getUserOrders } from "../../firebase/orderService";
+import { useNavigate } from "react-router-dom";
 
 export default function OrderHistory() {
   const { user } = useAuth();
 
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) return;
@@ -74,7 +76,8 @@ export default function OrderHistory() {
 
             <div
               key={order.id}
-              className="border border-[#ECE8E3] rounded-2xl p-6 hover:shadow-md transition"
+              onClick={() => navigate(`/profile/orders/${order.id}`)}
+              className="border border-[#ECE8E3] rounded-2xl p-6 hover:shadow-md hover:cursor-pointer transition"
             >
 
               <div className="flex justify-between">

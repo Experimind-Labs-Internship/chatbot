@@ -2,8 +2,17 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
 import {
-  FiGrid, FiBox, FiPackage, FiShoppingBag, FiUsers,
-  FiStar, FiTag, FiMail, FiBarChart2, FiLogOut,
+  FiGrid,
+  FiBox,
+  FiPackage,
+  FiShoppingBag,
+  FiUsers,
+  FiStar,
+  FiTag,
+  FiMail,
+  FiBarChart2,
+  FiLogOut,
+  FiMessageSquare,
 } from "react-icons/fi";
 
 const links = [
@@ -12,6 +21,7 @@ const links = [
   { to: "/admin/inventory", label: "Inventory", icon: FiPackage },
   { to: "/admin/orders", label: "Orders", icon: FiShoppingBag },
   { to: "/admin/customers", label: "Customers", icon: FiUsers },
+  { to: "/admin/messages", label: "Messages", icon: FiMessageSquare },
   { to: "/admin/reviews", label: "Reviews", icon: FiStar },
   { to: "/admin/coupons", label: "Coupons", icon: FiTag },
   { to: "/admin/newsletter", label: "Newsletter", icon: FiMail },

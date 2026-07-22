@@ -5,21 +5,49 @@ import {
   FiInstagram,
   FiMail,
 } from "react-icons/fi";
+import { sendContactMessage } from "../../firebase/contactService";
 
 export default function Contact() {
   const [messageSent, setMessageSent] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const [form, setForm] = useState({
+  name: "",
+  email: "",
+  phone: "",
+  message: "",
+});
+
+const handleChange = (e) => {
+  setForm({
+    ...form,
+    [e.target.name]: e.target.value,
+  });
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    await sendContactMessage(form);
 
     setMessageSent(true);
 
-    e.target.reset();
+    setForm({
+      name: "",
+      email: "",
+      phone: "",
+      message: "",
+    });
 
     setTimeout(() => {
       setMessageSent(false);
     }, 3000);
-  };
+
+  } catch (err) {
+    console.error(err);
+    alert("Failed to send message.");
+  }
+};
 
   return (
     <main className="bg-[#FAF8F5] min-h-screen pt-24">
@@ -56,22 +84,31 @@ export default function Contact() {
               onSubmit={handleSubmit}
               className="mt-10 space-y-6"
             >
-              <input
+             <input
                 type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
                 placeholder="Full Name"
                 required
                 className="w-full rounded-xl border border-[#E5DED7] px-5 py-4 outline-none focus:border-[#B89B72]"
               />
 
               <input
-                type="email"
-                placeholder="Email Address"
-                required
-                className="w-full rounded-xl border border-[#E5DED7] px-5 py-4 outline-none focus:border-[#B89B72]"
-              />
+                  type="email"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  placeholder="Email Address"
+                  required
+                  className="w-full rounded-xl border border-[#E5DED7] px-5 py-4 outline-none focus:border-[#B89B72]"
+                />
 
               <input
                 type="tel"
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
                 placeholder="Phone Number"
                 required
                 className="w-full rounded-xl border border-[#E5DED7] px-5 py-4 outline-none focus:border-[#B89B72]"
@@ -79,6 +116,9 @@ export default function Contact() {
 
               <textarea
                 rows="6"
+                name="message"
+                value={form.message}
+                onChange={handleChange}
                 placeholder="Your Message"
                 required
                 className="w-full rounded-xl border border-[#E5DED7] px-5 py-4 outline-none resize-none focus:border-[#B89B72]"

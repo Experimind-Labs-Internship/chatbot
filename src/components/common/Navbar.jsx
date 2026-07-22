@@ -218,7 +218,7 @@ useEffect(() => {
               </div>
 
               <Link
-                to="/about"
+                to="/our-story"
                 className="relative group"
               >
                 Our Story
@@ -496,7 +496,7 @@ useEffect(() => {
               </Link>
 
               <Link
-                to="/about"
+                to="/our-story"
                 onClick={() => setMobileOpen(false)}
               >
                 Our Story

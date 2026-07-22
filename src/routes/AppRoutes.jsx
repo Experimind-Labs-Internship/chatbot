@@ -21,6 +21,9 @@ import Kaftans from "../pages/customer/Kaftans";
 import CoordSets from "../pages/customer/CoordSets";
 import NewArrivals from "../pages/customer/NewArrivals";
 import BestSellerPage from "../pages/customer/BestSellerPage";
+import OurStoryPage from "../pages/customer/OurStoryPage";
+import OrderDetails from "../pages/customer/OrderDetails";
+import OrderHistory from "../pages/customer/OrderHistory";
 // Admin
 import AdminLayout from "../components/admin/AdminLayout";
 import ProtectedAdminRoute from "../components/admin/ProtectedAdminRoute";
@@ -36,6 +39,7 @@ import GuestOrders from "../pages/admin/GuestOrders";
 import ReviewList from "../pages/admin/ReviewList";
 import Coupons from "../pages/admin/Coupons";
 import CouponForm from "../pages/admin/CouponForm";
+import ContactMessages from "../pages/admin/ContactMessages";
 
 function CustomerLayout({ children }) {
   return (
@@ -68,9 +72,9 @@ export default function AppRoutes() {
         <Route path="/coord-sets" element={<CustomerLayout><CoordSets /></CustomerLayout>}/>
         <Route path="/new-arrivals" element={<CustomerLayout><NewArrivals /></CustomerLayout>}/>
         <Route path="/best-sellers" element={<CustomerLayout><BestSellerPage /></CustomerLayout>}/>
-        
-        
-        
+        <Route path="/our-story" element={<CustomerLayout><OurStoryPage /></CustomerLayout>}/>
+        <Route path="/profile/orders" element={ <CustomerLayout><OrderHistory /></CustomerLayout>}/>
+        <Route path="/profile/orders/:orderId" element={ <CustomerLayout><OrderDetails /></CustomerLayout>}/>
         <Route path="/order-confirmation/:orderId" element={<CustomerLayout><OrderConfirmation /></CustomerLayout>}/>
 
         {/* ---------- Admin ---------- */}
@@ -92,7 +96,7 @@ export default function AppRoutes() {
           <Route path="products/edit/:id" element={<ProductForm />} />
 
           <Route path="inventory" element={<Inventory />} />
-
+          <Route path="messages" element={<ContactMessages />}/>
           <Route path="orders" element={<OrderList />} />
           <Route path="orders/:orderId" element={<OrderDetail />} />
 

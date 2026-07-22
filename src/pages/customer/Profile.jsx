@@ -1,7 +1,7 @@
 import { useAuth } from "../../context/AuthContext";
 import ProfileInfo from "../../components/customer/ProfileInfo";
 import AddressCard from "../../components/customer/AddressCard";
-import OrderHistory from "../../components/customer/OrderHistory";
+import OrderHistory from "./OrderHistory";
 import WishlistSection from "../../components/customer/WishlistSection";
 import MyCoupons from "../../components/customer/MyCoupons";
 import AccountSettings from "../../components/customer/AccountSettings";
