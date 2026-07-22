@@ -15,6 +15,8 @@ export default function ProductCard({
     setLiked(wishlist.some((item) => item.id === id));
   }, [id]);
 
+  // ---------------- WISHLIST ----------------
+
   const handleWishlist = () => {
     const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 
@@ -23,7 +25,6 @@ export default function ProductCard({
 
       localStorage.setItem("wishlist", JSON.stringify(updated));
 
-      // Update navbar count immediately
       window.dispatchEvent(new Event("storage"));
 
       setLiked(false);
@@ -37,11 +38,36 @@ export default function ProductCard({
 
       localStorage.setItem("wishlist", JSON.stringify(wishlist));
 
-      // Update navbar count immediately
       window.dispatchEvent(new Event("storage"));
 
       setLiked(true);
     }
+  };
+
+  // ---------------- CART ----------------
+
+  const handleCart = () => {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const existingProduct = cart.find((item) => item.id === id);
+
+    if (existingProduct) {
+      existingProduct.quantity += 1;
+    } else {
+      cart.push({
+        id,
+        image,
+        title,
+        price,
+        quantity: 1,
+      });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    window.dispatchEvent(new Event("storage"));
+
+    alert("Product added to cart!");
   };
 
   return (
@@ -103,7 +129,10 @@ export default function ProductCard({
             {price}
           </span>
 
-          <button className="w-12 h-12 rounded-full bg-[#465348] text-white flex items-center justify-center hover:bg-[#39443A] transition">
+          <button
+            onClick={handleCart}
+            className="w-12 h-12 rounded-full bg-[#465348] text-white flex items-center justify-center hover:bg-[#39443A] transition"
+          >
             <FiShoppingBag />
           </button>
 

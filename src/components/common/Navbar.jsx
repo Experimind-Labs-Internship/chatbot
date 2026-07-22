@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { logout } from "../../services/authService";
+import { useCart } from "../../context/CartContext";
 
 import {
   FiSearch,
@@ -28,7 +29,10 @@ export default function Navbar() {
   const [accountOpen, setAccountOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [wishlistCount, setWishlistCount] = useState(0);
+  
+  
   const { user } = useAuth();
+  const { totalItems } = useCart();
 
   
 
@@ -64,6 +68,8 @@ useEffect(() => {
     window.removeEventListener("storage", updateWishlist);
   };
 }, []);
+
+
 
   return (
     <>
@@ -266,17 +272,18 @@ useEffect(() => {
 )}
 </Link>
 
-              <button
-                onClick={() => setCartOpen(true)}
-                className="relative hover:text-[#C3A274] transition text-xl"
-              >
-                <FiShoppingBag />
+<Link
+  to="/cart"
+  className="relative hover:text-[#C3A274] transition text-xl"
+>
+  <FiShoppingBag />
 
-                <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-[#465348] text-white text-[10px] flex items-center justify-center">
-                  1
-                </span>
-
-              </button>
+  {totalItems > 0 && (
+    <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-[#465348] text-white text-[10px] flex items-center justify-center">
+      {totalItems}
+    </span>
+  )}
+</Link>
 
               <button
                 onClick={() => setMobileOpen(true)}
