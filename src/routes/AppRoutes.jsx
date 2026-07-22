@@ -29,6 +29,8 @@ import CustomerList from "../pages/admin/CustomerList";
 import CustomerDetail from "../pages/admin/CustomerDetail";
 import GuestOrders from "../pages/admin/GuestOrders";
 import ReviewList from "../pages/admin/ReviewList";
+import Coupons from "../pages/admin/Coupons";
+import CouponForm from "../pages/admin/CouponForm";
 
 function CustomerLayout({ children }) {
   return (
@@ -70,6 +72,9 @@ export default function AppRoutes() {
             </ProtectedAdminRoute>
           }
         >
+          <Route path="/admin/coupons" element={<Coupons />} />
+
+          <Route path="/admin/coupons/new" element={<CouponForm />} />
           <Route path="dashboard" element={<Dashboard />} />
 
           <Route path="products" element={<ProductList />} />
