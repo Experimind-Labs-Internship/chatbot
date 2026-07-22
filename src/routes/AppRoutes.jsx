@@ -24,6 +24,7 @@ import BestSellerPage from "../pages/customer/BestSellerPage";
 import OurStoryPage from "../pages/customer/OurStoryPage";
 import OrderDetails from "../pages/customer/OrderDetails";
 import OrderHistory from "../pages/customer/OrderHistory";
+import SearchResults from "../pages/customer/SearchResults";
 // Admin
 import AdminLayout from "../components/admin/AdminLayout";
 import ProtectedAdminRoute from "../components/admin/ProtectedAdminRoute";
@@ -76,6 +77,8 @@ export default function AppRoutes() {
         <Route path="/profile/orders" element={ <CustomerLayout><OrderHistory /></CustomerLayout>}/>
         <Route path="/profile/orders/:orderId" element={ <CustomerLayout><OrderDetails /></CustomerLayout>}/>
         <Route path="/order-confirmation/:orderId" element={<CustomerLayout><OrderConfirmation /></CustomerLayout>}/>
+        <Route
+  path="/search" element={ <CustomerLayout><SearchResults /></CustomerLayout> }/>
 
         {/* ---------- Admin ---------- */}
         <Route
