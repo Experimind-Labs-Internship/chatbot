@@ -1,68 +1,127 @@
 import {
   collection,
   addDoc,
+  getDocs,
+  getDoc,
   updateDoc,
   deleteDoc,
   doc,
-  getDocs,
   query,
   where,
-  orderBy,
   serverTimestamp,
 } from "firebase/firestore";
+
 import { db } from "./firebase";
 
-const reviewsRef = collection(db, "reviews");
+const reviewRef = collection(db, "reviews");
 
-export async function submitReview({ productId, orderId, userId, userName, rating, comment }) {
-  await addDoc(reviewsRef, {
-    productId,
-    orderId,
-    userId,
-    userName,
-    rating,
-    comment,
-    status: "pending", // pending | approved | rejected
-    adminReply: null,
+// ---------------- ADD REVIEW ----------------
+
+export async function addReview(review) {
+  await addDoc(reviewRef, {
+    ...review,
+    status: "pending",
+    adminReply: "",
     createdAt: serverTimestamp(),
   });
 }
 
+// ---------------- GET ALL REVIEWS ----------------
+
 export async function getAllReviews() {
-  const q = query(reviewsRef, orderBy("createdAt", "desc"));
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+  const snap = await getDocs(reviewRef);
+
+  return snap.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
 }
+
+// ---------------- GET PRODUCT REVIEWS ----------------
+
+export async function getProductReviews(productId) {
+  const q = query(
+    reviewRef,
+    where("productId", "==", productId)
+  );
+
+  const snap = await getDocs(q);
+
+  return snap.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+}
+
+// ---------------- GET APPROVED REVIEWS ----------------
 
 export async function getApprovedReviewsForProduct(productId) {
   const q = query(
-    reviewsRef,
+    reviewRef,
     where("productId", "==", productId),
-    where("status", "==", "approved")
+    where("approved", "==", true)
   );
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+
+  const snap = await getDocs(q);
+
+  return snap.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
 }
 
-export async function updateReviewStatus(reviewId, status) {
-  await updateDoc(doc(db, "reviews", reviewId), { status });
+// ---------------- APPROVE REVIEW ----------------
+
+export async function approveReview(reviewId) {
+  await updateDoc(doc(db, "reviews", reviewId), {
+    approved: true,
+  });
 }
 
-export async function replyToReview(reviewId, replyText) {
-  await updateDoc(doc(db, "reviews", reviewId), { adminReply: replyText });
-}
+// ---------------- DELETE REVIEW ----------------
 
 export async function deleteReview(reviewId) {
   await deleteDoc(doc(db, "reviews", reviewId));
 }
 
-// Check if this user already reviewed this product for this order
-export async function hasReviewed(orderId, productId) {
+// ---------------- CHECK ALREADY REVIEWED ----------------
+
+export async function hasReviewed(orderId, productId, userId) {
   const q = query(
-    reviewsRef,
+    reviewRef,
     where("orderId", "==", orderId),
-    where("productId", "==", productId)
+    where("productId", "==", productId),
+    where("userId", "==", userId)
   );
-  const snapshot = await getDocs(q);
-  return !snapshot.empty;
+
+  const snap = await getDocs(q);
+
+  return !snap.empty;
+}
+
+// ---------------- GET REVIEW BY ID ----------------
+
+export async function getReviewById(reviewId) {
+  const snap = await getDoc(doc(db, "reviews", reviewId));
+
+  if (!snap.exists()) return null;
+
+  return {
+    id: snap.id,
+    ...snap.data(),
+  };
+}
+// ---------------- REPLY TO REVIEW ----------------
+
+export async function replyToReview(reviewId, reply) {
+  await updateDoc(doc(db, "reviews", reviewId), {
+    adminReply: reply,
+  });
+}
+// ---------------- UPDATE REVIEW STATUS ----------------
+
+export async function updateReviewStatus(reviewId, status) {
+  await updateDoc(doc(db, "reviews", reviewId), {
+    status,
+  });
 }

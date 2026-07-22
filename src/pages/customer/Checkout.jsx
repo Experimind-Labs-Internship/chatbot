@@ -76,7 +76,7 @@ export default function Checkout() {
         );
       }
 
-      clearCart();
+      await clearCart();
       navigate(`/order-confirmation/${orderId}`);
     } catch (err) {
       setError("Something went wrong placing your order: " + err.message);

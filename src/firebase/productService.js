@@ -41,13 +41,20 @@ export async function updateProduct(id, productData) {
 // ---------------- UPDATE PRODUCT STOCK ----------------
 
 export async function updateProductStock(productId, size, quantity) {
+  console.log("productId:", productId);
+  console.log("size:", size);
+  console.log("quantity:", quantity);
+
   const productRef = doc(db, "products", productId);
 
   await updateDoc(productRef, {
     [`sizes.${size}.stock`]: increment(-quantity),
     updatedAt: serverTimestamp(),
   });
+
+  console.log("Stock updated successfully!");
 }
+ 
 
 // ---------------- DELETE PRODUCT ----------------
 

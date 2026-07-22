@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { FiHeart, FiShoppingBag, FiTruck, FiRefreshCw } from "react-icons/fi";
 
 import { getProductById, SIZE_OPTIONS } from "../../firebase/productService";
-import { getApprovedReviewsForProduct } from "../../firebase/reviewService";
+import { getProductReviews } from "../../firebase/reviewService";
 import { useCart } from "../../context/CartContext";
 import Loader from "../../components/common/Loader";
 
@@ -26,7 +26,7 @@ export default function ProductDetails() {
     async function load() {
       const [productData, reviewData] = await Promise.all([
         getProductById(id),
-        getApprovedReviewsForProduct(id),
+        getProductReviews(id),
       ]);
 
       if (!isMounted) return;
@@ -304,7 +304,9 @@ export default function ProductDetails() {
 
                 <p className="text-xs text-[#8A8178] mb-3">{formatDate(review.createdAt)}</p>
 
-                <p className="text-[#4A453F] leading-7">{review.comment}</p>
+                <p className="text-[#4A453F] leading-7">
+                  {review.review}
+                </p>
 
                 {review.adminReply && (
                   <div className="bg-[#F8F5F1] rounded-xl p-4 mt-4">

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Loader from "../../components/common/Loader";
 import { getOrderById } from "../../firebase/orderService";
+import ReviewForm from "../../components/customer/ReviewForm";
 
 const steps = [
   "Processing",
@@ -172,26 +173,33 @@ export default function OrderDetails() {
 
         {/* Shipping */}
 
-        <div className="bg-white rounded-3xl shadow-sm mt-8 p-8">
+<div className="bg-white rounded-3xl shadow-sm mt-8 p-8">
 
-          <h2 className="text-2xl font-serif mb-6">
-            Shipping Address
-          </h2>
+  <h2 className="text-2xl font-serif mb-6">
+    Shipping Address
+  </h2>
 
-          <p>{order.shippingAddress?.name}</p>
+  <p className="font-semibold text-lg">
+    {order.shippingAddress?.fullName}
+  </p>
 
-          <p>{order.shippingAddress?.phone}</p>
+  <p className="mt-2">
+    {order.shippingAddress?.phone}
+  </p>
 
-          <p>{order.shippingAddress?.address}</p>
+  <p className="mt-2">
+    {order.shippingAddress?.line1}
+  </p>
 
-          <p>
-            {order.shippingAddress?.city},{" "}
-            {order.shippingAddress?.state}
-          </p>
+  <p className="mt-2">
+    {order.shippingAddress?.city}, {order.shippingAddress?.state}
+  </p>
 
-          <p>{order.shippingAddress?.pincode}</p>
+  <p className="mt-2">
+    {order.shippingAddress?.pincode}
+  </p>
 
-        </div>
+</div>
 
         {/* Payment */}
 
@@ -233,7 +241,18 @@ export default function OrderDetails() {
 
           </div>
 
-        </div>
+                </div>
+
+        {/* Review Section */}
+
+        {order.status === "Delivered" && (
+
+          <ReviewForm
+            productId={order.items?.[0]?.productId}
+            orderId={order.id}
+          />
+
+        )}
 
       </div>
 

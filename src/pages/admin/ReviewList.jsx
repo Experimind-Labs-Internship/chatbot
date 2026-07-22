@@ -116,7 +116,7 @@ export default function ReviewList() {
                 <span className="text-yellow-500">{"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}</span>
               </div>
 
-              <p className="text-[#4A453F] leading-6 mb-4">{review.comment}</p>
+              <p className="text-[#4A453F] leading-6 mb-4">{review.review}</p>
 
               {review.adminReply && (
                 <div className="bg-[#F8F5F1] rounded-xl p-4 mb-4">
