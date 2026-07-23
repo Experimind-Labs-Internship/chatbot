@@ -10,6 +10,8 @@ export async function sendOrderStatusEmail({
   order_id,
   status,
   message,
+  products,
+  total,
 }) {
   return emailjs.send(
     SERVICE_ID,
@@ -20,6 +22,8 @@ export async function sendOrderStatusEmail({
       order_id,
       status,
       message,
+      products,
+      total,
     },
     PUBLIC_KEY
   );

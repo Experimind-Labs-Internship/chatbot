@@ -21,6 +21,31 @@ export default function OrderDetail() {
 
   
  await updateOrderStatus(orderId, newStatus);
+ const productHtml = order.items
+  .map(
+    (item) => `
+<tr>
+  <td style="padding:12px;border-bottom:1px solid #ddd;">
+    <img
+      src="${item.image}"
+      width="70"
+      style="border-radius:8px;"
+    />
+  </td>
+
+  <td style="padding:12px;border-bottom:1px solid #ddd;">
+    <strong>${item.name}</strong><br>
+    Size: ${item.size}<br>
+    Qty: ${item.quantity}
+  </td>
+
+  <td style="padding:12px;border-bottom:1px solid #ddd;">
+    ₹${item.price}
+  </td>
+</tr>
+`
+  )
+  .join("");
  console.log("Sending email with:", {
   email: order.shippingAddress?.email || order.guestEmail,
   customer_name: order.shippingAddress?.fullName,
@@ -32,10 +57,13 @@ export default function OrderDetail() {
   console.log("Sending email...");
 
   const result = await sendOrderStatusEmail({
-    email: order.shippingAddress.email,
-    customer_name: order.shippingAddress.fullName,
-    order_id: order.id,
-    status: newStatus,
+  email: order.shippingAddress.email,
+  customer_name: order.shippingAddress.fullName,
+  order_id: order.id,
+  status: newStatus,
+
+  products: productHtml,
+  total: order.total,
     message:
       newStatus === "Confirmed"
         ? "Great news! Your order has been confirmed and is now being prepared."
