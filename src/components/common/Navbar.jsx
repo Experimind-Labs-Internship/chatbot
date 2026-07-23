@@ -498,17 +498,17 @@ useEffect(() => {
   </Link>
 
   <Link to="/wishlist" onClick={() => setMobileOpen(false)}>
-    ❤️ Wishlist
+    Wishlist ❤️ 
   </Link>
 
   <Link to="/cart" onClick={() => setMobileOpen(false)}>
-    🛍️ Cart
+    Cart 🛍️ 
   </Link>
 
   {user ? (
     <>
       <Link to="/profile" onClick={() => setMobileOpen(false)}>
-        👤 My Profile
+         My Profile
       </Link>
 
       <button
