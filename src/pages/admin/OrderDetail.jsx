@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
-import { getOrderById, updateOrderStatus, ORDER_STATUSES } from "../../firebase/orderService";
+import {
+  getOrderById,
+  updateOrderStatus,
+  ORDER_STATUSES,
+} from "../../firebase/orderService";
 import { sendOrderStatusEmail } from "../../firebase/emailService";
+import { generateInvoice } from "../../utils/generateInvoice";
 export default function OrderDetail() {
   const { orderId } = useParams();
   const [order, setOrder] = useState(null);
@@ -132,9 +137,16 @@ export default function OrderDetail() {
           {ORDER_STATUSES.map((status) => (
             <option key={status} value={status}>
               {status}
+              
             </option>
           ))}
         </select>
+        <button
+  onClick={() => generateInvoice(order)}
+  className="ml-3 px-5 py-2.5 rounded-full bg-[#465348] text-white hover:bg-[#39443A]"
+>
+  🧾 Download Invoice
+</button>
       </div>
 
       <div className="grid grid-cols-3 gap-6">
