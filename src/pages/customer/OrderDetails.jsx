@@ -116,6 +116,54 @@ async function handleCancelOrder() {
 
         </div>
 
+        {/* Order Tracking */}
+
+{(order.courier || order.trackingId) && (
+  <div className="bg-white rounded-3xl shadow-sm mt-8 p-8">
+
+    <h2 className="text-2xl font-serif mb-6">
+      🚚 Order Tracking
+    </h2>
+
+    <div className="grid md:grid-cols-3 gap-6">
+
+      <div>
+        <p className="text-[#8A8178] text-sm">
+          Courier Partner
+        </p>
+
+        <h3 className="font-semibold text-lg mt-1">
+          {order.courier}
+        </h3>
+      </div>
+
+      <div>
+        <p className="text-[#8A8178] text-sm">
+          Tracking ID
+        </p>
+
+        <h3 className="font-semibold text-lg mt-1">
+          {order.trackingId}
+        </h3>
+      </div>
+
+      <div>
+        <p className="text-[#8A8178] text-sm">
+          Estimated Delivery
+        </p>
+
+        <h3 className="font-semibold text-lg mt-1">
+          {order.estimatedDelivery?.toDate
+            ? order.estimatedDelivery.toDate().toLocaleDateString("en-IN")
+            : "-"}
+        </h3>
+      </div>
+
+    </div>
+
+  </div>
+)}
+
         {/* Timeline */}
 
         <div className="bg-white rounded-3xl shadow-sm mt-8 p-8">

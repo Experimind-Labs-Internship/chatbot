@@ -101,11 +101,27 @@ export async function getAllOrders() {
 
 export async function updateOrderStatus(
   orderId,
-  status
+  status,
+  trackingData = {}
 ) {
   await updateDoc(doc(db, "orders", orderId), {
     status,
     updatedAt: serverTimestamp(),
+
+    courier: trackingData.courier || "",
+    trackingId: trackingData.trackingId || "",
+    estimatedDelivery:
+      trackingData.estimatedDelivery || null,
+
+    shippedAt:
+      status === "Shipped"
+        ? serverTimestamp()
+        : null,
+
+    deliveredAt:
+      status === "Delivered"
+        ? serverTimestamp()
+        : null,
   });
 }
 

@@ -9,6 +9,13 @@ export async function sendOrderStatusEmail({
   customer_name,
   order_id,
   status,
+
+  // Tracking
+  courier,
+  trackingId,
+  estimatedDelivery,
+
+  // Order
   message,
   products,
   total,
@@ -21,6 +28,13 @@ export async function sendOrderStatusEmail({
       customer_name,
       order_id,
       status,
+
+      // Tracking
+      courier,
+      trackingId,
+      estimatedDelivery,
+
+      // Order
       message,
       products,
       total,
