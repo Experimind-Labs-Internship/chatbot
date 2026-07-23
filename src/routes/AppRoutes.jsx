@@ -47,6 +47,8 @@ import Coupons from "../pages/admin/Coupons";
 import CouponForm from "../pages/admin/CouponForm";
 import ContactMessages from "../pages/admin/ContactMessages";
 import AdminReturns from "../pages/admin/Returns";
+import Reports from "../pages/admin/Reports";
+import Newsletter from "../pages/admin/Newsletter";
 
 function CustomerLayout({ children }) {
   return (
@@ -124,6 +126,10 @@ export default function AppRoutes() {
   <Route path="coupons/new" element={<CouponForm />} />
 
   <Route path="returns" element={<AdminReturns />} />
+
+  <Route path="reports" element={<Reports />} />
+
+  <Route path="newsletter" element={<Newsletter />} />
 </Route>
 
 </Routes>
