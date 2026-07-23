@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
+import ForgotPassword from "../pages/customer/ForgotPassword";
 
 // Customer pages
 import Profile from "../pages/customer/Profile";
@@ -49,6 +50,7 @@ import ContactMessages from "../pages/admin/ContactMessages";
 import AdminReturns from "../pages/admin/Returns";
 import Reports from "../pages/admin/Reports";
 import Newsletter from "../pages/admin/Newsletter";
+import CancelledOrders from "../pages/admin/CancelledOrders";
 
 function CustomerLayout({ children }) {
   return (
@@ -91,6 +93,8 @@ export default function AppRoutes() {
         <Route path="/returns" element={ <CustomerLayout><Returns /></CustomerLayout>}/>
         <Route path="/privacy" element={<CustomerLayout><PrivacyPolicy /></CustomerLayout>}/>
         <Route path="/terms" element={ <CustomerLayout><Terms /></CustomerLayout>}/>
+        <Route
+  path="/forgot-password" element={ <CustomerLayout><ForgotPassword /></CustomerLayout>}/>
 
         {/* ---------- Admin ---------- */}
          {/* ---------- Admin ---------- */}
@@ -103,6 +107,11 @@ export default function AppRoutes() {
     </ProtectedAdminRoute>
   }
 >
+  <Route
+  path="cancelled-orders"
+  element={<CancelledOrders />}
+/>
+ 
   <Route path="dashboard" element={<Dashboard />} />
 
   <Route path="products" element={<ProductList />} />

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Loader from "../../components/common/Loader";
-import { getOrderById } from "../../firebase/orderService";
+import {getOrderById,cancelOrder,} from "../../firebase/orderService";
 import ReviewForm from "../../components/customer/ReviewForm";
 import ReturnRequestForm from "../../components/customer/ReturnRequestForm";
 
@@ -19,20 +19,49 @@ export default function OrderDetails() {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [cancelReason, setCancelReason] = useState("");
+  const [showCancel, setShowCancel] = useState(false);
+
   useEffect(() => {
-    loadOrder();
-  }, []);
+  loadOrder();
+}, []);
 
-  async function loadOrder() {
-    try {
-      const data = await getOrderById(orderId);
-      setOrder(data);
-    } catch (err) {
-      console.error(err);
-    }
-
-    setLoading(false);
+async function loadOrder() {
+  try {
+    const data = await getOrderById(orderId);
+    setOrder(data);
+  } catch (err) {
+    console.error(err);
   }
+
+  setLoading(false);
+}
+
+async function handleCancelOrder() {
+  if (!cancelReason) {
+    alert("Please select a cancellation reason.");
+    return;
+  }
+
+  try {
+    await cancelOrder(order.id, cancelReason);
+
+    setOrder({
+      ...order,
+      status: "Cancelled",
+      cancelReason,
+    });
+
+    setShowCancel(false);
+
+    alert("Order cancelled successfully.");
+  } catch (err) {
+    console.error(err);
+    alert("Failed to cancel order.");
+  }
+}
+
+
 
   if (loading) return <Loader />;
 
@@ -42,6 +71,7 @@ export default function OrderDetails() {
         <h2 className="text-3xl font-serif">
           Order not found
         </h2>
+        
       </main>
     );
   }
@@ -103,14 +133,16 @@ export default function OrderDetails() {
               >
 
                 <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center text-white
-                  ${
-                    index <= currentStep
-                      ? "bg-[#465348]"
-                      : "bg-gray-300"
-                  }`}
+                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold
+                    ${
+                      index < currentStep
+                        ? "bg-[#465348] text-white"
+                        : index === currentStep
+                        ? "bg-[#B89B72] text-white"
+                        : "bg-gray-200 text-gray-500"
+                    }`}
                 >
-                  ✓
+                    {index < currentStep ? "✓" : index + 1}
                 </div>
 
                 <p className="mt-3 text-sm text-center">
@@ -126,6 +158,30 @@ export default function OrderDetails() {
         </div>
 
         {/* Products */}
+
+        {(order.status === "Processing" ||
+  order.status === "Confirmed") && (
+  <div className="bg-white rounded-3xl shadow-sm mt-8 p-8">
+    <button
+      onClick={() => setShowCancel(true)}
+      className="px-6 py-3 rounded-full bg-red-600 text-white hover:bg-red-700"
+    >
+      Cancel Order
+    </button>
+  </div>
+)}
+
+{order.status === "Cancelled" && (
+  <div className="bg-white rounded-3xl shadow-sm mt-8 p-8">
+    <h3 className="text-xl font-semibold text-red-600">
+      Order Cancelled
+    </h3>
+
+    <p className="mt-3">
+      <strong>Reason:</strong> {order.cancelReason}
+    </p>
+  </div>
+)}
 
         <div className="bg-white rounded-3xl shadow-sm mt-8 p-8">
 
@@ -248,21 +304,60 @@ export default function OrderDetails() {
 
           </div>
 
-                </div>
+                     </div>
 
         {/* Review Section */}
 
         {order.status === "Delivered" && (
-
           <ReviewForm
             productId={order.items?.[0]?.productId}
             orderId={order.id}
           />
-
         )}
 
       </div>
 
-    </main>
-  );
+      {showCancel && (
+  <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+    <div className="bg-white rounded-2xl p-8 w-[420px]">
+
+      <h2 className="text-2xl font-semibold mb-6">
+        Cancel Order
+      </h2>
+
+      <select
+        value={cancelReason}
+        onChange={(e) => setCancelReason(e.target.value)}
+        className="w-full border rounded-xl p-3"
+      >
+        <option value="">Select Reason</option>
+        <option value="Ordered by mistake">Ordered by mistake</option>
+        <option value="Found a better price">Found a better price</option>
+        <option value="Delivery is too late">Delivery is too late</option>
+        <option value="Changed my mind">Changed my mind</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <div className="flex justify-end gap-3 mt-6">
+        <button
+          onClick={() => setShowCancel(false)}
+          className="px-5 py-2 border rounded-full"
+        >
+          Close
+        </button>
+
+        <button
+          onClick={handleCancelOrder}
+          className="px-5 py-2 bg-red-600 text-white rounded-full"
+        >
+          Confirm Cancel
+        </button>
+      </div>
+
+    </div>
+  </div>
+)}
+
+</main>
+);
 }

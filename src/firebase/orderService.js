@@ -108,3 +108,32 @@ export async function updateOrderStatus(
     updatedAt: serverTimestamp(),
   });
 }
+
+
+export async function cancelOrder(orderId, reason) {
+  await updateDoc(doc(db, "orders", orderId), {
+    status: "Cancelled",
+    cancelReason: reason,
+    cancelledAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+}
+
+/* ===============================
+   GET CANCELLED ORDERS
+================================ */
+
+export async function getCancelledOrders() {
+  const q = query(
+    orderRef,
+    where("status", "==", "Cancelled"),
+    orderBy("cancelledAt", "desc")
+  );
+
+  const snapshot = await getDocs(q);
+
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+}

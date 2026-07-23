@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { subscribeToNewsletter } from "../../firebase/newsletterService";
 import {
   FiInstagram,
   FiFacebook,
@@ -8,6 +10,29 @@ import {
 } from "react-icons/fi";
 
 export default function Footer() {
+  const [email, setEmail] = useState("");
+const [loading, setLoading] = useState(false);
+
+const handleSubscribe = async () => {
+  if (!email.trim()) {
+    alert("Please enter your email.");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    await subscribeToNewsletter(email);
+
+    alert("Subscribed successfully!");
+
+    setEmail("");
+  } catch (err) {
+    alert(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <footer className="bg-[#22201D] text-white">
 
@@ -176,11 +201,17 @@ export default function Footer() {
             <input
               type="email"
               placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="bg-transparent border border-gray-600 px-5 py-3 rounded-l-full w-full lg:w-80 outline-none"
             />
 
-            <button className="bg-[#465348] hover:bg-[#39443A] px-8 rounded-r-full transition">
-              Subscribe
+            <button
+              onClick={handleSubscribe}
+              disabled={loading}
+              className="bg-[#465348] hover:bg-[#39443A] px-8 rounded-r-full transition disabled:opacity-60"
+            >
+              {loading ? "Subscribing..." : "Subscribe"}
             </button>
 
           </div>
