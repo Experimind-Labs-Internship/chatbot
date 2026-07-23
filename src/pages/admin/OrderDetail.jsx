@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { getOrderById, updateOrderStatus, ORDER_STATUSES } from "../../firebase/orderService";
-
+import { sendOrderStatusEmail } from "../../firebase/emailService";
 export default function OrderDetail() {
   const { orderId } = useParams();
   const [order, setOrder] = useState(null);
@@ -17,11 +17,52 @@ export default function OrderDetail() {
   }, [orderId]);
 
   const handleStatusChange = async (newStatus) => {
-    setUpdating(true);
-    await updateOrderStatus(orderId, newStatus);
-    setOrder((prev) => ({ ...prev, status: newStatus }));
-    setUpdating(false);
-  };
+  setUpdating(true);
+
+  
+ await updateOrderStatus(orderId, newStatus);
+ console.log("Sending email with:", {
+  email: order.shippingAddress?.email || order.guestEmail,
+  customer_name: order.shippingAddress?.fullName,
+  order_id: order.id,
+  status: newStatus,
+});
+
+  try {
+  console.log("Sending email...");
+
+  const result = await sendOrderStatusEmail({
+    email: order.shippingAddress.email,
+    customer_name: order.shippingAddress.fullName,
+    order_id: order.id,
+    status: newStatus,
+    message:
+      newStatus === "Confirmed"
+        ? "Great news! Your order has been confirmed and is now being prepared."
+        : newStatus === "Packed"
+        ? "Your order has been packed and is ready for shipment."
+        : newStatus === "Shipped"
+        ? "Your order has been shipped and is on its way to you."
+        : newStatus === "Delivered"
+        ? "Your order has been delivered. We hope you enjoy your purchase!"
+        : newStatus === "Cancelled"
+        ? "Your order has been cancelled."
+        : "",
+  });
+
+  console.log("SUCCESS", result);
+
+} catch (err) {
+  console.error("EMAIL ERROR", err);
+}
+
+  setOrder((prev) => ({
+    ...prev,
+    status: newStatus,
+  }));
+
+  setUpdating(false);
+};
 
   const formatDate = (timestamp) => {
     if (!timestamp?.toDate) return "-";

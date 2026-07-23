@@ -16,6 +16,11 @@ export function AdminAuthProvider({ children }) {
 
       if (currentUser) {
         const userRole = await getUserRole(currentUser.uid);
+
+        console.log("Logged in email:", currentUser.email);
+        console.log("UID:", currentUser.uid);
+        console.log("Role from Firestore:", userRole);
+
         setRole(userRole);
       } else {
         setRole(null);

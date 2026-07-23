@@ -14,19 +14,22 @@ export default function Checkout() {
   const total = state?.total ?? subtotal;
   const couponCode = state?.appliedCoupon?.code || null;
 
+  const user = auth.currentUser;
+
   const [address, setAddress] = useState({
-    fullName: "",
-    phone: "",
-    line1: "",
-    city: "",
-    state: "",
-    pincode: "",
-  });
+  fullName: "",
+  email: user?.email || "",
+  phone: "",
+  line1: "",
+  city: "",
+  state: "",
+  pincode: "",
+});
   const [guestEmail, setGuestEmail] = useState("");
   const [placing, setPlacing] = useState(false);
   const [error, setError] = useState("");
 
-  const user = auth.currentUser;
+  
 
   const handleChange = (field, value) => {
     setAddress((prev) => ({ ...prev, [field]: value }));
@@ -60,7 +63,10 @@ export default function Checkout() {
         userId: user?.uid || null,
         guestEmail: user ? null : guestEmail,
         items,
-        shippingAddress: address,
+        shippingAddress: {
+          ...address,
+          email: user?.email || guestEmail,
+        },
         subtotal,
         discount,
         total,
@@ -113,7 +119,7 @@ export default function Checkout() {
               />
             )}
 
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className={`grid ${user ? "grid-cols-3" : "grid-cols-2"} gap-4 mb-4`}>
               <input
                 type="text"
                 placeholder="Full Name"
@@ -122,6 +128,15 @@ export default function Checkout() {
                 className="px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
                 required
               />
+              {user && (
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={address.email}
+                  readOnly
+                  className="px-4 py-3 rounded-xl border border-[#ECE8E3] bg-gray-50"
+                />
+              )}
               <input
                 type="tel"
                 placeholder="Phone Number"
