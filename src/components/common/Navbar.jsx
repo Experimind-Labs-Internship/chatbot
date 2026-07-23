@@ -479,52 +479,61 @@ useEffect(() => {
 
             </div>
 
-            <nav className="flex flex-col p-8 gap-8 text-lg">
+           <nav className="flex flex-col p-8 gap-6 text-lg">
 
-              <Link
-                to="/"
-                onClick={() => setMobileOpen(false)}
-              >
-                Home
-              </Link>
+  <Link to="/" onClick={() => setMobileOpen(false)}>
+    Home
+  </Link>
 
-              <Link
-                to="/shop"
-                onClick={() => setMobileOpen(false)}
-              >
-                Shop
-              </Link>
+  <Link to="/shop" onClick={() => setMobileOpen(false)}>
+    Shop
+  </Link>
 
-              <Link
-                to="/our-story"
-                onClick={() => setMobileOpen(false)}
-              >
-                Our Story
-              </Link>
+  <Link to="/our-story" onClick={() => setMobileOpen(false)}>
+    Our Story
+  </Link>
 
-              <Link
-                to="/contact"
-                onClick={() => setMobileOpen(false)}
-              >
-                Contact
-              </Link>
+  <Link to="/contact" onClick={() => setMobileOpen(false)}>
+    Contact
+  </Link>
 
-              <Link
-                to="/wishlist"
-                onClick={() => setMobileOpen(false)}
-              >
-                Wishlist
-              </Link>
+  <Link to="/wishlist" onClick={() => setMobileOpen(false)}>
+    ❤️ Wishlist
+  </Link>
 
-              <Link
-                to="/login"
-                onClick={() => setMobileOpen(false)}
-              >
-                Login
-              </Link>
+  <Link to="/cart" onClick={() => setMobileOpen(false)}>
+    🛍️ Cart
+  </Link>
 
-            </nav>
+  {user ? (
+    <>
+      <Link to="/profile" onClick={() => setMobileOpen(false)}>
+        👤 My Profile
+      </Link>
 
+      <button
+        onClick={async () => {
+          await logout();
+          setMobileOpen(false);
+        }}
+        className="text-left text-red-600"
+      >
+        Logout
+      </button>
+    </>
+  ) : (
+    <>
+      <Link to="/login" onClick={() => setMobileOpen(false)}>
+        Login
+      </Link>
+
+      <Link to="/signup" onClick={() => setMobileOpen(false)}>
+        Create Account
+      </Link>
+    </>
+  )}
+
+</nav>
           </div>
 
         </div>

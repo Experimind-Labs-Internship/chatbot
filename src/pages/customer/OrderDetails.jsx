@@ -182,17 +182,21 @@ async function handleCancelOrder() {
               >
 
                 <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold
-                    ${
-                      index < currentStep
-                        ? "bg-[#465348] text-white"
-                        : index === currentStep
-                        ? "bg-[#B89B72] text-white"
-                        : "bg-gray-200 text-gray-500"
-                    }`}
-                >
-                    {index < currentStep ? "✓" : index + 1}
-                </div>
+  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold
+  ${
+    index < currentStep ||
+    (order.status === "Delivered" && index === currentStep)
+      ? "bg-[#465348] text-white"
+      : index === currentStep
+      ? "bg-[#B89B72] text-white"
+      : "bg-gray-200 text-gray-500"
+  }`}
+>
+  {index < currentStep ||
+  (order.status === "Delivered" && index === currentStep)
+    ? "✓"
+    : index + 1}
+</div>
 
                 <p className="mt-3 text-sm text-center">
                   {step}
