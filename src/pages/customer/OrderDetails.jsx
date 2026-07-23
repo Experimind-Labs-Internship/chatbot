@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import Loader from "../../components/common/Loader";
 import { getOrderById } from "../../firebase/orderService";
 import ReviewForm from "../../components/customer/ReviewForm";
+import ReturnRequestForm from "../../components/customer/ReturnRequestForm";
 
 const steps = [
   "Processing",
@@ -164,6 +165,12 @@ export default function OrderDetails() {
                 </p>
 
               </div>
+              {order.status === "Delivered" && (
+                <ReturnRequestForm
+                    order={order}
+                    product={item}
+                />
+                )}
 
             </div>
 

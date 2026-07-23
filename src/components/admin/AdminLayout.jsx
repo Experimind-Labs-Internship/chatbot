@@ -13,6 +13,7 @@ import {
   FiBarChart2,
   FiLogOut,
   FiMessageSquare,
+  FiRotateCcw,
 } from "react-icons/fi";
 
 const links = [
@@ -20,6 +21,7 @@ const links = [
   { to: "/admin/products", label: "Products", icon: FiBox },
   { to: "/admin/inventory", label: "Inventory", icon: FiPackage },
   { to: "/admin/orders", label: "Orders", icon: FiShoppingBag },
+  { to: "/admin/returns", label: "Returns", icon: FiRotateCcw },
   { to: "/admin/customers", label: "Customers", icon: FiUsers },
   { to: "/admin/messages", label: "Messages", icon: FiMessageSquare },
   { to: "/admin/reviews", label: "Reviews", icon: FiStar },

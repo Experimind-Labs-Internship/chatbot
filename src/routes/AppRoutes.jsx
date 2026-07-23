@@ -46,6 +46,7 @@ import ReviewList from "../pages/admin/ReviewList";
 import Coupons from "../pages/admin/Coupons";
 import CouponForm from "../pages/admin/CouponForm";
 import ContactMessages from "../pages/admin/ContactMessages";
+import AdminReturns from "../pages/admin/Returns";
 
 function CustomerLayout({ children }) {
   return (
@@ -90,33 +91,43 @@ export default function AppRoutes() {
         <Route path="/terms" element={ <CustomerLayout><Terms /></CustomerLayout>}/>
 
         {/* ---------- Admin ---------- */}
-          <Route path="/admin" element={ <ProtectedAdminRoute> <AdminLayout /></ProtectedAdminRoute>}/>
-          <Route path="/admin/coupons" element={<Coupons />} />
+         {/* ---------- Admin ---------- */}
 
-          <Route path="/admin/coupons/new" element={<CouponForm />} />
-          <Route path="dashboard" element={<Dashboard />} />
+<Route
+  path="/admin"
+  element={
+    <ProtectedAdminRoute>
+      <AdminLayout />
+    </ProtectedAdminRoute>
+  }
+>
+  <Route path="dashboard" element={<Dashboard />} />
 
-          <Route path="products" element={<ProductList />} />
-          <Route path="products/add" element={<ProductForm />} />
-          <Route path="products/edit/:id" element={<ProductForm />} />
+  <Route path="products" element={<ProductList />} />
+  <Route path="products/add" element={<ProductForm />} />
+  <Route path="products/edit/:id" element={<ProductForm />} />
 
-          <Route path="inventory" element={<Inventory />} />
-          <Route path="messages" element={<ContactMessages />}/>
-          <Route path="orders" element={<OrderList />} />
-          <Route path="orders/:orderId" element={<OrderDetail />} />
+  <Route path="inventory" element={<Inventory />} />
 
-          {/* IMPORTANT: "customers/guests" must stay above
-              "customers/:customerId" or the router will treat
-              "guests" as a customerId param */}
-          <Route path="customers" element={<CustomerList />} />
-          <Route path="customers/guests" element={<GuestOrders />} />
-          <Route path="customers/:customerId" element={<CustomerDetail />} />
+  <Route path="orders" element={<OrderList />} />
+  <Route path="orders/:orderId" element={<OrderDetail />} />
 
-          <Route path="reviews" element={<ReviewList />} />
+  <Route path="customers" element={<CustomerList />} />
+  <Route path="customers/guests" element={<GuestOrders />} />
+  <Route path="customers/:customerId" element={<CustomerDetail />} />
 
-          {/* Coupons, Newsletter, Reports
-              routes will be added here as we build each module */}
-        </Routes>
+  <Route path="messages" element={<ContactMessages />} />
+
+  <Route path="reviews" element={<ReviewList />} />
+
+  <Route path="coupons" element={<Coupons />} />
+  <Route path="coupons/new" element={<CouponForm />} />
+
+  <Route path="returns" element={<AdminReturns />} />
+</Route>
+
+</Routes>
+        
     </BrowserRouter>
   );
 }

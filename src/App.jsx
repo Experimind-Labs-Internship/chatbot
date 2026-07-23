@@ -5,6 +5,7 @@ import Coupons from "./pages/admin/Coupons";
 import CouponForm from "./pages/admin/CouponForm";
 import { AuthProvider } from "./context/AuthContext";
 
+
 function App() {
   return (
     <AuthProvider>
