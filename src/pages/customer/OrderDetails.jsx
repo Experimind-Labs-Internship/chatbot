@@ -4,6 +4,7 @@ import Loader from "../../components/common/Loader";
 import {getOrderById,cancelOrder,} from "../../firebase/orderService";
 import ReviewForm from "../../components/customer/ReviewForm";
 import ReturnRequestForm from "../../components/customer/ReturnRequestForm";
+import { generateInvoice } from "../../utils/generateInvoice";
 
 const steps = [
   "Processing",
@@ -266,54 +267,59 @@ async function handleCancelOrder() {
 
         {/* Payment */}
 
-        <div className="bg-white rounded-3xl shadow-sm mt-8 p-8">
+<div className="bg-white rounded-3xl shadow-sm mt-8 p-8">
 
-          <h2 className="text-2xl font-serif mb-6">
-            Payment Details
-          </h2>
+  <h2 className="text-2xl font-serif mb-6">
+    Payment Details
+  </h2>
 
-          <div className="flex justify-between mb-4">
+  <div className="flex justify-between mb-4">
+    <span>Payment Method</span>
+    <span>{order.paymentMethod || "Online"}</span>
+  </div>
 
-            <span>Payment Method</span>
+  <div className="flex justify-between mb-4">
+    <span>Subtotal</span>
+    <span>₹{order.subtotal?.toLocaleString()}</span>
+  </div>
 
-            <span>
-              {order.paymentMethod}
-            </span>
+  {order.discount > 0 && (
+    <div className="flex justify-between mb-4 text-green-700">
+      <span>Discount</span>
+      <span>-₹{order.discount.toLocaleString()}</span>
+    </div>
+  )}
 
-          </div>
+  <div className="flex justify-between border-t pt-4">
+    <span className="font-semibold text-xl">
+      Total
+    </span>
 
-          <div className="flex justify-between mb-4">
+    <span className="font-semibold text-xl">
+      ₹{order.total.toLocaleString()}
+    </span>
+  </div>
 
-            <span>Subtotal</span>
+  {/* Invoice Button */}
+  {order.status === "Delivered" && (
+    <button
+      onClick={() => generateInvoice(order)}
+      className="w-full mt-8 py-3 rounded-full bg-[#465348] text-white hover:bg-[#39443A] transition"
+    >
+      🧾 Download Invoice
+    </button>
+  )}
 
-            <span>
-              ₹{order.total}
-            </span>
+</div>
 
-          </div>
+{/* Review Section */}
 
-          <div className="flex justify-between">
-
-            <span className="font-semibold text-xl">
-              Total
-            </span>
-
-            <span className="font-semibold text-xl">
-              ₹{order.total}
-            </span>
-
-          </div>
-
-                     </div>
-
-        {/* Review Section */}
-
-        {order.status === "Delivered" && (
-          <ReviewForm
-            productId={order.items?.[0]?.productId}
-            orderId={order.id}
-          />
-        )}
+{order.status === "Delivered" && (
+  <ReviewForm
+    productId={order.items?.[0]?.productId}
+    orderId={order.id}
+  />
+)}
 
       </div>
 
