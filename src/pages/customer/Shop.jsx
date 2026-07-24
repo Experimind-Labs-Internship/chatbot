@@ -11,8 +11,11 @@ import { getAllProducts } from "../../firebase/productService";
 import ProductCard from "../../components/customer/ProductCard";
 
 export default function Shop() {
-  const [category, setCategory] = useState("All");
+const [category, setCategory] = useState("All");
 const [products, setProducts] = useState([]);
+
+const [searchOpen, setSearchOpen] = useState(false);
+const [searchTerm, setSearchTerm] = useState("");
 
 useEffect(() => {
   async function loadProducts() {
@@ -27,14 +30,19 @@ useEffect(() => {
   loadProducts();
 }, []);
 
-  const filteredProducts =
-  category === "All"
-    ? products
-    : products.filter(
-        (product) =>
-          product.category?.toLowerCase() ===
-          category.toLowerCase().replace(" ", "-")
-      );
+  const filteredProducts = products.filter((product) => {
+  const matchesCategory =
+    category === "All"
+      ? true
+      : product.category?.toLowerCase() === category.toLowerCase();
+
+  const matchesSearch =
+    product.name
+      ?.toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+  return matchesCategory && matchesSearch;
+});
   const categories = [
   { label: "All", value: "All" },
   { label: "Nightwear", value: "nightwear" },
@@ -96,13 +104,14 @@ useEffect(() => {
           {/* Actions */}
 
           <div className="flex gap-4">
+            
 
-            <button className="flex items-center gap-2 px-5 py-3 rounded-full border border-[#E6E0D8] bg-white">
-
+            <button
+              onClick={() => setSearchOpen(!searchOpen)}
+              className="flex items-center gap-2 px-5 py-3 rounded-full border border-[#E6E0D8] bg-white"
+            >
               <FiSearch />
-
               Search
-
             </button>
 
             <button className="flex items-center gap-2 px-5 py-3 rounded-full border border-[#E6E0D8] bg-white">
@@ -128,8 +137,20 @@ useEffect(() => {
             </button>
 
           </div>
+          
 
         </div>
+        {searchOpen && (
+  <div className="mt-6 flex justify-end">
+    <input
+      type="text"
+      placeholder="Search products..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className="w-full md:w-96 px-5 py-3 rounded-full border border-[#E6E0D8] bg-white outline-none focus:border-[#465348]"
+    />
+  </div>
+)}
 
       </section>
 
