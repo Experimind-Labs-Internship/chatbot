@@ -1,5 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import { Routes, Route } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
 import ForgotPassword from "../pages/customer/ForgotPassword";
@@ -64,85 +63,71 @@ function CustomerLayout({ children }) {
 
 export default function AppRoutes() {
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* ---------- Customer-facing ---------- */}
-        <Route path="/" element={<CustomerLayout><Home /></CustomerLayout>} />
-        <Route path="/shop" element={<CustomerLayout><Shop /></CustomerLayout>} />
-        <Route path="/product/:id" element={<CustomerLayout><ProductDetails /></CustomerLayout>} />
-        <Route path="/login" element={<CustomerLayout><Login /></CustomerLayout>} />
-        <Route path="/signup" element={<CustomerLayout><Signup /></CustomerLayout>} />
-        <Route path="/contact" element={<CustomerLayout><Contact /></CustomerLayout>} />
-        <Route path="/wishlist" element={<CustomerLayout><Wishlist /></CustomerLayout>} />
-        <Route path="/cart" element={<CustomerLayout><Cart /></CustomerLayout>} />
-        <Route path="/profile" element={<CustomerLayout><Profile /></CustomerLayout>}/>
-        <Route path="/checkout" element={<CustomerLayout><Checkout /></CustomerLayout>} />
-        <Route path="/nightwear" element={<CustomerLayout> <Nightwear /> </CustomerLayout>}/>
-        <Route path="/abayas" element={<CustomerLayout><Abayas /></CustomerLayout>}/>
-        <Route path="/kaftans" element={<CustomerLayout><Kaftans /></CustomerLayout>}/>
-        <Route path="/coord-sets" element={<CustomerLayout><CoordSets /></CustomerLayout>}/>
-        <Route path="/new-arrivals" element={<CustomerLayout><NewArrivals /></CustomerLayout>}/>
-        <Route path="/best-sellers" element={<CustomerLayout><BestSellerPage /></CustomerLayout>}/>
-        <Route path="/our-story" element={<CustomerLayout><OurStoryPage /></CustomerLayout>}/>
-        <Route path="/profile/orders" element={ <CustomerLayout><OrderHistory /></CustomerLayout>}/>
-        <Route path="/profile/orders/:orderId" element={ <CustomerLayout><OrderDetails /></CustomerLayout>}/>
-        <Route path="/order-confirmation/:orderId" element={<CustomerLayout><OrderConfirmation /></CustomerLayout>}/>
-        <Route path="/search" element={ <CustomerLayout><SearchResults /></CustomerLayout> }/>
-        <Route path="/faq" element={ <CustomerLayout><FAQ /></CustomerLayout> }/>
-        <Route path="/shipping" element={ <CustomerLayout><Shipping /></CustomerLayout> }/>
-        <Route path="/returns" element={ <CustomerLayout><Returns /></CustomerLayout>}/>
-        <Route path="/privacy" element={<CustomerLayout><PrivacyPolicy /></CustomerLayout>}/>
-        <Route path="/terms" element={ <CustomerLayout><Terms /></CustomerLayout>}/>
-        <Route
-  path="/forgot-password" element={ <CustomerLayout><ForgotPassword /></CustomerLayout>}/>
+    <Routes>
+      {/* ---------- Customer-facing ---------- */}
+      <Route path="/" element={<CustomerLayout><Home /></CustomerLayout>} />
+      <Route path="/shop" element={<CustomerLayout><Shop /></CustomerLayout>} />
+      <Route path="/product/:id" element={<CustomerLayout><ProductDetails /></CustomerLayout>} />
+      <Route path="/login" element={<CustomerLayout><Login /></CustomerLayout>} />
+      <Route path="/signup" element={<CustomerLayout><Signup /></CustomerLayout>} />
+      <Route path="/contact" element={<CustomerLayout><Contact /></CustomerLayout>} />
+      <Route path="/wishlist" element={<CustomerLayout><Wishlist /></CustomerLayout>} />
+      <Route path="/cart" element={<CustomerLayout><Cart /></CustomerLayout>} />
+      <Route path="/profile" element={<CustomerLayout><Profile /></CustomerLayout>} />
+      <Route path="/checkout" element={<CustomerLayout><Checkout /></CustomerLayout>} />
+      <Route path="/nightwear" element={<CustomerLayout><Nightwear /></CustomerLayout>} />
+      <Route path="/abayas" element={<CustomerLayout><Abayas /></CustomerLayout>} />
+      <Route path="/kaftans" element={<CustomerLayout><Kaftans /></CustomerLayout>} />
+      <Route path="/coord-sets" element={<CustomerLayout><CoordSets /></CustomerLayout>} />
+      <Route path="/new-arrivals" element={<CustomerLayout><NewArrivals /></CustomerLayout>} />
+      <Route path="/best-sellers" element={<CustomerLayout><BestSellerPage /></CustomerLayout>} />
+      <Route path="/our-story" element={<CustomerLayout><OurStoryPage /></CustomerLayout>} />
+      <Route path="/profile/orders" element={<CustomerLayout><OrderHistory /></CustomerLayout>} />
+      <Route path="/profile/orders/:orderId" element={<CustomerLayout><OrderDetails /></CustomerLayout>} />
+      <Route path="/order-confirmation/:orderId" element={<CustomerLayout><OrderConfirmation /></CustomerLayout>} />
+      <Route path="/search" element={<CustomerLayout><SearchResults /></CustomerLayout>} />
+      <Route path="/faq" element={<CustomerLayout><FAQ /></CustomerLayout>} />
+      <Route path="/shipping" element={<CustomerLayout><Shipping /></CustomerLayout>} />
+      <Route path="/returns" element={<CustomerLayout><Returns /></CustomerLayout>} />
+      <Route path="/privacy" element={<CustomerLayout><PrivacyPolicy /></CustomerLayout>} />
+      <Route path="/terms" element={<CustomerLayout><Terms /></CustomerLayout>} />
+      <Route
+        path="/forgot-password"
+        element={<CustomerLayout><ForgotPassword /></CustomerLayout>}
+      />
 
-        {/* ---------- Admin ---------- */}
-         {/* ---------- Admin ---------- */}
+      {/* ---------- Admin ---------- */}
 
-<Route
-  path="/admin"
-  element={
-    <ProtectedAdminRoute>
-      <AdminLayout />
-    </ProtectedAdminRoute>
-  }
->
-  <Route
-  path="cancelled-orders"
-  element={<CancelledOrders />}
-/>
- 
-  <Route path="dashboard" element={<Dashboard />} />
-
-  <Route path="products" element={<ProductList />} />
-  <Route path="products/add" element={<ProductForm />} />
-  <Route path="products/edit/:id" element={<ProductForm />} />
-
-  <Route path="inventory" element={<Inventory />} />
-
-  <Route path="orders" element={<OrderList />} />
-  <Route path="orders/:orderId" element={<OrderDetail />} />
-
-  <Route path="customers" element={<CustomerList />} />
-  <Route path="customers/guests" element={<GuestOrders />} />
-  <Route path="customers/:customerId" element={<CustomerDetail />} />
-
-  <Route path="messages" element={<ContactMessages />} />
-
-  <Route path="reviews" element={<ReviewList />} />
-
-  <Route path="coupons" element={<Coupons />} />
-  <Route path="coupons/new" element={<CouponForm />} />
-
-  <Route path="returns" element={<AdminReturns />} />
-
-  <Route path="reports" element={<Reports />} />
-
-  <Route path="newsletter" element={<Newsletter />} />
-</Route>
-
-</Routes>
-        
-    </BrowserRouter>
+      <Route
+        path="/admin"
+        element={
+          <ProtectedAdminRoute>
+            <AdminLayout />
+          </ProtectedAdminRoute>
+        }
+      >
+        <Route path="cancelled-orders" element={<CancelledOrders />} />
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="products" element={<ProductList />} />
+        <Route path="products/add" element={<ProductForm />} />
+        <Route path="products/edit/:id" element={<ProductForm />} />
+        <Route path="inventory" element={<Inventory />} />
+        <Route path="orders" element={<OrderList />} />
+        <Route path="orders/:orderId" element={<OrderDetail />} />
+        <Route path="customers" element={<CustomerList />} />
+        <Route path="customers/guests" element={<GuestOrders />} />
+        <Route path="customers/:customerId" element={<CustomerDetail />} />
+        <Route path="messages" element={<ContactMessages />} />
+        <Route path="reviews" element={<ReviewList />} />
+        <Route path="coupons" element={<Coupons />} />
+        <Route path="coupons/new" element={<CouponForm />} />
+        <Route path="returns" element={<AdminReturns />} />
+        <Route path="reports" element={<Reports />} />
+        <Route path="newsletter" element={<Newsletter />} />
+      </Route>
+    </Routes>
   );
 }
+
+
+        

@@ -6,6 +6,7 @@ import BestSellers from "../../components/customer/BestSellers";
 import Testimonials from "../../components/customer/Testimonials";
 import InstagramFeed from "../../components/customer/InstagramFeed";
 import Newsletter from "../../components/customer/Newsletter";
+import RecentlyViewed from "../../components/home/RecentlyViewed";
 
 export default function Home() {
   return (
@@ -15,6 +16,9 @@ export default function Home() {
       <NewArrivals />
       <OurStory />
       <BestSellers />
+
+      <RecentlyViewed />
+
       <Testimonials />
       <InstagramFeed />
       <Newsletter />

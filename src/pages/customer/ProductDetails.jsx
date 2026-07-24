@@ -6,11 +6,13 @@ import { getProductById, SIZE_OPTIONS } from "../../firebase/productService";
 import { getProductReviews } from "../../firebase/reviewService";
 import { useCart } from "../../context/CartContext";
 import Loader from "../../components/common/Loader";
+import { useRecentlyViewed } from "../../context/RecentlyViewedContext";
 
 export default function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { addRecentlyViewed } = useRecentlyViewed();
 
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -32,7 +34,12 @@ export default function ProductDetails() {
       if (!isMounted) return;
 
       setProduct(productData);
-      setReviews(reviewData);
+setReviews(reviewData);
+
+// ⭐ Add this
+if (productData) {
+  addRecentlyViewed(productData);
+}
 
       if (productData?.sizes) {
         const firstInStock = SIZE_OPTIONS.find(
