@@ -8,6 +8,7 @@ import { useCart } from "../../context/CartContext";
 import Loader from "../../components/common/Loader";
 import { useRecentlyViewed } from "../../context/RecentlyViewedContext";
 import RelatedProducts from "../../components/customer/RelatedProducts";
+import { getEstimatedDelivery } from "../../utils/deliveryDate";
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -76,6 +77,7 @@ if (productData) {
   const avgRating = reviews.length
     ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
     : 0;
+    const estimatedDelivery = getEstimatedDelivery();
 
   const handleAddToCart = async () => {
   console.log("Button Clicked");
@@ -270,29 +272,44 @@ if (productData) {
             </button>
           )}
 
-          {/* Features */}
-          <div className="mt-14 space-y-5">
-            <div className="flex items-center gap-4">
-              <FiTruck size={20} />
-              <span>Free Shipping Across India</span>
-            </div>
+         {/* Features */}
+<div className="mt-14 space-y-6">
 
-            <div className="flex items-center gap-4">
-              <FiRefreshCw size={20} />
-              <span>Easy 7-Day Returns</span>
-            </div>
-          </div>
-        </div>
-      </div>
-            {/* Related Products */}
-      <div className="max-w-7xl mx-auto px-6 mt-24">
-        <RelatedProducts
-          category={product.category}
-          currentProductId={product.id}
-        />
-      </div>
+  <div className="flex items-center gap-4">
+    <FiTruck size={20} />
+    <span>Free Shipping Across India</span>
+  </div>
 
-      {/* Reviews Section */}
+  <div className="bg-[#F8F5F1] rounded-2xl p-5 border border-[#ECE8E3]">
+    <p className="text-sm text-[#8A8178]">
+      Estimated Delivery
+    </p>
+
+    <p className="text-lg font-semibold text-[#2E2A27] mt-1">
+      🚚 {estimatedDelivery}
+    </p>
+  </div>
+
+  <div className="flex items-center gap-4">
+    <FiRefreshCw size={20} />
+    <span>Easy 7-Day Returns</span>
+  </div>
+
+</div>
+
+        </div> {/* End Details */}
+
+</div> {/* End Grid */}
+
+{/* Related Products */}
+<div className="max-w-7xl mx-auto px-6 mt-24">
+  <RelatedProducts
+    category={product.category}
+    currentProductId={product.id}
+  />
+</div>
+
+
 
       {/* Reviews Section */}
       <div className="max-w-4xl mx-auto px-6 mt-24">
