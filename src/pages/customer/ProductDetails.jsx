@@ -7,6 +7,7 @@ import { getProductReviews } from "../../firebase/reviewService";
 import { useCart } from "../../context/CartContext";
 import Loader from "../../components/common/Loader";
 import { useRecentlyViewed } from "../../context/RecentlyViewedContext";
+import RelatedProducts from "../../components/customer/RelatedProducts";
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -283,6 +284,15 @@ if (productData) {
           </div>
         </div>
       </div>
+            {/* Related Products */}
+      <div className="max-w-7xl mx-auto px-6 mt-24">
+        <RelatedProducts
+          category={product.category}
+          currentProductId={product.id}
+        />
+      </div>
+
+      {/* Reviews Section */}
 
       {/* Reviews Section */}
       <div className="max-w-4xl mx-auto px-6 mt-24">

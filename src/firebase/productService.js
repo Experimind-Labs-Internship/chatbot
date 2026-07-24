@@ -7,6 +7,9 @@ import {
   getDocs,
   getDoc,
   serverTimestamp,
+  query,
+  where,
+  limit,
 } from "firebase/firestore";
 import { increment } from "firebase/firestore";
 
@@ -81,4 +84,22 @@ export async function getProductById(id) {
   return snap.exists()
     ? { id: snap.id, ...snap.data() }
     : null;
+}
+// ---------------- RELATED PRODUCTS ----------------
+
+export async function getRelatedProducts(category, currentProductId) {
+  const q = query(
+    productsRef,
+    where("category", "==", category),
+    limit(8)
+  );
+
+  const snapshot = await getDocs(q);
+
+  return snapshot.docs
+    .map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }))
+    .filter((product) => product.id !== currentProductId);
 }
