@@ -7,10 +7,10 @@ export default function AccountSettings() {
   const navigate = useNavigate();
 
   const logout = async () => {
-    await signOut(auth);
+  await signOut(auth);
 
-    navigate("/login");
-  };
+  navigate("/signup", { replace: true });
+};
 
   return (
     <div className="bg-white rounded-3xl shadow-sm p-8 mt-8">

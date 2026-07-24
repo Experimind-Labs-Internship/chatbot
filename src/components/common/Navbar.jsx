@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+
 import { useAuth } from "../../context/AuthContext";
 import { logout } from "../../services/authService";
 import { useCart } from "../../context/CartContext";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   FiSearch,
@@ -23,6 +24,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [shopOpen, setShopOpen] = useState(false);
   const shopMenuRef = useRef(null);
+  const navigate = useNavigate();
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -353,6 +355,7 @@ useEffect(() => {
             onClick={async () => {
               await logout();
               setAccountOpen(false);
+              navigate("/login", { replace: true });
             }}
             className="block mt-4 w-full text-center py-3 rounded-full bg-[#465348] text-white hover:bg-[#39443A] transition"
           >
@@ -515,6 +518,7 @@ useEffect(() => {
         onClick={async () => {
           await logout();
           setMobileOpen(false);
+          navigate("/signup", { replace: true });
         }}
         className="text-left text-red-600"
       >
