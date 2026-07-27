@@ -28,6 +28,7 @@ export default function Checkout() {
   const [guestEmail, setGuestEmail] = useState("");
   const [placing, setPlacing] = useState(false);
   const [error, setError] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("online");
 
   
 
@@ -56,37 +57,141 @@ export default function Checkout() {
       // For now we simulate a successful payment so the rest of the
       // flow (order creation, admin order management) can be built
       // and tested end-to-end.
-      const simulatedPaymentId = `SIMULATED_${Date.now()}`;
-      // ───────────────────────────────────────────────
-      console.log("===== START CHECKOUT =====");
-      console.log("Current User:", user);
+      if (paymentMethod === "cod") {
 
-      const orderId = await createOrder({
-        userId: user?.uid || null,
-        guestEmail: user ? null : guestEmail,
-        items,
-        shippingAddress: {
-          ...address,
-          email: user?.email || guestEmail,
-        },
-        subtotal,
-        discount,
-        total,
-        couponCode,
-        paymentId: simulatedPaymentId,
-      });
-      console.log("Order Created:", orderId);
-      // Reduce stock for each purchased item
-      for (const item of items) {
-        await updateProductStock(
-          item.productId,
-          item.size,
-          item.quantity
-        );
-      }
+  const orderId = await createOrder({
+    userId: user?.uid || null,
+    guestEmail: user ? null : guestEmail,
+    items,
 
-      await clearCart();
-      navigate(`/order-confirmation/${orderId}`);
+    shippingAddress: {
+      ...address,
+      email: user?.email || guestEmail,
+    },
+
+    subtotal,
+    discount,
+    total,
+    couponCode,
+
+    paymentMethod: "Cash On Delivery",
+    paymentStatus: "Pending",
+  });
+
+  for (const item of items) {
+    await updateProductStock(
+      item.productId,
+      item.size,
+      item.quantity
+    );
+  }
+
+  await clearCart();
+
+  navigate(`/order-confirmation/${orderId}`);
+
+  return;
+}
+// Create Razorpay Order from Vercel API
+
+const orderResponse = await fetch("/api/create-order", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    amount: total,
+  }),
+});
+
+const razorpayOrder = await orderResponse.json();
+
+const options = {
+  key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+
+  amount: razorpayOrder.amount,
+
+  currency: razorpayOrder.currency,
+
+  order_id: razorpayOrder.id,
+
+  name: "YUMI DXB Fashion",
+
+  description: "Order Payment",
+
+  prefill: {
+    name: address.fullName,
+    email: user?.email || guestEmail,
+    contact: address.phone,
+  },
+
+  theme: {
+    color: "#465348",
+  },
+
+  
+    handler: async function (response) {
+
+  const verifyResponse = await fetch("/api/verify-payment", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(response),
+  });
+
+  const verify = await verifyResponse.json();
+
+  if (!verify.success) {
+    alert("Payment verification failed.");
+    return;
+  }
+
+  const orderId = await createOrder({
+    userId: user?.uid || null,
+    guestEmail: user ? null : guestEmail,
+    items,
+
+    shippingAddress: {
+      ...address,
+      email: user?.email || guestEmail,
+    },
+
+    subtotal,
+    discount,
+    total,
+    couponCode,
+
+    paymentMethod: "Online",
+    paymentStatus: "Paid",
+
+    paymentId: response.razorpay_payment_id,
+  });
+
+  for (const item of items) {
+    await updateProductStock(
+      item.productId,
+      item.size,
+      item.quantity
+    );
+  }
+
+  await clearCart();
+
+  navigate(`/order-confirmation/${orderId}`);
+}, // <-- comma here
+
+}; // <-- close options object here
+
+const paymentObject = new window.Razorpay(options);
+
+paymentObject.open();
+
+paymentObject.on("payment.failed", function (response) {
+  alert(response.error.description || "Payment Failed");
+});
+
+paymentObject.open();
     } catch (err) {
   console.error("Checkout Error:", err);
   console.error("Error Code:", err.code);
@@ -192,12 +297,36 @@ export default function Checkout() {
           </div>
 
           <div className="bg-white rounded-2xl border border-[#ECE8E3] p-6">
-            <h2 className="font-medium text-[#2E2A27] mb-2">Payment</h2>
-            <p className="text-sm text-[#8A8178]">
-              Razorpay checkout (UPI / Card / Net Banking) will appear here once
-              payment integration is connected.
-            </p>
-          </div>
+  <h2 className="font-medium text-[#2E2A27] mb-5">
+    Select Payment Method
+  </h2>
+
+  <div className="space-y-4">
+
+    <label className="flex items-center gap-3 border rounded-xl p-4 cursor-pointer">
+      <input
+        type="radio"
+        value="online"
+        checked={paymentMethod === "online"}
+        onChange={(e) => setPaymentMethod(e.target.value)}
+      />
+
+      <span>Online Payment (UPI / Card / Net Banking)</span>
+    </label>
+
+    <label className="flex items-center gap-3 border rounded-xl p-4 cursor-pointer">
+      <input
+        type="radio"
+        value="cod"
+        checked={paymentMethod === "cod"}
+        onChange={(e) => setPaymentMethod(e.target.value)}
+      />
+
+      <span>Cash On Delivery</span>
+    </label>
+
+  </div>
+</div>
 
           {error && (
             <p className="text-sm text-red-600 bg-red-50 px-4 py-3 rounded-xl">{error}</p>

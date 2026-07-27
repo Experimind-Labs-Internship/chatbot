@@ -53,7 +53,7 @@ const handleSubmit = async (e) => {
     <main className="bg-[#FAF8F5] min-h-screen pt-24">
       {/* Hero */}
 
-      <section className="text-center py-20 px-6">
+      <section className="text-center pt-8 pb-16 px-6">
         <p className="uppercase tracking-[4px] text-sm text-[#B89B72]">
           Get In Touch
         </p>

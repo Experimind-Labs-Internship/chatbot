@@ -94,7 +94,7 @@ useEffect(() => {
              <img
                 src={logo}
                 alt="YUMI DXB Fashion"
-                className="h-20 w-auto"
+                className="h-28 w-auto"
               />
             </Link>
 
