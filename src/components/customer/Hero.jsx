@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
-
+import { useState } from "react";
 import hero from "../../assets/images/hero/hero.png";
+import discoverVideo from "../../assets/videos/discover.mp4";
 
 export default function Hero() {
+  const [showVideo, setShowVideo] = useState(false);
   return (
     <section className="relative min-h-screen bg-[#F8F4EF] overflow-hidden">
 
@@ -101,11 +103,12 @@ export default function Hero() {
 
           <div className="mt-16 flex items-center gap-5">
 
-            <button className="w-16 h-16 rounded-full border border-[#B89B72] flex items-center justify-center hover:bg-[#B89B72] hover:text-white transition">
-
-              ▶
-
-            </button>
+            <button
+  onClick={() => setShowVideo(true)}
+  className="w-16 h-16 rounded-full border border-[#B89B72] flex items-center justify-center hover:bg-[#B89B72] hover:text-white transition"
+>
+  ▶
+</button>
 
             <span className="uppercase tracking-[3px] text-sm">
 
@@ -130,6 +133,26 @@ export default function Hero() {
         </div>
 
       </div>
+      {showVideo && (
+  <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+    <div className="relative w-[90%] max-w-4xl">
+
+      <button
+        onClick={() => setShowVideo(false)}
+        className="absolute -top-12 right-0 text-white text-4xl"
+      >
+        ×
+      </button>
+
+      <video
+        src={discoverVideo}
+        controls
+        autoPlay
+        className="w-full rounded-3xl"
+      />
+    </div>
+  </div>
+)}
 
     </section>
   );
