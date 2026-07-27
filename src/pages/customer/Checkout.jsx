@@ -106,9 +106,10 @@ const orderResponse = await fetch("/api/create-order", {
 
 const razorpayOrder = await orderResponse.json();
 
+console.log("Razorpay Key:", import.meta.env.VITE_RAZORPAY_KEY_ID);
+
 const options = {
   key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-
   amount: razorpayOrder.amount,
 
   currency: razorpayOrder.currency,
@@ -191,7 +192,7 @@ paymentObject.on("payment.failed", function (response) {
   alert(response.error.description || "Payment Failed");
 });
 
-paymentObject.open();
+
     } catch (err) {
   console.error("Checkout Error:", err);
   console.error("Error Code:", err.code);
