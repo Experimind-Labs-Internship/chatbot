@@ -58,6 +58,8 @@ export default function Checkout() {
       // and tested end-to-end.
       const simulatedPaymentId = `SIMULATED_${Date.now()}`;
       // ───────────────────────────────────────────────
+      console.log("===== START CHECKOUT =====");
+      console.log("Current User:", user);
 
       const orderId = await createOrder({
         userId: user?.uid || null,
@@ -73,6 +75,7 @@ export default function Checkout() {
         couponCode,
         paymentId: simulatedPaymentId,
       });
+      console.log("Order Created:", orderId);
       // Reduce stock for each purchased item
       for (const item of items) {
         await updateProductStock(
@@ -85,10 +88,14 @@ export default function Checkout() {
       await clearCart();
       navigate(`/order-confirmation/${orderId}`);
     } catch (err) {
-      setError("Something went wrong placing your order: " + err.message);
-    } finally {
-      setPlacing(false);
-    }
+  console.error("Checkout Error:", err);
+  console.error("Error Code:", err.code);
+  console.error("Error Message:", err.message);
+
+  setError(`${err.code} : ${err.message}`);
+} finally {
+  setPlacing(false);
+}
   };
 
   if (items.length === 0) {
