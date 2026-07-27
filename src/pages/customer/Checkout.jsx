@@ -119,6 +119,12 @@ const options = {
   name: "YUMI DXB Fashion",
 
   description: "Order Payment",
+  method: {
+    upi: true,
+    card: true,
+    netbanking: true,
+    wallet: true,
+  },
 
   prefill: {
     name: address.fullName,
