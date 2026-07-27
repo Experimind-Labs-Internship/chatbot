@@ -38,6 +38,25 @@ export async function getWishlist(userId) {
   }));
 }
 
+// ---------------- CHECK ----------------
+
+export async function getWishlistItem(userId, productId) {
+  const q = query(
+    wishlistRef,
+    where("userId", "==", userId),
+    where("productId", "==", productId)
+  );
+
+  const snapshot = await getDocs(q);
+
+  if (snapshot.empty) return null;
+
+  return {
+    id: snapshot.docs[0].id,
+    ...snapshot.docs[0].data(),
+  };
+}
+
 // ---------------- REMOVE ----------------
 
 export async function removeWishlistItem(id) {

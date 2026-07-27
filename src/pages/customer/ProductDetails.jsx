@@ -1,7 +1,19 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FiHeart, FiShoppingBag, FiTruck, FiRefreshCw } from "react-icons/fi";
+import {
+  FiHeart,
+  FiShoppingBag,
+  FiTruck,
+  FiRefreshCw,
+} from "react-icons/fi";
 
+import {
+  addToWishlist,
+  removeWishlistItem,
+  getWishlistItem,
+} from "../../firebase/wishlistService";
+
+import { auth } from "../../firebase/firebase";
 import { getProductById, SIZE_OPTIONS } from "../../firebase/productService";
 import { getProductReviews } from "../../firebase/reviewService";
 import { useCart } from "../../context/CartContext";
@@ -23,6 +35,8 @@ export default function ProductDetails() {
   const [size, setSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const [wishlisted, setWishlisted] = useState(false);
+  const [wishlistId, setWishlistId] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -51,6 +65,20 @@ if (productData) {
       }
 
       setLoading(false);
+      const user = auth.currentUser;
+
+if (user && productData) {
+  const existing = await getWishlistItem(
+    user.uid,
+    productData.id
+  );
+
+  if (existing) {
+    setWishlisted(true);
+    setWishlistId(existing.id);
+  }
+}
+    
     }
 
     load();
@@ -78,8 +106,45 @@ if (productData) {
     ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
     : 0;
     const estimatedDelivery = getEstimatedDelivery();
+const handleWishlist = async () => {
+  const user = auth.currentUser;
 
-  const handleAddToCart = async () => {
+  if (!user) {
+    navigate("/login");
+    return;
+  }
+
+  try {
+    if (wishlisted) {
+      await removeWishlistItem(wishlistId);
+
+      setWishlisted(false);
+      setWishlistId(null);
+    } else {
+      await addToWishlist({
+        userId: user.uid,
+        productId: product.id,
+        name: product.name,
+        image: product.images?.[0],
+        price: product.price,
+      });
+
+      const addedItem = await getWishlistItem(
+        user.uid,
+        product.id
+      );
+
+      if (addedItem) {
+        setWishlisted(true);
+        setWishlistId(addedItem.id);
+      }
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const handleAddToCart = async () => {
   console.log("Button Clicked");
 
   if (!size || isOutOfStock) {
@@ -89,14 +154,19 @@ if (productData) {
 
   try {
     await addToCart(product, size, quantity);
+
     console.log("Added Successfully");
 
     setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
+
+    setTimeout(() => {
+      setAdded(false);
+    }, 2000);
   } catch (err) {
     console.error("Add To Cart Error:", err);
   }
 };
+ 
 
   const formatDate = (timestamp) => {
     if (!timestamp?.toDate) return "";
@@ -258,9 +328,19 @@ if (productData) {
               {isOutOfStock ? "Out of Stock" : added ? "Added ✓" : "Add to Cart"}
             </button>
 
-            <button className="w-16 rounded-full border flex items-center justify-center">
-              <FiHeart />
-            </button>
+            <button
+  onClick={handleWishlist}
+  className={`w-16 rounded-full border flex items-center justify-center transition
+    ${
+      wishlisted
+        ? "bg-red-500 text-white border-red-500"
+        : "hover:bg-[#465348] hover:text-white"
+    }`}
+>
+  <FiHeart
+    fill={wishlisted ? "currentColor" : "none"}
+  />
+</button>
           </div>
 
           {added && (

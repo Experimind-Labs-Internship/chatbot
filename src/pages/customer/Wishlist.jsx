@@ -2,24 +2,38 @@ import { Link } from "react-router-dom";
 import { FiHeart, FiTrash2 } from "react-icons/fi";
 import { useEffect, useState } from "react";
 
+import { auth } from "../../firebase/firebase";
+import {
+  getWishlist,
+  removeWishlistItem,
+} from "../../firebase/wishlistService";
+
 export default function Wishlist() {
   const [wishlist, setWishlist] = useState([]);
 
-  useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("wishlist")) || [];
+useEffect(() => {
+  async function loadWishlist() {
+    const user = auth.currentUser;
+
+    if (!user) return;
+
+    const data = await getWishlist(user.uid);
+
+    console.log("Wishlist Data:", data);
+
     setWishlist(data);
-  }, []);
+  }
 
-  const removeFromWishlist = (id) => {
-    const updated = wishlist.filter((item) => item.id !== id);
+  loadWishlist();
+}, []);
 
-    setWishlist(updated);
+  const removeFromWishlist = async (id) => {
+  await removeWishlistItem(id);
 
-    localStorage.setItem("wishlist", JSON.stringify(updated));
-
-    // Update navbar badge immediately
-    window.dispatchEvent(new Event("storage"));
-  };
+  setWishlist((prev) =>
+    prev.filter((item) => item.id !== id)
+  );
+};
 
   return (
     <main className="bg-[#FAF8F5] min-h-screen pt-24">
@@ -81,20 +95,25 @@ export default function Wishlist() {
                   className="w-full h-[350px] object-cover"
                 />
 
-                <div className="p-6">
+                <div className="p-6 flex flex-col h-[210px]">
 
                   <h3 className="text-2xl font-serif text-[#2E2A27]">
                     {product.title}
                   </h3>
+                  <h3 className="text-2xl font-serif text-[#2E2A27] min-h-[64px] leading-tight">
+  {product.name}
+</h3>
 
-                  <p className="mt-3 text-2xl font-semibold text-[#B89B72]">
-                    {product.price}
-                  </p>
+   
 
-                  <div className="flex gap-4 mt-6">
+<p className="mt-2 text-2xl font-semibold text-[#B89B72]">
+  ₹{product.price}
+</p>
+
+                  <div className="flex gap-4 mt-auto">
 
                     <Link
-                      to={`/product/${product.id}`}
+  to={`/product/${product.productId}`}
                       className="flex-1 bg-[#465348] text-white py-3 rounded-full text-center hover:bg-[#39443A] transition"
                     >
                       View Product
