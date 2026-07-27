@@ -4,6 +4,11 @@ import { useCart } from "../../context/CartContext";
 import { auth } from "../../firebase/firebase";
 import { createOrder } from "../../firebase/orderService";
 import { updateProductStock } from "../../firebase/productService";
+import { useEffect } from "react";
+import {getAddresses,saveAddress,} from "../../firebase/addressService";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
+
 
 export default function Checkout() {
   const { items, subtotal, clearCart } = useCart();
@@ -13,28 +18,62 @@ export default function Checkout() {
   const discount = state?.discount || 0;
   const total = state?.total ?? subtotal;
   const couponCode = state?.appliedCoupon?.code || null;
+  
 
   const user = auth.currentUser;
 
   const [address, setAddress] = useState({
-  fullName: "",
-  email: user?.email || "",
-  phone: "",
-  line1: "",
-  city: "",
-  state: "",
-  pincode: "",
-});
+    label: "Home",
+    fullName: "",
+    email: user?.email || "",
+    phone: "",
+    line1: "",
+    city: "",
+    state: "",
+    pincode: "",
+  });
   const [guestEmail, setGuestEmail] = useState("");
   const [placing, setPlacing] = useState(false);
   const [error, setError] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("online");
-
+  const [addresses, setAddresses] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [saveThisAddress, setSaveThisAddress] = useState(true);
+  const [showAddressForm, setShowAddressForm] = useState(false);
   
 
   const handleChange = (field, value) => {
     setAddress((prev) => ({ ...prev, [field]: value }));
   };
+  const loadAddresses = async () => {
+  if (!user) return;
+
+  const data = await getAddresses(user.uid);
+
+  setAddresses(data);
+
+  const defaultAddress =
+    data.find((a) => a.isDefault) || data[0];
+
+  if (defaultAddress) {
+    setSelectedAddress(defaultAddress);
+
+    setAddress({
+  label: defaultAddress.label || "Home",
+  fullName: defaultAddress.fullName,
+  email: user.email,
+  phone: defaultAddress.phone || "",
+  line1: defaultAddress.line1,
+  city: defaultAddress.city,
+  state: defaultAddress.state,
+  pincode: defaultAddress.pincode,
+});
+  }
+};
+
+useEffect(() => {
+  loadAddresses();
+}, [user]);
 
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
@@ -85,10 +124,32 @@ export default function Checkout() {
       item.quantity
     );
   }
+  
 
-  await clearCart();
 
-  navigate(`/order-confirmation/${orderId}`);
+  if (
+  saveThisAddress &&
+  user &&
+  !selectedAddress
+) {
+  await saveAddress(user.uid, {
+    label: address.label,
+    fullName: address.fullName,
+    phone: address.phone,
+    line1: address.line1,
+    city: address.city,
+    state: address.state,
+    pincode: address.pincode,
+    isDefault: addresses.length === 0,
+  });
+
+  setShowAddressForm(false);
+  await loadAddresses();
+}
+
+await clearCart();
+
+navigate(`/order-confirmation/${orderId}`);
 
   return;
 }
@@ -221,83 +282,230 @@ paymentObject.on("payment.failed", function (response) {
         {/* Address form */}
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white rounded-2xl border border-[#ECE8E3] p-6">
-            <h2 className="font-medium text-[#2E2A27] mb-4">Shipping Address</h2>
 
-            {!user && (
-              <input
-                type="email"
-                placeholder="Email (for order updates)"
-                value={guestEmail}
-                onChange={(e) => setGuestEmail(e.target.value)}
-                className="w-full mb-4 px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
-              />
-            )}
+  <h2 className="font-medium text-[#2E2A27] mb-4">
+    Shipping Address
+  </h2>
 
-            <div className={`grid ${user ? "grid-cols-3" : "grid-cols-2"} gap-4 mb-4`}>
-              <input
-                type="text"
-                placeholder="Full Name"
-                value={address.fullName}
-                onChange={(e) => handleChange("fullName", e.target.value)}
-                className="px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
-                required
-              />
-              {user && (
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={address.email}
-                  readOnly
-                  className="px-4 py-3 rounded-xl border border-[#ECE8E3] bg-gray-50"
-                />
-              )}
-              <input
-                type="tel"
-                placeholder="Phone Number"
-                value={address.phone}
-                onChange={(e) => handleChange("phone", e.target.value)}
-                className="px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
-                required
-              />
-            </div>
+  {addresses.length > 0 && !showAddressForm && (
+    <div className="space-y-4 mb-6">
 
-            <input
-              type="text"
-              placeholder="Address Line"
-              value={address.line1}
-              onChange={(e) => handleChange("line1", e.target.value)}
-              className="w-full mb-4 px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
-              required
-            />
+      {addresses.map((item) => (
 
-            <div className="grid grid-cols-3 gap-4">
-              <input
-                type="text"
-                placeholder="City"
-                value={address.city}
-                onChange={(e) => handleChange("city", e.target.value)}
-                className="px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
-                required
-              />
-              <input
-                type="text"
-                placeholder="State"
-                value={address.state}
-                onChange={(e) => handleChange("state", e.target.value)}
-                className="px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
-                required
-              />
-              <input
-                type="text"
-                placeholder="Pincode"
-                value={address.pincode}
-                onChange={(e) => handleChange("pincode", e.target.value)}
-                className="px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
-                required
-              />
-            </div>
-          </div>
+        <div
+          key={item.id}
+          
+          className={`border rounded-2xl p-5 cursor-pointer transition ${
+            selectedAddress?.id === item.id
+              ? "border-[#465348] bg-[#F7F8F7]"
+              : "border-[#ECE8E3]"
+          }`}
+        >
 
+          <p className="font-semibold">
+            {item.label}
+          </p>
+
+          <p>{item.fullName}</p>
+
+          <p>{item.phone}</p>
+
+          <p>{item.line1}</p>
+
+<p>
+  {item.city}, {item.state} - {item.pincode}
+</p>
+
+<button
+  type="button"
+  onClick={(e) => {
+    e.stopPropagation();
+
+    setSelectedAddress(item);
+
+    setAddress({
+  label: item.label || "Home",
+  fullName: item.fullName,
+  email: user?.email || "",
+  phone: item.phone || "",
+  line1: item.line1,
+  city: item.city,
+  state: item.state,
+  pincode: item.pincode,
+});
+  }}
+  className="mt-4 px-4 py-2 rounded-full bg-[#465348] text-white hover:bg-[#39443A]"
+>
+  Deliver Here
+</button>
+
+</div>
+
+      ))}
+
+      <button
+  type="button"
+  onClick={() => {
+    setSelectedAddress(null);
+
+    setAddress({
+      label: "Home",
+      fullName: "",
+      email: user?.email || "",
+      phone: "",
+      line1: "",
+      city: "",
+      state: "",
+      pincode: "",
+    });
+
+    setShowAddressForm(true);
+  }}
+  className="text-[#465348] underline"
+>
+  + Add New Address
+</button>
+
+    </div>
+  )}
+
+  {(addresses.length === 0 || showAddressForm) && (
+    <>
+    {!user && (
+  <input
+    type="email"
+    placeholder="Email (for order updates)"
+    value={guestEmail}
+    onChange={(e) => setGuestEmail(e.target.value)}
+    className="w-full mb-4 px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
+  />
+)}
+
+<div className="mb-5">
+  <label className="block text-sm font-medium text-[#2E2A27] mb-3">
+    Address Type
+  </label>
+
+  <div className="flex gap-3">
+    <button
+      type="button"
+      onClick={() => handleChange("label", "Home")}
+      className={`px-4 py-2 text-sm rounded-full border transition ${
+        address.label === "Home"
+          ? "bg-[#465348] text-white border-[#465348]"
+          : "border-[#ECE8E3] hover:border-[#465348]"
+      }`}
+    >
+      🏠 Home
+    </button>
+
+    <button
+      type="button"
+      onClick={() => handleChange("label", "Work")}
+      className={`px-4 py-2 text-sm rounded-full border transition ${
+        address.label === "Work"
+          ? "bg-[#465348] text-white border-[#465348]"
+          : "border-[#ECE8E3] hover:border-[#465348]"
+      }`}
+    >
+      🏢 Work
+    </button>
+
+    <button
+      type="button"
+      onClick={() => handleChange("label", "Other")}
+      className={`px-4 py-2 text-sm rounded-full border transition ${
+        address.label === "Other"
+          ? "bg-[#465348] text-white border-[#465348]"
+          : "border-[#ECE8E3] hover:border-[#465348]"
+      }`}
+    >
+      📍 Other
+    </button>
+  </div>
+</div>
+
+<div className="grid grid-cols-2 gap-6 mb-4">
+
+  <input
+    type="text"
+    placeholder="Full Name"
+    value={address.fullName}
+    onChange={(e) => handleChange("fullName", e.target.value)}
+    className="px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
+    required
+  />
+    
+
+
+  
+
+  <div className="w-full">
+  <PhoneInput
+    defaultCountry="in"
+    value={address.phone}
+    onChange={(phone) => handleChange("phone", phone)}
+  />
+</div>
+</div>
+
+<input
+  type="text"
+  placeholder="Address Line"
+  value={address.line1}
+  onChange={(e) => handleChange("line1", e.target.value)}
+  className="w-full mb-4 px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
+  required
+/>
+
+<div className="grid grid-cols-3 gap-4">
+  <input
+    type="text"
+    placeholder="City"
+    value={address.city}
+    onChange={(e) => handleChange("city", e.target.value)}
+    className="px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
+    required
+  />
+
+  <input
+    type="text"
+    placeholder="State"
+    value={address.state}
+    onChange={(e) => handleChange("state", e.target.value)}
+    className="px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
+    required
+  />
+
+  <input
+    type="text"
+    placeholder="Pincode"
+    value={address.pincode}
+    onChange={(e) => handleChange("pincode", e.target.value)}
+    className="px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
+    required
+  />
+</div>
+
+<label className="flex items-center gap-3 mt-6">
+  <input
+    type="checkbox"
+    checked={saveThisAddress}
+    onChange={(e) => setSaveThisAddress(e.target.checked)}
+  />
+  <span>Save this address for future orders</span>
+</label>
+<button
+  type="button"
+  onClick={() => setShowAddressForm(false)}
+  className="mt-4 text-[#465348] underline"
+>
+  Cancel
+</button>
+
+    </>
+  )}
+    </div>
           <div className="bg-white rounded-2xl border border-[#ECE8E3] p-6">
   <h2 className="font-medium text-[#2E2A27] mb-5">
     Select Payment Method

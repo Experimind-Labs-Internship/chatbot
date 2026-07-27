@@ -50,6 +50,7 @@ import AdminReturns from "../pages/admin/Returns";
 import Reports from "../pages/admin/Reports";
 import Newsletter from "../pages/admin/Newsletter";
 import CancelledOrders from "../pages/admin/CancelledOrders";
+import Addresses from "../pages/customer/Addresses";
 
 function CustomerLayout({ children }) {
   return (
@@ -95,6 +96,7 @@ export default function AppRoutes() {
         path="/forgot-password"
         element={<CustomerLayout><ForgotPassword /></CustomerLayout>}
       />
+      <Route path="/addresses" element={<Addresses />} />
 
       {/* ---------- Admin ---------- */}
 
@@ -106,6 +108,7 @@ export default function AppRoutes() {
           </ProtectedAdminRoute>
         }
       >
+        
         <Route path="cancelled-orders" element={<CancelledOrders />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="products" element={<ProductList />} />
