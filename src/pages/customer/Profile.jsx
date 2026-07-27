@@ -1,6 +1,6 @@
 import { useAuth } from "../../context/AuthContext";
 import ProfileInfo from "../../components/customer/ProfileInfo";
-import AddressCard from "../../components/customer/AddressCard";
+import AddressCard from "../../components/customer/AddressSection";
 
 import WishlistSection from "../../components/customer/WishlistSection";
 import MyCoupons from "../../components/customer/MyCoupons";
