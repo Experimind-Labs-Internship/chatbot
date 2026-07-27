@@ -2,7 +2,7 @@ import storyImage from "../../assets/images/story/story.png";
 
 export default function OurStoryPage() {
   return (
-    <main className="bg-[#FAF8F5] pt-32 pb-24">
+    <main className="bg-[#FAF8F5] pt-16 pb-24">
 
       {/* Hero */}
 

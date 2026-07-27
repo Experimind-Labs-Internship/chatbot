@@ -112,7 +112,7 @@ default:
 ];
 
   return (
-    <main className="bg-[#FAF8F5] pt-32 pb-24">
+    <main className="bg-[#FAF8F5] pb-24">
 
       {/* Hero */}
 
