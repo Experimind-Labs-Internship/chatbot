@@ -26,6 +26,10 @@ export default function LoginForm() {
       setLoading(true);
 
       const user = await login(email, password);
+      console.log(
+  "After login providers:",
+  user.providerData.map((p) => p.providerId)
+);
       const role = await getUserRole(user.uid);
 
       if (role === "admin") {
