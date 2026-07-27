@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import {getAddresses,saveAddress,} from "../../firebase/addressService";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
-
+import { getLocationFromPincode } from "../../services/pincodeService";
 
 export default function Checkout() {
   const { items, subtotal, clearCart } = useCart();
@@ -45,6 +45,25 @@ export default function Checkout() {
   const handleChange = (field, value) => {
     setAddress((prev) => ({ ...prev, [field]: value }));
   };
+  const handlePincodeChange = async (value) => {
+  // Allow only numbers
+  const pincode = value.replace(/\D/g, "");
+
+  handleChange("pincode", pincode);
+
+  // Only lookup when exactly 6 digits
+  if (pincode.length === 6) {
+    const location = await getLocationFromPincode(pincode);
+
+    if (location) {
+      setAddress((prev) => ({
+        ...prev,
+        city: location.city,
+        state: location.state,
+      }));
+    }
+  }
+};
   const loadAddresses = async () => {
   if (!user) return;
 
@@ -460,31 +479,30 @@ paymentObject.on("payment.failed", function (response) {
 
 <div className="grid grid-cols-3 gap-4">
   <input
-    type="text"
-    placeholder="City"
-    value={address.city}
-    onChange={(e) => handleChange("city", e.target.value)}
-    className="px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
-    required
-  />
+  type="text"
+  placeholder="City"
+  value={address.city}
+  readOnly
+  className="px-4 py-3 rounded-xl border border-[#ECE8E3] bg-[#F8F8F8]"
+/>
 
   <input
-    type="text"
-    placeholder="State"
-    value={address.state}
-    onChange={(e) => handleChange("state", e.target.value)}
-    className="px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
-    required
-  />
+  type="text"
+  placeholder="State"
+  value={address.state}
+  readOnly
+  className="px-4 py-3 rounded-xl border border-[#ECE8E3] bg-[#F8F8F8]"
+/>
 
   <input
-    type="text"
-    placeholder="Pincode"
-    value={address.pincode}
-    onChange={(e) => handleChange("pincode", e.target.value)}
-    className="px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
-    required
-  />
+  type="text"
+  placeholder="Pincode"
+  value={address.pincode}
+  onChange={(e) => handlePincodeChange(e.target.value)}
+  className="px-4 py-3 rounded-xl border border-[#ECE8E3] outline-none focus:border-[#465348]"
+  maxLength={6}
+  required
+/>
 </div>
 
 <label className="flex items-center gap-3 mt-6">
