@@ -158,39 +158,45 @@ const handleSubscribe = async () => {
 
             </div>
 
-            {/* Social */}
+           {/* Social */}
 
-           
+<div className="mt-8">
 
-<div className="flex gap-4 mt-8">
+  <p className="text-gray-400 mb-3 text-sm font-medium">
+    Follow Us
+  </p>
 
-  <a
-    href="https://www.instagram.com/yumi_dxb"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Instagram"
-    className="w-11 h-11 rounded-full border border-gray-500 flex items-center justify-center hover:bg-[#C3A274] hover:border-[#C3A274] hover:text-[#22201D] transition-all duration-300"
-  >
-    <FiInstagram size={20} />
-  </a>
+  <div className="flex gap-4">
 
-  <a
-    href="https://wa.me/919591308536"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="WhatsApp"
-    className="w-11 h-11 rounded-full border border-gray-500 flex items-center justify-center hover:bg-[#25D366] hover:border-[#25D366] hover:text-white transition-all duration-300"
-  >
-    <FaWhatsapp size={20} />
-  </a>
+    <a
+      href="https://www.instagram.com/yumi_dxb"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Instagram"
+      className="w-11 h-11 rounded-full border border-gray-500 flex items-center justify-center hover:bg-[#C3A274] hover:border-[#C3A274] hover:text-[#22201D] hover:-translate-y-1 transition-all duration-300"
+    >
+      <FiInstagram size={20} />
+    </a>
 
-  <a
-    href="mailto:hello@yumidxb.com"
-    aria-label="Email"
-    className="w-11 h-11 rounded-full border border-gray-500 flex items-center justify-center hover:bg-[#465348] hover:border-[#465348] transition-all duration-300"
-  >
-    <FiMail size={20} />
-  </a>
+    <a
+      href="https://wa.me/919591308536"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="WhatsApp"
+      className="w-11 h-11 rounded-full border border-gray-500 flex items-center justify-center hover:bg-[#25D366] hover:border-[#25D366] hover:text-white hover:-translate-y-1 transition-all duration-300"
+    >
+      <FaWhatsapp size={20} />
+    </a>
+
+    <a
+      href="mailto:hello@yumidxb.com"
+      aria-label="Email"
+      className="w-11 h-11 rounded-full border border-gray-500 flex items-center justify-center hover:bg-[#465348] hover:border-[#465348] hover:-translate-y-1 transition-all duration-300"
+    >
+      <FiMail size={20} />
+    </a>
+
+  </div>
 
 </div>
 
