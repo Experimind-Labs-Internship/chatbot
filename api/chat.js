@@ -80,11 +80,16 @@ User: ${message}
 Assistant:`;
 
   const result = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: prompt,
-  });
+  model: "gemini-2.5-flash",
+  contents: [
+    {
+      role: "user",
+      parts: [{ text: prompt }],
+    },
+  ],
+});
 
-  const reply = cleanText(result.text || "", 3000);
+const reply = cleanText(result.text ?? "", 3000);
 
   if (!reply) {
     return res.status(502).json({
@@ -95,20 +100,12 @@ Assistant:`;
   return res.status(200).json({ reply });
 
 } catch (error) {
-  console.error("Gemini SDK Error:", error);
+  console.error("Gemini SDK Error:");
+console.error(error);
+console.error(error?.stack);
   return res.status(500).json({
     message: error.message || "Support is temporarily unavailable.",
   });
 }
 }
-    const reply = cleanText(
-  data.candidates?.[0]?.content?.parts?.[0]?.text || "",
-  3000
-);
-    if (!reply) return res.status(502).json({ message: "Support returned an empty response." });
-    return res.status(200).json({ reply });
-  } catch (error) {
-    console.error("Chat request failed", error);
-    return res.status(500).json({ message: "Support is temporarily unavailable." });
-  }
-}
+   
