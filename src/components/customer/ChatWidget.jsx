@@ -3,6 +3,7 @@ import { FiSend, FiX } from "react-icons/fi";
 import { getAllProducts } from "../../firebase/productService";
 import logo from "../../assets/images/logo/logo.png";
 import "./ChatWidget.css";
+import ReactMarkdown from "react-markdown";
 
 const STORAGE_KEY = "yumi-chat-messages";
 const STARTER_MESSAGE = {
@@ -106,10 +107,30 @@ export default function ChatWidget() {
 
           <div className="yumi-chat__messages" ref={messagesRef}>
             {messages.map((item, index) => (
-              <p key={`${item.role}-${index}`} className={`yumi-chat__message yumi-chat__message--${item.role}`}>
-                {item.content}
-              </p>
-            ))}
+  <div
+    key={`${item.role}-${index}`}
+    className={`yumi-chat__message yumi-chat__message--${item.role}`}
+  >
+    <ReactMarkdown
+      components={{
+        a: ({ href, children }) => (
+          <a
+            href={href}
+            style={{
+              color: "#465348",
+              fontWeight: 600,
+              textDecoration: "underline",
+            }}
+          >
+            {children}
+          </a>
+        ),
+      }}
+    >
+      {item.content}
+    </ReactMarkdown>
+  </div>
+))}
             {isSending && <p className="yumi-chat__typing">Yumi Assistant is typing…</p>}
           </div>
 
