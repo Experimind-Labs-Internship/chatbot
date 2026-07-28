@@ -170,8 +170,8 @@ Assistant:
 
 for (let i = 0; i < 3; i++) {
   try {
-    console.log("Model:", "gemini-2.5-flash");
-    console.log("Requested model:", "gemini-2.5-flash");
+    console.log("Model:", "gemini-2.0-flash");
+console.log("Requested model:", "gemini-2.0-flash");
 
 try {
   result = await ai.models.generateContent({
