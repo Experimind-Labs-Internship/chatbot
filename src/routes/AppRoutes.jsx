@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
+import ChatWidget from "../components/customer/ChatWidget";
 import ForgotPassword from "../pages/customer/ForgotPassword";
 
 // Customer pages
@@ -58,6 +59,7 @@ function CustomerLayout({ children }) {
       <Navbar />
       {children}
       <Footer />
+      <ChatWidget />
     </>
   );
 }
@@ -133,4 +135,3 @@ export default function AppRoutes() {
 }
 
 
-        
