@@ -44,17 +44,28 @@ export default function ChatWidget() {
   }, [messages]);
 
   useEffect(() => {
-    getAllProducts()
-      .then((products) => setCatalogue(products.map(({ id, name, price, category, description, image, images }) => ({
-        id,
-        name,
-        price,
-        category,
-        description,
-        image: image || images?.[0] || "",
-      }))))
-      .catch(() => setCatalogue([]));
-  }, []);
+  getAllProducts()
+    .then((products) => {
+      console.log("Products:", products);
+
+      setCatalogue(
+        products.map(
+          ({ id, name, price, category, description, image, images }) => ({
+            id,
+            name,
+            price,
+            category,
+            description,
+            image: image || images?.[0] || "",
+          })
+        )
+      );
+    })
+    .catch((err) => {
+      console.error("Firebase products error:", err);
+      setCatalogue([]);
+    });
+}, []);
 
   useEffect(() => {
     if (isOpen) inputRef.current?.focus();
