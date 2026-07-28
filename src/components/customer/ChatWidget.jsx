@@ -103,6 +103,8 @@ if (!recognition) {
 }
 
 function speak(text) {
+  if (!voiceEnabled) return;
+
   if (!("speechSynthesis" in window)) {
     console.log("Speech synthesis not supported");
     return;
@@ -112,23 +114,33 @@ function speak(text) {
 
   const utterance = new SpeechSynthesisUtterance(text);
 
+  // Load available voices
+  const voices = window.speechSynthesis.getVoices();
+
+  // Prefer female voices
+  const femaleVoice =
+    voices.find(v => v.name.includes("Google UK English Female")) ||
+    voices.find(v => v.name.includes("Microsoft Aria")) ||
+    voices.find(v => v.name.includes("Microsoft Jenny")) ||
+    voices.find(v => v.name.includes("Microsoft Zira")) ||
+    voices.find(v => v.name.includes("Samantha")) ||
+    voices.find(v => v.name.toLowerCase().includes("female")) ||
+    voices.find(v => v.lang.startsWith("en"));
+
+  if (femaleVoice) {
+    utterance.voice = femaleVoice;
+    console.log("Using voice:", femaleVoice.name);
+  }
+
   utterance.lang = "en-US";
   utterance.rate = 1;
-  utterance.pitch = 1;
+  utterance.pitch = 1.15;
   utterance.volume = 1;
 
-  utterance.onstart = () => {
-    console.log("Started speaking");
-    setSpeaking(true);
-  };
-
-  utterance.onend = () => {
-    console.log("Finished speaking");
-    setSpeaking(false);
-  };
-
+  utterance.onstart = () => setSpeaking(true);
+  utterance.onend = () => setSpeaking(false);
   utterance.onerror = (e) => {
-    console.error("Speech error:", e);
+    console.error(e);
     setSpeaking(false);
   };
 
