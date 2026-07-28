@@ -5,6 +5,7 @@ const MAX_HISTORY = 8;
 const MAX_CATALOGUE_PRODUCTS = 30;
 const requests = new Map();
 
+
 const STORE_CONTEXT = `
 Yumi Store customer-support facts:
 - Orders are processed 1-2 business days after payment confirmation; delivery usually takes 5-7 business days depending on location.
@@ -123,11 +124,12 @@ Assistant:`;
 let reply = cleanText(result.text ?? "", 3000);
 
 reply = reply.replace(
-  /\[\s*🛍️\s*View Product\s*\]\s*\n*\(\/product\/([A-Za-z0-9_-]+)\)/g,
-  "[🛍️ View Product](/product/$1)"
+  /\[([^\]]+)\]\s*\r?\n+\s*\(([^)]+)\)/g,
+  "[$1]($2)"
 );
-
 reply = reply.trim();
+console.log("FINAL REPLY:");
+console.log(reply);
   if (!reply) {
     return res.status(502).json({
       message: "Support returned an empty response.",
