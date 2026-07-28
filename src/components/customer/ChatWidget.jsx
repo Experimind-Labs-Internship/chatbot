@@ -103,20 +103,36 @@ if (!recognition) {
 }
 
 function speak(text) {
-  if (!voiceEnabled) return;
+  if (!("speechSynthesis" in window)) {
+    console.log("Speech synthesis not supported");
+    return;
+  }
 
   window.speechSynthesis.cancel();
 
-  const speech = new SpeechSynthesisUtterance(text);
+  const utterance = new SpeechSynthesisUtterance(text);
 
-  speech.lang = "en-IN";
-  speech.rate = 1;
-  speech.pitch = 1;
+  utterance.lang = "en-US";
+  utterance.rate = 1;
+  utterance.pitch = 1;
+  utterance.volume = 1;
 
-  speech.onstart = () => setSpeaking(true);
-  speech.onend = () => setSpeaking(false);
+  utterance.onstart = () => {
+    console.log("Started speaking");
+    setSpeaking(true);
+  };
 
-  window.speechSynthesis.speak(speech);
+  utterance.onend = () => {
+    console.log("Finished speaking");
+    setSpeaking(false);
+  };
+
+  utterance.onerror = (e) => {
+    console.error("Speech error:", e);
+    setSpeaking(false);
+  };
+
+  window.speechSynthesis.speak(utterance);
 }
 
   async function sendMessage(rawMessage) {
