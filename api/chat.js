@@ -70,7 +70,7 @@ export default async function handler(req, res) {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
       body: JSON.stringify({
-        model: process.env.OPENAI_CHAT_MODEL || "gpt-5.6-luna",
+        model: process.env.OPENAI_CHAT_MODEL || "gpt-5",
         instructions,
         input: [...history, { role: "user", content: message }],
         max_output_tokens: 350,
@@ -78,9 +78,11 @@ export default async function handler(req, res) {
     });
     const data = await response.json();
     if (!response.ok) {
-      console.error("OpenAI chat error", data?.error?.message || response.status);
-      return res.status(502).json({ message: "Support is temporarily unavailable." });
-    }
+  console.error("OpenAI Error:", JSON.stringify(data, null, 2));
+  return res.status(502).json({
+    message: data?.error?.message || "Support is temporarily unavailable."
+  });
+}
     const reply = cleanText(data.output_text, 3000);
     if (!reply) return res.status(502).json({ message: "Support returned an empty response." });
     return res.status(200).json({ reply });
