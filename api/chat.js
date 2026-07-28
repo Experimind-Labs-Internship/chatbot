@@ -86,6 +86,7 @@ function cleanCatalogue(catalogue) {
 }
 
 export default async function handler(req, res) {
+  console.log("===== NEW CHAT API =====");
   if (req.method !== "POST") {
     return res.status(405).json({
       message: "Method Not Allowed",
@@ -169,6 +170,7 @@ Assistant:
 
 for (let i = 0; i < 3; i++) {
   try {
+    console.log("Model:", "gemini-2.5-flash");
     result = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: [
