@@ -177,6 +177,8 @@ try {
   model: "models/gemini-3-flash-preview",
   input: prompt,
 });
+console.log("FULL RESULT:");
+console.log(JSON.stringify(result, null, 2));
 } catch (err) {
   console.error("FULL ERROR:");
   console.error(JSON.stringify(err, null, 2));
@@ -196,10 +198,7 @@ try {
   }
 }
 
-const reply = cleanText(
-  result.steps?.at(-1)?.content?.parts?.[0]?.text ?? "",
-  3000
-);
+const reply = "TEMP";
 
     if (!reply) {
       return res.status(502).json({
