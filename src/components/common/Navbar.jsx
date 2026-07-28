@@ -151,31 +151,59 @@ useEffect(() => {
 
                         <div className="space-y-5">
 
-                          <Link to="/shop" className="block hover:text-[#C3A274] transition">
+                          <Link
+                            to="/shop"
+                            onClick={() => setShopOpen(false)}
+                            className="block hover:text-[#C3A274] transition"
+                          >
                             All Products
                           </Link>
 
-                          <Link to="/nightwear" className="block hover:text-[#C3A274] transition">
+                          <Link
+                            to="/nightwear"
+                            onClick={() => setShopOpen(false)}
+                            className="block hover:text-[#C3A274] transition"
+                          >
                             Nightwear
                           </Link>
 
-                          <Link to="/abayas" className="block hover:text-[#C3A274] transition">
+                          <Link
+                            to="/Abayas"
+                            onClick={() => setShopOpen(false)}
+                            className="block hover:text-[#C3A274] transition"
+                          >
                             Abayas
                           </Link>
 
-                          <Link to="/kaftans" className="block hover:text-[#C3A274] transition">
+                          <Link
+                            to="/Kaftans"
+                            onClick={() => setShopOpen(false)}
+                            className="block hover:text-[#C3A274] transition"
+                          >
                             Kaftans
                           </Link>
 
-                          <Link to="/coord-sets" className="block hover:text-[#C3A274] transition">
+                          <Link
+                            to="/coord-sets"
+                            onClick={() => setShopOpen(false)}
+                            className="block hover:text-[#C3A274] transition"
+                          >
                             Co-ord Sets
                           </Link>
 
-                          <Link to="/new-arrivals" className="block hover:text-[#C3A274] transition">
+                          <Link
+                            to="/NewArrivals"
+                            onClick={() => setShopOpen(false)}
+                            className="block hover:text-[#C3A274] transition"
+                          >
                             New Arrivals
                           </Link>
 
-                          <Link to="/best-sellers" className="block hover:text-[#C3A274] transition">
+                          <Link
+                            to="/BestSellerPage"
+                            onClick={() => setShopOpen(false)}
+                            className="block hover:text-[#C3A274] transition"
+                          >
                             Best Sellers
                           </Link>
 
