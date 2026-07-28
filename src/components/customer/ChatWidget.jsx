@@ -117,20 +117,20 @@ function speak(text) {
   // Load available voices
   const voices = window.speechSynthesis.getVoices();
 
-  // Prefer female voices
+console.log(voices);
+
+// Only use a voice if it actually exists
+if (voices.length > 0) {
   const femaleVoice =
-    voices.find(v => v.name.includes("Google UK English Female")) ||
-    voices.find(v => v.name.includes("Microsoft Aria")) ||
-    voices.find(v => v.name.includes("Microsoft Jenny")) ||
-    voices.find(v => v.name.includes("Microsoft Zira")) ||
-    voices.find(v => v.name.includes("Samantha")) ||
-    voices.find(v => v.name.toLowerCase().includes("female")) ||
-    voices.find(v => v.lang.startsWith("en"));
+    voices.find(v => v.name === "Microsoft Aria Online (Natural)") ||
+    voices.find(v => v.name === "Microsoft Jenny Online (Natural)") ||
+    voices.find(v => v.name === "Google UK English Female");
 
   if (femaleVoice) {
     utterance.voice = femaleVoice;
-    console.log("Using voice:", femaleVoice.name);
   }
+}
+
 
   utterance.lang = "en-US";
   utterance.rate = 1;
