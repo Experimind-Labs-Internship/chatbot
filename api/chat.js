@@ -171,15 +171,23 @@ Assistant:
 for (let i = 0; i < 3; i++) {
   try {
     console.log("Model:", "gemini-2.5-flash");
-    result = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: [
-        {
-          role: "user",
-          parts: [{ text: prompt }],
-        },
-      ],
-    });
+    console.log("Requested model:", "gemini-2.5-flash");
+
+try {
+  result = await ai.models.generateContent({
+    model: "gemini-2.5-flash",
+    contents: [
+      {
+        role: "user",
+        parts: [{ text: prompt }],
+      },
+    ],
+  });
+} catch (err) {
+  console.error("FULL ERROR:");
+  console.error(JSON.stringify(err, null, 2));
+  throw err;
+}
 
     break;
 
