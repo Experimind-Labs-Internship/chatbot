@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FiSend, FiX } from "react-icons/fi";
+import { FiSend, FiX, FiMic, FiVolume2 } from "react-icons/fi";
 import { getAllProducts } from "../../firebase/productService";
 import logo from "../../assets/images/logo/logo.png";
 import "./ChatWidget.css";
@@ -31,8 +31,12 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState(readStoredMessages);
   const [isSending, setIsSending] = useState(false);
   const [catalogue, setCatalogue] = useState([]);
+  const [listening, setListening] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [speaking, setSpeaking] = useState(false);
   const inputRef = useRef(null);
   const messagesRef = useRef(null);
+  const recognitionRef = useRef(null);
 
   useEffect(() => {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
@@ -55,6 +59,65 @@ export default function ChatWidget() {
   useEffect(() => {
     if (isOpen) inputRef.current?.focus();
   }, [isOpen]);
+  useEffect(() => {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) return;
+
+  recognitionRef.current = new SpeechRecognition();
+  recognitionRef.current.lang = "en-IN";
+  recognitionRef.current.interimResults = false;
+  recognitionRef.current.continuous = false;
+}, []);
+
+
+
+function startListening() {
+  const recognition = recognitionRef.current;
+
+if (!recognition) {
+    alert("Voice recognition isn't supported in this browser.");
+    return;
+  }
+
+  setListening(true);
+
+  recognition.start();
+
+  recognition.onresult = (event) => {
+  const text = event.results[0][0].transcript;
+
+  setListening(false);
+
+  sendMessage(text);
+};
+
+  recognition.onerror = () => {
+    setListening(false);
+  };
+
+  recognition.onend = () => {
+    setListening(false);
+  };
+}
+
+function speak(text) {
+  if (!voiceEnabled) return;
+
+  window.speechSynthesis.cancel();
+
+  const speech = new SpeechSynthesisUtterance(text);
+
+  speech.lang = "en-IN";
+  speech.rate = 1;
+  speech.pitch = 1;
+
+  speech.onstart = () => setSpeaking(true);
+  speech.onend = () => setSpeaking(false);
+
+  window.speechSynthesis.speak(speech);
+}
 
   async function sendMessage(rawMessage) {
     const text = rawMessage.trim();
@@ -78,12 +141,25 @@ export default function ChatWidget() {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || "Unable to get a response.");
-      setMessages((current) => [...current, { role: "assistant", content: data.reply }]);
+      setMessages((current) => [
+  ...current,
+  { role: "assistant", content: data.reply },
+]);
+
+speak(data.reply);
     } catch {
-      setMessages((current) => [...current, {
-        role: "assistant",
-        content: "I’m sorry, I can’t connect right now. Please try again shortly or visit our Contact page.",
-      }]);
+      const errorReply =
+  "I’m sorry, I can’t connect right now. Please try again shortly or visit our Contact page.";
+
+setMessages((current) => [
+  ...current,
+  {
+    role: "assistant",
+    content: errorReply,
+  },
+]);
+
+speak(errorReply);
     } finally {
       setIsSending(false);
     }
@@ -99,7 +175,10 @@ export default function ChatWidget() {
               <h2>Yumi Assistant</h2>
               <p><span /> Customer support</p>
             </div>
-            <button type="button" className="yumi-chat__close" onClick={() => setIsOpen(false)} aria-label="Close chat">
+            <button type="button" className="yumi-chat__close" onClick={() => {
+  window.speechSynthesis.cancel();
+  setIsOpen(false);
+}} aria-label="Close chat">
               <FiX />
             </button>
           </header>
@@ -120,12 +199,79 @@ export default function ChatWidget() {
               </button>
             ))}
           </div>
+          {listening && (
+  <div className="yumi-chat__voice-status">
+    🎤 Listening...
+  </div>
+)}
+{speaking && (
+  <div className="yumi-chat__voice-status">
+    🔊 Speaking...
+  </div>
+)}
+          <form
+  className="yumi-chat__form"
+  onSubmit={(e) => {
+    e.preventDefault();
+    sendMessage(message);
+  }}
+>
+  <label className="sr-only" htmlFor="yumi-chat-input">
+    Your message
+  </label>
 
-          <form className="yumi-chat__form" onSubmit={(event) => { event.preventDefault(); sendMessage(message); }}>
-            <label className="sr-only" htmlFor="yumi-chat-input">Your message</label>
-            <input id="yumi-chat-input" ref={inputRef} value={message} onChange={(event) => setMessage(event.target.value)} maxLength="1000" placeholder="Type your message…" disabled={isSending} />
-            <button type="submit" aria-label="Send message" disabled={isSending || !message.trim()}><FiSend /></button>
-          </form>
+  <input
+    id="yumi-chat-input"
+    ref={inputRef}
+    value={message}
+    onChange={(e) => setMessage(e.target.value)}
+    maxLength="1000"
+    placeholder="Type your message…"
+    disabled={isSending}
+  />
+
+  <div className="yumi-chat__actions">
+
+    <button
+  type="button"
+  disabled={!recognitionRef.current}
+  className={`yumi-chat__icon-btn ${
+    listening ? "yumi-chat__icon-btn--listening" : ""
+  }`}
+  onClick={startListening}
+  title="Voice Input"
+>
+  <FiMic />
+</button>
+
+    <button
+  type="button"
+  className="yumi-chat__icon-btn"
+  onClick={() => {
+    if (voiceEnabled) {
+      window.speechSynthesis.cancel();
+    }
+    setVoiceEnabled(!voiceEnabled);
+  }}
+  title={voiceEnabled ? "Mute Voice" : "Enable Voice"}
+>
+  <FiVolume2
+    style={{
+      opacity: voiceEnabled ? 1 : 0.4,
+    }}
+  />
+</button>
+
+    <button
+      type="submit"
+      className="yumi-chat__icon-btn"
+      disabled={isSending || !message.trim()}
+    >
+      <FiSend />
+    </button>
+
+  </div>
+</form>
           <p className="yumi-chat__notice">Messages are processed to provide support.</p>
         </section>
       )}
