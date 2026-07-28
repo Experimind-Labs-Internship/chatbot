@@ -112,15 +112,11 @@ try {
   });
 
   const result = await ai.models.generateContent({
-    model: "gemini-2.5-flash-lite",
+    model: "gemini-3.5-flash-lite",
     contents: [
       {
         role: "user",
-        parts: [
-          {
-            text: prompt,
-          },
-        ],
+        parts: [{ text: prompt }],
       },
     ],
   });
@@ -143,24 +139,3 @@ try {
   });
 }
 }
-
-const reply = cleanText(result.text ?? "", 3000);
-
-  if (!reply) {
-    return res.status(502).json({
-      message: "Support returned an empty response.",
-    });
-  }
-
-  return res.status(200).json({ reply });
-
-} catch (error) {
-  console.error("Gemini SDK Error:");
-console.error(error);
-console.error(error?.stack);
-  return res.status(500).json({
-    message: error.message || "Support is temporarily unavailable.",
-  });
-}
-}
-   
