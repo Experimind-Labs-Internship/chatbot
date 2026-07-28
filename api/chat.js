@@ -97,7 +97,7 @@ Current catalogue (use only these products):
 ${JSON.stringify(catalogue)}
 `;
 
-const prompt = `${instructions}
+  const prompt = `${instructions}
 
 Conversation:
 ${history.map(h => `${h.role}: ${h.content}`).join("\n")}
@@ -116,7 +116,11 @@ try {
     contents: [
       {
         role: "user",
-        parts: [{ text: prompt }],
+        parts: [
+          {
+            text: prompt,
+          },
+        ],
       },
     ],
   });
@@ -139,3 +143,24 @@ try {
   });
 }
 }
+
+const reply = cleanText(result.text ?? "", 3000);
+
+  if (!reply) {
+    return res.status(502).json({
+      message: "Support returned an empty response.",
+    });
+  }
+
+  return res.status(200).json({ reply });
+
+} catch (error) {
+  console.error("Gemini SDK Error:");
+console.error(error);
+console.error(error?.stack);
+  return res.status(500).json({
+    message: error.message || "Support is temporarily unavailable.",
+  });
+}
+}
+   
