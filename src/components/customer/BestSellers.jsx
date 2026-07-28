@@ -45,15 +45,23 @@ export default function BestSellers() {
 
               {/* Image */}
 
-              <div className="overflow-hidden bg-[#F8F5F1]">
+              <div className="relative overflow-hidden bg-[#F8F5F1]">
 
-                <img
-                  src={product.images?.[0]}
-                  alt={product.name}
-                  className="w-full h-[420px] object-cover transition duration-700 group-hover:scale-105"
-                />
+  {product.discountActive && (
+    <span className="absolute top-5 left-5 z-10 bg-[#465348] text-whitetext-xs px-4 py-2 rounded-full tracking-wider">
+      {product.discountType === "percentage"
+        ? `${product.discountValue}% OFF`
+        : "SALE"}
+    </span>
+  )}
 
-              </div>
+  <img
+    src={product.images?.[0]}
+    alt={product.name}
+    className="w-full h-[420px] object-cover transition duration-700 group-hover:scale-105"
+  />
+
+</div>
 
               {/* Details */}
 
@@ -69,15 +77,35 @@ export default function BestSellers() {
 
                 <div className="flex items-center justify-between mt-4">
 
-                  <p className="text-lg font-semibold text-[#2E2A27]">
-                    ₹{product.price}
-                  </p>
+  <div>
+    {product.discountActive ? (
+      <>
+        <p className="text-sm text-gray-400 line-through">
+          ₹{product.price}
+        </p>
 
-                  <span className="text-[#B89B72]">
-                    ★  4.9
-                  </span>
+        <p className="text-xl font-bold text-red-600">
+          ₹{product.discountedPrice}
+        </p>
 
-                </div>
+        {product.discountType === "percentage" && (
+          <span className="inline-block mt-1 bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">
+            {product.discountValue}% OFF
+          </span>
+        )}
+      </>
+    ) : (
+      <p className="text-lg font-semibold text-[#2E2A27]">
+        ₹{product.price}
+      </p>
+    )}
+  </div>
+
+  <span className="text-[#B89B72]">
+    ★ 4.9
+  </span>
+
+</div>
 
                 <Link
                   to={`/product/${product.id}`}

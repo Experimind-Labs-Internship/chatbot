@@ -61,9 +61,17 @@ export default function NewArrivals() {
                   className="w-full h-[420px] object-cover transition duration-700 group-hover:scale-105"
                 />
 
-                <span className="absolute top-5 left-5 bg-[#465348] text-white text-xs px-4 py-2 rounded-full tracking-wider">
-                  NEW
-                </span>
+                {product.discountActive ? (
+  <span className="absolute top-5 left-5 bg-[#465348] text-white text-xs px-4 py-2 rounded-full tracking-wider">
+    {product.discountType === "percentage"
+      ? `${product.discountValue}% OFF`
+      : "SALE"}
+  </span>
+) : (
+  <span className="absolute top-5 left-5 bg-[#465348] text-white text-xs px-4 py-2 rounded-full tracking-wider">
+    NEW
+  </span>
+)}
 
               </div>
 
@@ -85,19 +93,35 @@ export default function NewArrivals() {
 
                 <div className="flex justify-between items-center mt-6">
 
-                  <span className="text-xl font-semibold text-[#2E2A27]">
+  <div>
+    {product.discountActive ? (
+      <>
+        <p className="text-sm text-gray-400 line-through">
+          ₹{product.price}
+        </p>
 
-                    ₹{product.price}
+        <p className="text-xl font-bold text-red-600">
+          ₹{product.discountedPrice}
+        </p>
 
-                  </span>
+        {product.discountType === "percentage" && (
+          <span className="inline-block mt-1 bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">
+            {product.discountValue}% OFF
+          </span>
+        )}
+      </>
+    ) : (
+      <span className="text-xl font-semibold text-[#2E2A27]">
+        ₹{product.price}
+      </span>
+    )}
+  </div>
 
-                  <span className="text-[#B89B72]">
+  <span className="text-[#B89B72]">
+    ★ 4.9
+  </span>
 
-                    ★ 4.9
-
-                  </span>
-
-                </div>
+</div>
 
                 <Link
                   to={`/product/${product.id}`}

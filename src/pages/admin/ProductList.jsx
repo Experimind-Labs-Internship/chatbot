@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiPlus, FiEdit2, FiTrash2, FiSearch } from "react-icons/fi";
+import {
+  FiPlus,
+  FiEdit2,
+  FiTrash2,
+  FiSearch,
+  FiPercent,
+} from "react-icons/fi";
 import { getAllProducts, deleteProduct } from "../../firebase/productService";
+
 
 export default function ProductList() {
   const [products, setProducts] = useState([]);
@@ -89,7 +96,21 @@ export default function ProductList() {
                     </td>
                     <td className="px-6 py-4 font-medium text-[#2E2A27]">{product.name}</td>
                     <td className="px-6 py-4 capitalize text-[#6F6A65]">{product.category}</td>
-                    <td className="px-6 py-4">₹{product.price}</td>
+                    <td className="px-6 py-4">
+  {product.discountActive ? (
+    <>
+      <span className="line-through text-gray-400 mr-2">
+        ₹{product.price}
+      </span>
+
+      <span className="font-semibold text-green-700">
+        ₹{product.discountedPrice}
+      </span>
+    </>
+  ) : (
+    <>₹{product.price}</>
+  )}
+</td>
                     <td className="px-6 py-4">
                       <span className={totalStock === 0 ? "text-red-600" : "text-[#2E2A27]"}>
                         {totalStock}
@@ -114,6 +135,12 @@ export default function ProductList() {
                         >
                           <FiEdit2 size={16} />
                         </Link>
+                        <Link
+  to={`/admin/products/discount/${product.id}`}
+  className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-green-50 text-green-700"
+>
+  <FiPercent size={16} />
+</Link>
                         <button
                           onClick={() => handleDelete(product)}
                           className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-red-50 text-red-600"

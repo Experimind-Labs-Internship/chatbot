@@ -74,12 +74,16 @@ export default function NewArrivals() {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {products.map((product) => (
               <ProductCard
-                key={product.id}
-                id={product.id}
-                image={product.images?.[0]}
-                title={product.name}
-                price={`₹${product.price}`}
-              />
+  key={product.id}
+  id={product.id}
+  image={product.images?.[0]}
+  title={product.name}
+  price={product.price}
+  discountActive={product.discountActive}
+  discountedPrice={product.discountedPrice}
+  discountType={product.discountType}
+  discountValue={product.discountValue}
+/>
             ))}
 
           </div>

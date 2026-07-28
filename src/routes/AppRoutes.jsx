@@ -52,7 +52,7 @@ import Reports from "../pages/admin/Reports";
 import Newsletter from "../pages/admin/Newsletter";
 import CancelledOrders from "../pages/admin/CancelledOrders";
 import Addresses from "../pages/customer/Addresses";
-
+import DiscountProduct from "../pages/admin/DiscountProduct";
 function CustomerLayout({ children }) {
   return (
     <>
@@ -111,7 +111,6 @@ export default function AppRoutes() {
         }
       >
         
-        <Route path="cancelled-orders" element={<CancelledOrders />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="products" element={<ProductList />} />
         <Route path="products/add" element={<ProductForm />} />
@@ -129,9 +128,16 @@ export default function AppRoutes() {
         <Route path="returns" element={<AdminReturns />} />
         <Route path="reports" element={<Reports />} />
         <Route path="newsletter" element={<Newsletter />} />
-      </Route>
-    </Routes>
+
+    <Route path="cancelled-orders" element={<CancelledOrders />} />
+
+<Route
+  path="products/discount/:id"
+  element={<DiscountProduct />}
+/>
+
+</Route>
+
+</Routes>
   );
 }
-
-

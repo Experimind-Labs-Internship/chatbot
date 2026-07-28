@@ -126,7 +126,9 @@ const handleWishlist = async () => {
         productId: product.id,
         name: product.name,
         image: product.images?.[0],
-        price: product.price,
+        price: product.discountActive
+  ? product.discountedPrice
+  : product.price,
       });
 
       const addedItem = await getWishlistItem(
@@ -153,7 +155,14 @@ const handleAddToCart = async () => {
   }
 
   try {
-    await addToCart(product, size, quantity);
+    const finalProduct = {
+      ...product,
+      price: product.discountActive
+        ? product.discountedPrice
+        : product.price,
+    };
+
+    await addToCart(finalProduct, size, quantity);
 
     console.log("Added Successfully");
 
@@ -166,7 +175,6 @@ const handleAddToCart = async () => {
     console.error("Add To Cart Error:", err);
   }
 };
- 
 
   const formatDate = (timestamp) => {
     if (!timestamp?.toDate) return "";
@@ -229,9 +237,27 @@ const handleAddToCart = async () => {
             </span>
           </div>
 
-          <h2 className="mt-8 text-4xl font-semibold text-[#465348]">
-            ₹{product.price?.toLocaleString()}
-          </h2>
+          <div className="mt-8">
+  {product.discountActive ? (
+    <>
+      <p className="text-xl text-gray-400 line-through">
+        ₹{product.price?.toLocaleString()}
+      </p>
+
+      <h2 className="text-4xl font-semibold text-[#465348]">
+        ₹{product.discountedPrice?.toLocaleString()}
+      </h2>
+
+      <span className="inline-block mt-2 bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-medium">
+        {product.discountValue}% OFF
+      </span>
+    </>
+  ) : (
+    <h2 className="text-4xl font-semibold text-[#465348]">
+      ₹{product.price?.toLocaleString()}
+    </h2>
+  )}
+</div>
 
           <p className="mt-8 leading-8 text-[#6A625B]">
             {product.description}

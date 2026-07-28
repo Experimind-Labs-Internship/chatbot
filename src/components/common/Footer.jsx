@@ -143,17 +143,34 @@ const handleSubscribe = async () => {
 
               <div className="flex items-center gap-3">
                 <FiPhone />
-                <span>+91 9591308536</span>
+                <a
+                  href="tel:+919591308536"
+                  className="hover:text-[#C3A274] transition"
+                >
+                  +91 9591308536
+                </a>
               </div>
 
               <div className="flex items-center gap-3">
                 <FiMail />
-                <span>hello@yumidxb.com</span>
+                <a
+                  href="mailto:yumidxb@gmail.com"
+                  className="hover:text-[#C3A274] transition"
+                >
+                  yumidxb@gmail.com
+                </a>
               </div>
 
               <div className="flex items-center gap-3">
                 <FiMapPin />
-                <span>Mangaluru, India</span>
+                <a
+                  href="https://maps.google.com/?q=Mangaluru,India"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[#C3A274] transition"
+                >
+                  Mangaluru, India
+                </a>
               </div>
 
             </div>

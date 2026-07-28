@@ -423,13 +423,16 @@ default:
 
           {filteredProducts.length > 0 ? (
   filteredProducts.map((product) => (
-    <ProductCard
-      key={product.id}
-      id={product.id}
-      image={product.images?.[0]}
-      title={product.name}
-      price={`₹${product.price}`}
-    />
+   <ProductCard
+  id={product.id}
+  image={product.images?.[0]}
+  title={product.name}
+  price={product.price}
+  discountActive={product.discountActive}
+  discountedPrice={product.discountedPrice}
+  discountType={product.discountType}
+  discountValue={product.discountValue}
+/>
   ))
 ) : (
   <div className="col-span-full text-center py-16">

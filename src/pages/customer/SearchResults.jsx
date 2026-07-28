@@ -75,12 +75,16 @@ export default function SearchResults() {
             {products.map((product) => (
 
               <ProductCard
-                key={product.id}
-                id={product.id}
-                image={product.images?.[0]}
-                title={product.name}
-                price={`₹${product.price}`}
-              />
+  key={product.id}
+  id={product.id}
+  image={product.images?.[0]}
+  title={product.name}
+  price={product.price}
+  discountActive={product.discountActive}
+  discountedPrice={product.discountedPrice}
+  discountType={product.discountType}
+  discountValue={product.discountValue}
+/>
 
             ))}
 

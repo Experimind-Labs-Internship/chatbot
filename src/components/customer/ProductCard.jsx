@@ -13,6 +13,10 @@ export default function ProductCard({
   image,
   title,
   price,
+  discountActive,
+  discountedPrice,
+  discountType,
+  discountValue,
 }) {
   const [liked, setLiked] = useState(false);
   const { user } = useAuth();
@@ -63,9 +67,11 @@ async function loadWishlist() {
     name: title,
     image,
     price:
-      typeof price === "string"
-        ? Number(price.replace(/[₹,]/g, ""))
-        : price,
+  typeof price === "string"
+    ? Number(price.replace(/[₹,]/g, ""))
+    : discountActive
+      ? discountedPrice
+      : price,
   });
 
   loadWishlist();
@@ -80,6 +86,13 @@ async function loadWishlist() {
       {/* Image */}
 
       <div className="relative overflow-hidden">
+        {discountActive && (
+  <div className="absolute top-4 left-4 z-10 bg-[#465348] text-white px-3 py-2 rounded-xl font-semibold text-sm shadow-lg">
+    {discountType === "percentage"
+      ? `${discountValue}% OFF`
+      : "SALE"}
+  </div>
+)}
 
         <img
           src={image}
@@ -129,9 +142,29 @@ async function loadWishlist() {
 
         <div className="flex justify-between items-center mt-6">
 
-          <span className="text-2xl font-semibold text-[#B89B72]">
-            {price}
-          </span>
+          
+ 
+{discountActive ? (
+  <div>
+    <p className="text-sm text-gray-400 line-through">
+      ₹{price}
+    </p>
+
+    <p className="text-2xl font-bold text-red-600">
+      ₹{discountedPrice}
+    </p>
+
+    {discountType === "percentage" && (
+      <span className="inline-block mt-2 bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">
+        {discountValue}% OFF
+      </span>
+    )}
+  </div>
+) : (
+  <span className="text-2xl font-semibold text-[#B89B72]">
+    ₹{price}
+  </span>
+)}
 
           <Link
             to={`/product/${id}`}
