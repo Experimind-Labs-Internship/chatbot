@@ -120,7 +120,12 @@ Assistant:`;
   ],
 });
 
-const reply = cleanText(result.text ?? "", 3000);
+let reply = cleanText(result.text ?? "", 3000);
+
+reply = reply.replace(
+  /\/product\/([A-Za-z0-9_-]+)/g,
+  "[🛍️ View Product](/product/$1)"
+);
 
   if (!reply) {
     return res.status(502).json({
