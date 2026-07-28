@@ -186,7 +186,12 @@ if (voices.length > 0) {
         }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Unable to get a response.");
+
+console.log("API Response:", data);
+
+if (!response.ok) {
+  throw new Error(data.message);
+}
       setMessages((current) => [
   ...current,
   { role: "assistant", content: data.reply },

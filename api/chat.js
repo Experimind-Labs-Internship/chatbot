@@ -214,8 +214,8 @@ const reply = cleanText(result.text ?? "", 3000);
   }
 
   return res.status(500).json({
-    message:
-      "Support is temporarily unavailable. Please try again later.",
-  });
+  message: err.message,
+  status: err.status,
+});
 }
 }
