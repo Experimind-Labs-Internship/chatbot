@@ -80,7 +80,7 @@ User: ${message}
 Assistant:`;
 
   const result = await ai.models.generateContent({
-  model: "gemini-2.5-pro",
+  model: "gemini-2.0-flash",
   contents: [
     {
       role: "user",
