@@ -122,16 +122,9 @@ Assistant:`;
 
 let reply = cleanText(result.text ?? "", 3000);
 
-// Replace "(/product/ID)" with a clickable markdown link
 reply = reply.replace(
-  /\(\/product\/([A-Za-z0-9_-]+)\)/g,
-  "\n\n[🛍️ View Product](/product/$1)"
-);
-
-// Remove any remaining plain "/product/ID" text
-reply = reply.replace(
-  /^\/product\/[A-Za-z0-9_-]+$/gm,
-  ""
+  /\[\s*🛍️\s*View Product\s*\]\s*\n*\(\/product\/([A-Za-z0-9_-]+)\)/g,
+  "[🛍️ View Product](/product/$1)"
 );
 
 reply = reply.trim();
