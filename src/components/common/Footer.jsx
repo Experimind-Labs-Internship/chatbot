@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import { subscribeToNewsletter } from "../../firebase/newsletterService";
 import {
   FiInstagram,
-  FiFacebook,
   FiPhone,
   FiMail,
   FiMapPin,
 } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
 
 export default function Footer() {
   const [email, setEmail] = useState("");
@@ -160,17 +160,39 @@ const handleSubscribe = async () => {
 
             {/* Social */}
 
-            <div className="flex gap-4 mt-8">
+           
 
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full border border-gray-500 flex items-center justify-center hover:bg-[#C3A274] hover:border-[#C3A274] transition"
-              >
-                <FiInstagram />
-              </a>
+<div className="flex gap-4 mt-8">
 
+  <a
+    href="https://www.instagram.com/yumi_dxb"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Instagram"
+    className="w-11 h-11 rounded-full border border-gray-500 flex items-center justify-center hover:bg-[#C3A274] hover:border-[#C3A274] hover:text-[#22201D] transition-all duration-300"
+  >
+    <FiInstagram size={20} />
+  </a>
 
-            </div>
+  <a
+    href="https://wa.me/919591308536"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="WhatsApp"
+    className="w-11 h-11 rounded-full border border-gray-500 flex items-center justify-center hover:bg-[#25D366] hover:border-[#25D366] hover:text-white transition-all duration-300"
+  >
+    <FaWhatsapp size={20} />
+  </a>
+
+  <a
+    href="mailto:hello@yumidxb.com"
+    aria-label="Email"
+    className="w-11 h-11 rounded-full border border-gray-500 flex items-center justify-center hover:bg-[#465348] hover:border-[#465348] transition-all duration-300"
+  >
+    <FiMail size={20} />
+  </a>
+
+</div>
 
           </div>
 
