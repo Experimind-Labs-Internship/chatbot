@@ -170,19 +170,13 @@ Assistant:
 
 for (let i = 0; i < 3; i++) {
   try {
-    console.log("Model:", "gemini-2.0-flash");
-console.log("Requested model:", "gemini-2.0-flash");
+    console.log("Model:", "models/gemini-3-flash-preview");
 
 try {
-  result = await ai.models.generateContent({
-    model: "gemini-2.0-flash",
-    contents: [
-      {
-        role: "user",
-        parts: [{ text: prompt }],
-      },
-    ],
-  });
+  result = await ai.interactions.create({
+  model: "models/gemini-3-flash-preview",
+  input: prompt,
+});
 } catch (err) {
   console.error("FULL ERROR:");
   console.error(JSON.stringify(err, null, 2));
@@ -202,7 +196,10 @@ try {
   }
 }
 
-const reply = cleanText(result.text ?? "", 3000);
+const reply = cleanText(
+  result.steps?.at(-1)?.content?.parts?.[0]?.text ?? "",
+  3000
+);
 
     if (!reply) {
       return res.status(502).json({
