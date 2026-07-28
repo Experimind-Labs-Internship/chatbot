@@ -87,22 +87,22 @@ export default function ChatWidget() {
 function startListening() {
   const recognition = recognitionRef.current;
 
-if (!recognition) {
+  if (!recognition) {
     alert("Voice recognition isn't supported in this browser.");
     return;
   }
 
+  if (listening) return;
+
   setListening(true);
 
-  recognition.start();
-
   recognition.onresult = (event) => {
-  const text = event.results[0][0].transcript;
+    const text = event.results[0][0].transcript;
 
-  setListening(false);
+    setListening(false);
 
-  sendMessage(text);
-};
+    sendMessage(text);
+  };
 
   recognition.onerror = () => {
     setListening(false);
@@ -111,7 +111,11 @@ if (!recognition) {
   recognition.onend = () => {
     setListening(false);
   };
+
+  recognition.start();
 }
+
+
 
 function speak(text) {
   if (!voiceEnabled) return;
@@ -151,9 +155,12 @@ if (voices.length > 0) {
   utterance.onstart = () => setSpeaking(true);
   utterance.onend = () => setSpeaking(false);
   utterance.onerror = (e) => {
+  if (e.error !== "interrupted") {
     console.error(e);
-    setSpeaking(false);
-  };
+  }
+
+  setSpeaking(false);
+};
 
   window.speechSynthesis.speak(utterance);
 }
@@ -229,23 +236,25 @@ speak(errorReply);
   className={`yumi-chat__message yumi-chat__message--${item.role}`}
 >
   <ReactMarkdown
-    components={{
-      a: ({ href, children }) => (
-        <a
-          href={href}
-          style={{
-            color: "#465348",
-            fontWeight: 600,
-            textDecoration: "underline",
-          }}
-        >
-          {children}
-        </a>
-      ),
-    }}
-  >
-    {item.content}
-  </ReactMarkdown>
+  components={{
+    a: ({ href, children }) => (
+      <a
+        href={href}
+        target="_self"
+        rel="noopener noreferrer"
+        style={{
+          color: "#465348",
+          fontWeight: 600,
+          textDecoration: "underline",
+        }}
+      >
+        {children}
+      </a>
+    ),
+  }}
+>
+  {item.content}
+</ReactMarkdown>
 </div>
             ))}
             {isSending && <p className="yumi-chat__typing">Yumi Assistant is typing…</p>}
