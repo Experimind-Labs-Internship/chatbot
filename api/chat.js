@@ -165,21 +165,34 @@ Assistant:
       apiKey: process.env.GEMINI_API_KEY,
     });
 
-    const result = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+    let result;
+
+for (let i = 0; i < 3; i++) {
+  try {
+    result = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
       contents: [
         {
           role: "user",
-          parts: [
-            {
-              text: prompt,
-            },
-          ],
+          parts: [{ text: prompt }],
         },
       ],
     });
 
-    const reply = cleanText(result.text || "", 3000);
+    break;
+
+  } catch (err) {
+    if (err.status !== 503 || i === 2) {
+      throw err;
+    }
+
+    await new Promise((resolve) =>
+      setTimeout(resolve, 1500 * (i + 1))
+    );
+  }
+}
+
+const reply = cleanText(result.text ?? "", 3000);
 
     if (!reply) {
       return res.status(502).json({
@@ -191,11 +204,18 @@ Assistant:
       reply,
     });
   } catch (err) {
-    console.error("Gemini Error:", err);
+  console.error("Gemini Error:", err);
 
-    return res.status(500).json({
+  if (err.status === 503) {
+    return res.status(503).json({
       message:
-        err.message || "Support is temporarily unavailable.",
+        "Our AI assistant is experiencing high demand. Please try again in a few seconds.",
     });
   }
+
+  return res.status(500).json({
+    message:
+      "Support is temporarily unavailable. Please try again later.",
+  });
+}
 }
