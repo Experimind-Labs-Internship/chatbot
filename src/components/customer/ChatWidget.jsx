@@ -43,6 +43,7 @@ export default function ChatWidget() {
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef(null);
   const [lastReply, setLastReply] = useState("");
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   useEffect(() => {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
@@ -155,7 +156,12 @@ speak(data.reply);
   }
 }
 function speak(text) {
-  speechSynthesis.cancel();
+  // If already speaking, stop
+  if (speechSynthesis.speaking) {
+    speechSynthesis.cancel();
+    setIsSpeaking(false);
+    return;
+  }
 
   const utterance = new SpeechSynthesisUtterance(text);
 
@@ -172,12 +178,15 @@ function speak(text) {
     voices[0];
 
   utterance.voice = femaleVoice;
-
   utterance.rate = 0.95;
-
   utterance.pitch = 1.2;
-
   utterance.volume = 1;
+
+  utterance.onstart = () => setIsSpeaking(true);
+
+  utterance.onend = () => setIsSpeaking(false);
+
+  utterance.onerror = () => setIsSpeaking(false);
 
   speechSynthesis.speak(utterance);
 }
@@ -191,7 +200,11 @@ function speak(text) {
               <h2>Yumi Assistant</h2>
               <p><span /> Customer support</p>
             </div>
-            <button type="button" className="yumi-chat__close" onClick={() => setIsOpen(false)} aria-label="Close chat">
+            <button type="button" className="yumi-chat__close" onClick={() => {
+  speechSynthesis.cancel();
+  setIsSpeaking(false);
+  setIsOpen(false);
+}} aria-label="Close chat">
               <FiX />
             </button>
           </header>
@@ -250,9 +263,9 @@ function speak(text) {
   className="yumi-chat__voice"
   onClick={() => lastReply && speak(lastReply)}
   disabled={!lastReply}
-  aria-label="Speak last reply"
+  aria-label={isSpeaking ? "Stop speaking" : "Speak last reply"}
 >
-  <span>🔊</span>
+  {isSpeaking ? "⏹️" : "🔊"}
 </button>
 
 <button
