@@ -284,7 +284,9 @@ function startListening() {
 
           <form className="yumi-chat__form" onSubmit={(event) => { event.preventDefault(); sendMessage(message); }}>
             <label className="sr-only" htmlFor="yumi-chat-input">Your message</label>
-            <input
+           
+
+<input
   id="yumi-chat-input"
   ref={inputRef}
   value={message}
@@ -294,6 +296,18 @@ function startListening() {
   disabled={isSending}
 />
 
+{/* Speaker Button */}
+<button
+  type="button"
+  className="yumi-chat__voice"
+  onClick={toggleSpeech}
+  disabled={!lastReply}
+  aria-label={isSpeaking ? "Stop speaking" : "Speak last reply"}
+>
+  {isSpeaking ? "⏹️" : "🔊"}
+</button>
+
+{/* Mic Button */}
 <button
   type="button"
   className="yumi-chat__voice"
@@ -304,7 +318,7 @@ function startListening() {
   {listening ? <FiMicOff /> : <FiMic />}
 </button>
 
-
+{/* Send Button */}
 <button
   type="submit"
   className="yumi-chat__send"
@@ -313,6 +327,9 @@ function startListening() {
 >
   <FiSend />
 </button>
+
+
+
           </form>
           <p className="yumi-chat__notice">Messages are processed to provide support.</p>
         </section>
