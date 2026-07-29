@@ -31,6 +31,7 @@ import Shipping from "../pages/customer/Shipping";
 import Returns from "../pages/customer/Returns";
 import PrivacyPolicy from "../pages/customer/PrivacyPolicy";
 import Terms from "../pages/customer/Terms";
+import VoiceAssistant from "../components/customer/VoiceAssistant";
 // Admin
 import AdminLayout from "../components/admin/AdminLayout";
 import ProtectedAdminRoute from "../components/admin/ProtectedAdminRoute";
@@ -60,6 +61,7 @@ function CustomerLayout({ children }) {
       {children}
       <Footer />
       <ChatWidget />
+      <VoiceAssistant />
     </>
   );
 }
@@ -98,6 +100,7 @@ export default function AppRoutes() {
         path="/forgot-password"
         element={<CustomerLayout><ForgotPassword /></CustomerLayout>}
       />
+      
       <Route path="/addresses" element={<Addresses />} />
 
       {/* ---------- Admin ---------- */}

@@ -1,5 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { FiSend, FiX } from "react-icons/fi";
+import {
+  FiSend,
+  FiX,
+  FiMic,
+  FiMicOff,
+  FiVolume2,
+} from "react-icons/fi";
 import { getAllProducts } from "../../firebase/productService";
 import logo from "../../assets/images/logo/logo.png";
 import "./ChatWidget.css";
@@ -34,6 +40,8 @@ export default function ChatWidget() {
   const [catalogue, setCatalogue] = useState([]);
   const inputRef = useRef(null);
   const messagesRef = useRef(null);
+  const [listening, setListening] = useState(false);
+  const recognitionRef = useRef(null);
 
   useEffect(() => {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
@@ -56,6 +64,38 @@ export default function ChatWidget() {
   useEffect(() => {
     if (isOpen) inputRef.current?.focus();
   }, [isOpen]);
+
+  useEffect(() => {
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) return;
+
+  const recognition = new SpeechRecognition();
+
+  recognition.lang = "en-US";
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  recognition.onstart = () => setListening(true);
+
+  recognition.onend = () => setListening(false);
+
+  recognition.onerror = () => setListening(false);
+
+  recognition.onresult = (event) => {
+    const text = event.results[0][0].transcript;
+    setMessage(text);
+    sendMessage(text);
+  };
+
+  recognitionRef.current = recognition;
+
+  speechSynthesis.onvoiceschanged = () => {
+    speechSynthesis.getVoices();
+  };
+}, []);
 
   async function sendMessage(rawMessage) {
     const text = rawMessage.trim();
@@ -81,15 +121,43 @@ export default function ChatWidget() {
       if (!response.ok) throw new Error(data.message || "Unable to get a response.");
       setMessages((current) => [...current, { role: "assistant", content: data.reply }]);
     } catch {
-      setMessages((current) => [...current, {
-        role: "assistant",
-        content: "I’m sorry, I can’t connect right now. Please try again shortly or visit our Contact page.",
-      }]);
+      setMessages((current) => [
+  ...current,
+  { role: "assistant", content: data.reply },
+]);
+
+speak(data.reply);
     } finally {
       setIsSending(false);
     }
   }
+function speak(text) {
+  speechSynthesis.cancel();
 
+  const utterance = new SpeechSynthesisUtterance(text);
+
+  const voices = speechSynthesis.getVoices();
+
+  const femaleVoice =
+    voices.find(v => v.name.includes("Google UK English Female")) ||
+    voices.find(v => v.name.includes("Microsoft Sonia")) ||
+    voices.find(v => v.name.includes("Microsoft Natasha")) ||
+    voices.find(v => v.name.includes("Samantha")) ||
+    voices.find(v => v.name.includes("Zira")) ||
+    voices.find(v => v.name.toLowerCase().includes("female")) ||
+    voices.find(v => v.lang === "en-US") ||
+    voices[0];
+
+  utterance.voice = femaleVoice;
+
+  utterance.rate = 0.95;
+
+  utterance.pitch = 1.2;
+
+  utterance.volume = 1;
+
+  speechSynthesis.speak(utterance);
+}
   return (
     <div className="yumi-chat" aria-live="polite">
       {isOpen && (
@@ -145,7 +213,24 @@ export default function ChatWidget() {
           <form className="yumi-chat__form" onSubmit={(event) => { event.preventDefault(); sendMessage(message); }}>
             <label className="sr-only" htmlFor="yumi-chat-input">Your message</label>
             <input id="yumi-chat-input" ref={inputRef} value={message} onChange={(event) => setMessage(event.target.value)} maxLength="1000" placeholder="Type your message…" disabled={isSending} />
-            <button type="submit" aria-label="Send message" disabled={isSending || !message.trim()}><FiSend /></button>
+            <>
+  <button
+    type="button"
+    aria-label="Voice Assistant"
+    onClick={() => recognitionRef.current?.start()}
+    disabled={listening}
+  >
+    {listening ? <FiMicOff /> : <FiMic />}
+  </button>
+
+  <button
+    type="submit"
+    aria-label="Send message"
+    disabled={isSending || !message.trim()}
+  >
+    <FiSend />
+  </button>
+</>
           </form>
           <p className="yumi-chat__notice">Messages are processed to provide support.</p>
         </section>
