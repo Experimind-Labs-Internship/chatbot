@@ -63,9 +63,9 @@ export default function Profile() {
         </div>
 
         {/* Sections */}
-        <div className="grid lg:grid-cols-3 gap-8 mt-10">
+        <div className="mt-10">
 
-          <div className="lg:col-span-2 space-y-8">
+          <div className="space-y-8">
 
   <div className="bg-white rounded-3xl shadow-sm p-8">
 
@@ -136,10 +136,8 @@ export default function Profile() {
 </div>
 
           <div className="space-y-8">
-            <WishlistSection />
-            <MyCoupons />
-            <AccountSettings />
-          </div>
+  <AccountSettings />
+</div>
 
         </div>
 
