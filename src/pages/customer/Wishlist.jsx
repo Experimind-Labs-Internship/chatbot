@@ -103,12 +103,28 @@ useEffect(() => {
                   <h3 className="text-2xl font-serif text-[#2E2A27] min-h-[64px] leading-tight">
   {product.name}
 </h3>
+{product.discountActive ? (
+  <>
+    <p className="mt-2 text-sm text-gray-400 line-through">
+      ₹{product.price}
+    </p>
 
-   
+    <p className="mt-2 text-2xl font-bold text-green-600">
+      ₹{product.discountedPrice}
+    </p>
 
-<p className="mt-2 text-2xl font-semibold text-[#B89B72]">
-  ₹{product.price}
-</p>
+    {product.discountType === "percentage" && (
+      <span className="inline-block mt-2 bg-green-100 text-green-600 text-xs px-2 py-1 rounded-full">
+        {product.discountValue}% OFF
+      </span>
+    )}
+  </>
+) : (
+  <p className="mt-2 text-2xl font-semibold text-[#B89B72]">
+    ₹{product.price}
+  </p>
+)}
+  
 
                   <div className="flex gap-4 mt-auto">
 

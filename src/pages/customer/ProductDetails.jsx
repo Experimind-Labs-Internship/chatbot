@@ -244,19 +244,19 @@ const handleAddToCart = async () => {
         ₹{product.price?.toLocaleString()}
       </p>
 
-      <h2 className="text-4xl font-semibold text-[#465348]">
-        ₹{product.discountedPrice?.toLocaleString()}
-      </h2>
+      <h2 className="text-4xl font-semibold text-green-600">
+  ₹{product.discountedPrice?.toLocaleString()}
+</h2>
 
-      <span className="inline-block mt-2 bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-medium">
-        {product.discountValue}% OFF
-      </span>
+      <span className="inline-block mt-2 bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm font-medium">
+  {product.discountValue}% OFF
+</span>
     </>
   ) : (
-    <h2 className="text-4xl font-semibold text-[#465348]">
-      ₹{product.price?.toLocaleString()}
-    </h2>
-  )}
+  <h2 className="text-4xl font-semibold text-[#465348]">
+    ₹{product.price?.toLocaleString()}
+  </h2>
+)}
 </div>
 
           <p className="mt-8 leading-8 text-[#6A625B]">

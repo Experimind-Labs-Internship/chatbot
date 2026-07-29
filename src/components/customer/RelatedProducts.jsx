@@ -39,7 +39,7 @@ export default function RelatedProducts({ category, currentProductId }) {
             to={`/product/${product.id}`}
             className="group"
           >
-            <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition">
+            <div className="relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition">
 
               <img
                 src={product.images?.[0]}
@@ -52,9 +52,27 @@ export default function RelatedProducts({ category, currentProductId }) {
                   {product.name}
                 </h3>
 
-                <p className="mt-2 text-lg font-semibold text-[#465348]">
-                  ₹{product.price?.toLocaleString()}
-                </p>
+                {product.discountActive ? (
+  <div className="mt-2">
+    <p className="text-sm text-gray-400 line-through">
+      ₹{product.price?.toLocaleString()}
+    </p>
+
+    <p className="text-lg font-bold text-green-600">
+      ₹{product.discountedPrice?.toLocaleString()}
+    </p>
+
+    <span className="inline-block mt-2 bg-green-100 text-green-600 text-xs px-2 py-1 rounded-full font-medium">
+      {product.discountType === "percentage"
+        ? `${product.discountValue}% OFF`
+        : "SALE"}
+    </span>
+  </div>
+) : (
+  <p className="mt-2 text-lg font-semibold text-[#465348]">
+    ₹{product.price?.toLocaleString()}
+  </p>
+)}
               </div>
 
             </div>

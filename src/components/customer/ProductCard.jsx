@@ -62,17 +62,23 @@ async function loadWishlist() {
   }
 
   await addToWishlist({
-    userId: user.uid,
-    productId: id,
-    name: title,
-    image,
-    price:
-  typeof price === "string"
-    ? Number(price.replace(/[₹,]/g, ""))
-    : discountActive
-      ? discountedPrice
+  userId: user.uid,
+  productId: id,
+  name: title,
+  image,
+
+  // Original price
+  price:
+    typeof price === "string"
+      ? Number(price.replace(/[₹,]/g, ""))
       : price,
-  });
+
+  // Discount details
+  discountActive,
+  discountedPrice,
+  discountType,
+  discountValue,
+});
 
   loadWishlist();
 };

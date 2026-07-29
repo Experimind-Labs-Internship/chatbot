@@ -52,12 +52,12 @@ export default function RecentlyViewed() {
         ₹{product.price?.toLocaleString()}
       </p>
 
-      <p className="text-lg font-bold text-green-600">
+      <p className="text-lg font-bold text-green-700">
   ₹{product.discountedPrice?.toLocaleString()}
 </p>
 
 {product.discountType === "percentage" && (
-  <span className="inline-block mt-1 bg-green-100 text-green-600 text-xs px-2 py-1 rounded-full">
+  <span className="inline-block mt-1 bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">
     {product.discountValue}% OFF
   </span>
 )}
