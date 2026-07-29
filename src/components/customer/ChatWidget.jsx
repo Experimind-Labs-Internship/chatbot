@@ -163,6 +163,7 @@ startSpeaking(data.reply);
 }
 function startSpeaking(text) {
   speechSynthesis.cancel();
+  setIsSpeaking(false);
 
   const utterance = new SpeechSynthesisUtterance(text);
 
@@ -196,6 +197,19 @@ function toggleSpeech() {
   } else if (lastReply) {
     startSpeaking(lastReply);
   }
+}
+function startListening() {
+  // Stop AI speaking
+  speechSynthesis.cancel();
+  setIsSpeaking(false);
+
+  // Stop any previous recognition session
+  recognitionRef.current?.abort();
+
+  // Wait for speech synthesis to fully stop
+  setTimeout(() => {
+    recognitionRef.current?.start();
+  }, 500);
 }
   return (
     <div className="yumi-chat" aria-live="polite">
@@ -268,22 +282,13 @@ function toggleSpeech() {
 <button
   type="button"
   className="yumi-chat__voice"
-  onClick={toggleSpeech}
-  disabled={!lastReply}
-  aria-label={isSpeaking ? "Stop speaking" : "Speak last reply"}
->
-  {isSpeaking ? "⏹️" : "🔊"}
-</button>
-
-<button
-  type="button"
-  className="yumi-chat__voice"
-  onClick={() => recognitionRef.current?.start()}
+  onClick={startListening}
   disabled={listening}
   aria-label="Voice input"
 >
   {listening ? <FiMicOff /> : <FiMic />}
 </button>
+
 
 <button
   type="submit"
