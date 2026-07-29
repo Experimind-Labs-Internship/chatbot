@@ -22,7 +22,7 @@ export default function Hero() {
 
       {/* Content */}
 
-      <div className="relative z-10 max-w-7xl mx-auto px-8 h-screen flex items-center">
+      <div className="relative z-20 max-w-7xl mx-auto px-8 h-screen flex items-center">
 
         <div className="max-w-2xl">
 
