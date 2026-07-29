@@ -4,6 +4,7 @@ import {
   FiX,
   FiMic,
   FiMicOff,
+  FiVolume2,
 } from "react-icons/fi";
 import { getAllProducts } from "../../firebase/productService";
 import logo from "../../assets/images/logo/logo.png";
@@ -41,6 +42,7 @@ export default function ChatWidget() {
   const messagesRef = useRef(null);
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef(null);
+  const [lastReply, setLastReply] = useState("");
 
   useEffect(() => {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
@@ -126,15 +128,16 @@ export default function ChatWidget() {
     }
 
     setMessages((current) => [
-      ...current,
-      {
-        role: "assistant",
-        content: data.reply,
-      },
-    ]);
+  ...current,
+  {
+    role: "assistant",
+    content: data.reply,
+  },
+]);
 
-    // Speak the reply
-    speak(data.reply);
+setLastReply(data.reply);
+
+speak(data.reply);
 
   } catch (error) {
     console.error(error);
@@ -245,14 +248,26 @@ function speak(text) {
 <button
   type="button"
   className="yumi-chat__voice"
+  onClick={() => lastReply && speak(lastReply)}
+  disabled={!lastReply}
+  aria-label="Speak last reply"
+>
+  <FiVolume2 />
+</button>
+
+<button
+  type="button"
+  className="yumi-chat__voice"
   onClick={() => recognitionRef.current?.start()}
   disabled={listening}
+  aria-label="Voice input"
 >
   {listening ? <FiMicOff /> : <FiMic />}
 </button>
 
 <button
   type="submit"
+  className="yumi-chat__send"
   aria-label="Send message"
   disabled={isSending || !message.trim()}
 >

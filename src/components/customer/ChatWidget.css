@@ -17,22 +17,103 @@
 .yumi-chat__typing { margin: 0; color: #6a625b; font-size: 13px; }
 .yumi-chat__suggestions { display: flex; gap: 6px; overflow-x: auto; padding: 9px 12px; border-top: 1px solid #eee7df; }
 .yumi-chat__suggestions button { white-space: nowrap; border: 1px solid #d9cbb8; border-radius: 999px; padding: 6px 9px; background: #fff; color: #6a625b; font-size: 12px; cursor: pointer; }
-.yumi-chat__form { display: flex; gap: 8px; padding: 10px 12px; border-top: 1px solid #eee7df; }
-.yumi-chat__form input { min-width: 0; flex: 1; border: 1px solid #d9cbb8; border-radius: 10px; padding: 10px; outline-color: #b89b72; font-size: 14px; }
-.yumi-chat__form button { width: 42px; border: 0; border-radius: 10px; background: #465348; color: #fff; display: grid; place-items: center; cursor: pointer; }
-.yumi-chat__form button:disabled, .yumi-chat__suggestions button:disabled { opacity: .55; cursor: not-allowed; }
+.yumi-chat__form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid #eee7df;
+}
+
+.yumi-chat__form input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid #d9cbb8;
+  border-radius: 10px;
+  padding: 10px 14px;
+  outline-color: #b89b72;
+  font-size: 14px;
+}
+
+/* Speaker + Mic */
+.yumi-chat__voice {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 10px;
+  background: #465348;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.yumi-chat__voice:hover {
+  background: #39443a;
+}
+
+.yumi-chat__voice:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.yumi-chat__voice svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Send button */
+.yumi-chat__send {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 10px;
+  background: #465348;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.yumi-chat__send:hover {
+  background: #39443a;
+}
+
+.yumi-chat__send:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
 .yumi-chat__notice { margin: 0; padding: 0 12px 10px; color: #887e75; font-size: 10px; text-align: center; }
 @media (max-width: 480px) { .yumi-chat { right: 16px; bottom: 16px; } .yumi-chat__panel { bottom: 68px; } }
 .yumi-chat__voice{
     width:42px;
+    height:42px;
     border:none;
     border-radius:10px;
     background:#465348;
-    color:white;
-    display:grid;
-    place-items:center;
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
     cursor:pointer;
     transition:.2s;
+}
+
+.yumi-chat__voice:hover{
+    background:#39443a;
+}
+
+.yumi-chat__voice:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+.yumi-chat__voice svg{
+    width:18px;
+    height:18px;
 }
 
 .yumi-chat__voice:hover{
