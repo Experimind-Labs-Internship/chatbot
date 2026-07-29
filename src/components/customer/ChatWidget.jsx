@@ -84,19 +84,38 @@ export default function ChatWidget() {
 
   recognition.lang = "en-US";
   recognition.continuous = false;
-  recognition.interimResults = false;
+recognition.interimResults = false;
+recognition.maxAlternatives = 1;
 
-  recognition.onstart = () => setListening(true);
+  recognition.onstart = () => {
+  console.log("Listening...");
+  setListening(true);
+};
 
-  recognition.onend = () => setListening(false);
+recognition.onresult = (event) => {
+  // Ignore partial results
+  if (!event.results[event.results.length - 1].isFinal) return;
 
-  recognition.onerror = () => setListening(false);
+  const text = event.results[event.results.length - 1][0].transcript;
 
-  recognition.onresult = (event) => {
-    const text = event.results[0][0].transcript;
-    setMessage(text);
-    sendMessage(text);
-  };
+  console.log("Heard:", text);
+
+  recognition.stop(); // Stop listening immediately
+  setListening(false);
+
+  setMessage(text);
+  sendMessage(text);
+};
+
+recognition.onend = () => {
+  console.log("Recognition ended");
+  setListening(false);
+};
+
+recognition.onerror = (event) => {
+  console.log("Recognition error:", event.error);
+  setListening(false);
+};
 
   recognitionRef.current = recognition;
 
@@ -203,23 +222,25 @@ function toggleSpeech() {
 function startListening() {
   if (!recognitionRef.current) return;
 
-  // Stop speaking
-  window.speechSynthesis.cancel();
+  // Stop AI speech
+  speechSynthesis.cancel();
   setIsSpeaking(false);
 
-  // Abort any previous recognition
-  recognitionRef.current.abort();
+  // If already listening, stop it
+  try {
+    recognitionRef.current.abort();
+  } catch (e) {}
 
-  // Wait until speech has completely stopped
-  const waitUntilStopped = () => {
-    if (window.speechSynthesis.speaking) {
-      requestAnimationFrame(waitUntilStopped);
-    } else {
-      recognitionRef.current.start();
+  setListening(true);
+
+  recognitionRef.current.start();
+
+  // Safety timeout: stop listening after 8 seconds
+  setTimeout(() => {
+    if (recognitionRef.current && listening) {
+      recognitionRef.current.stop();
     }
-  };
-
-  waitUntilStopped();
+  }, 8000);
 }
   return (
     <div className="yumi-chat" aria-live="polite">
