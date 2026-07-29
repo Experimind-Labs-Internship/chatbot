@@ -144,7 +144,7 @@ const handleSubscribe = async () => {
               <div className="flex items-center gap-3">
                 <FiPhone />
                 <a
-                  href="tel:+917340558926"
+                  href="tel:+91 7340558926"
                   className="hover:text-[#C3A274] transition"
                 >
                   +917340558926
