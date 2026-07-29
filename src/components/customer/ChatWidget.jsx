@@ -4,7 +4,6 @@ import {
   FiX,
   FiMic,
   FiMicOff,
-  FiVolume2,
 } from "react-icons/fi";
 import { getAllProducts } from "../../firebase/productService";
 import logo from "../../assets/images/logo/logo.png";
@@ -98,39 +97,60 @@ export default function ChatWidget() {
 }, []);
 
   async function sendMessage(rawMessage) {
-    const text = rawMessage.trim();
-    if (!text || isSending) return;
+  const text = rawMessage.trim();
+  if (!text || isSending) return;
 
-    const nextMessages = [...messages, { role: "user", content: text }];
-    setMessages(nextMessages);
-    setMessage("");
-    setIsSending(true);
+  const nextMessages = [...messages, { role: "user", content: text }];
+  setMessages(nextMessages);
+  setMessage("");
+  setIsSending(true);
 
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: text,
-          history: nextMessages.slice(-8),
-          catalogue,
-          page: window.location.pathname,
-        }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Unable to get a response.");
-      setMessages((current) => [...current, { role: "assistant", content: data.reply }]);
-    } catch {
-      setMessages((current) => [
-  ...current,
-  { role: "assistant", content: data.reply },
-]);
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: text,
+        history: nextMessages.slice(-8),
+        catalogue,
+        page: window.location.pathname,
+      }),
+    });
 
-speak(data.reply);
-    } finally {
-      setIsSending(false);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Unable to get a response.");
     }
+
+    setMessages((current) => [
+      ...current,
+      {
+        role: "assistant",
+        content: data.reply,
+      },
+    ]);
+
+    // Speak the reply
+    speak(data.reply);
+
+  } catch (error) {
+    console.error(error);
+
+    setMessages((current) => [
+      ...current,
+      {
+        role: "assistant",
+        content:
+          "I'm sorry, I can't connect right now. Please try again shortly.",
+      },
+    ]);
+  } finally {
+    setIsSending(false);
   }
+}
 function speak(text) {
   speechSynthesis.cancel();
 
@@ -212,25 +232,32 @@ function speak(text) {
 
           <form className="yumi-chat__form" onSubmit={(event) => { event.preventDefault(); sendMessage(message); }}>
             <label className="sr-only" htmlFor="yumi-chat-input">Your message</label>
-            <input id="yumi-chat-input" ref={inputRef} value={message} onChange={(event) => setMessage(event.target.value)} maxLength="1000" placeholder="Type your message…" disabled={isSending} />
-            <>
-  <button
-    type="button"
-    aria-label="Voice Assistant"
-    onClick={() => recognitionRef.current?.start()}
-    disabled={listening}
-  >
-    {listening ? <FiMicOff /> : <FiMic />}
-  </button>
+            <input
+  id="yumi-chat-input"
+  ref={inputRef}
+  value={message}
+  onChange={(event) => setMessage(event.target.value)}
+  maxLength="1000"
+  placeholder="Type your message…"
+  disabled={isSending}
+/>
 
-  <button
-    type="submit"
-    aria-label="Send message"
-    disabled={isSending || !message.trim()}
-  >
-    <FiSend />
-  </button>
-</>
+<button
+  type="button"
+  className="yumi-chat__voice"
+  onClick={() => recognitionRef.current?.start()}
+  disabled={listening}
+>
+  {listening ? <FiMicOff /> : <FiMic />}
+</button>
+
+<button
+  type="submit"
+  aria-label="Send message"
+  disabled={isSending || !message.trim()}
+>
+  <FiSend />
+</button>
           </form>
           <p className="yumi-chat__notice">Messages are processed to provide support.</p>
         </section>

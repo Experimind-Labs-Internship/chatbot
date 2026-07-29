@@ -23,3 +23,22 @@
 .yumi-chat__form button:disabled, .yumi-chat__suggestions button:disabled { opacity: .55; cursor: not-allowed; }
 .yumi-chat__notice { margin: 0; padding: 0 12px 10px; color: #887e75; font-size: 10px; text-align: center; }
 @media (max-width: 480px) { .yumi-chat { right: 16px; bottom: 16px; } .yumi-chat__panel { bottom: 68px; } }
+.yumi-chat__voice{
+    width:42px;
+    border:none;
+    border-radius:10px;
+    background:#465348;
+    color:white;
+    display:grid;
+    place-items:center;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.yumi-chat__voice:hover{
+    background:#39443a;
+}
+
+.yumi-chat__voice:disabled{
+    opacity:.6;
+}
