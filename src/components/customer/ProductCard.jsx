@@ -93,7 +93,7 @@ async function loadWishlist() {
 
       <div className="relative overflow-hidden">
         {discountActive && (
-  <div className="absolute top-4 left-4 z-10 bg-[#465348] text-white px-3 py-2 rounded-xl font-semibold text-sm shadow-lg">
+  <div className="absolute top-4 left-4 z-10 bg-green-600 text-white px-3 py-2 rounded-xl font-semibold text-sm shadow-lg">
     {discountType === "percentage"
       ? `${discountValue}% OFF`
       : "SALE"}
@@ -161,11 +161,7 @@ async function loadWishlist() {
         ₹{discountedPrice}
       </p>
 
-      {discountType === "percentage" && (
-        <span className="inline-block mt-2 bg-green-100 text-green-600 text-xs px-2 py-1 rounded-full">
-          {discountValue}% OFF
-        </span>
-      )}
+      
     </>
   ) : (
     <p className="text-2xl font-semibold text-[#B89B72] pt-5">
