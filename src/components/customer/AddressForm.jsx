@@ -191,29 +191,48 @@ export default function AddressForm({
     type="button"
     disabled={saving}
     onClick={async () => {
-      try {
-        setSaving(true);
+  const phoneDigits = form.phone.replace(/\D/g, "");
 
-        if (address) {
-          await updateAddress(
-            user.uid,
-            address.id,
-            form
-          );
-        } else {
-          await saveAddress(user.uid, {
-            ...form,
-            isDefault: false,
-          });
-        }
+  if (
+    !form.fullName.trim() ||
+    !form.line1.trim() ||
+    !form.city.trim() ||
+    !form.state.trim() ||
+    !form.pincode.trim()
+  ) {
+    alert("Please fill in all address details.");
+    return;
+  }
 
-        onClose();
-      } catch (err) {
-        alert(err.message);
-      } finally {
-        setSaving(false);
-      }
-    }}
+  if (!form.phone || phoneDigits.length !== 12) {
+    alert("Please enter a valid 10-digit phone number.");
+    return;
+  }
+
+  try {
+    setSaving(true);
+
+    if (address) {
+      await updateAddress(
+        user.uid,
+        address.id,
+        form
+      );
+    } else {
+      await saveAddress(user.uid, {
+        ...form,
+        isDefault: false,
+      });
+    }
+
+    onClose();
+  } catch (err) {
+    alert(err.message);
+  } finally {
+    setSaving(false);
+  }
+}}
+    
     className="px-6 py-3 rounded-full bg-[#465348] text-white hover:bg-[#39443A]"
   >
     {saving
