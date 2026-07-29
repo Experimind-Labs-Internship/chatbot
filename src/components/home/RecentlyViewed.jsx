@@ -12,14 +12,14 @@ export default function RecentlyViewed() {
         Recently Viewed
       </h2>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {recentProducts.map((product) => (
           <Link
             key={product.id}
             to={`/product/${product.id}`}
             className="group"
           >
-            <div className="bg-white rounded-2xl overflow-hidden border border-[#ECE8E3] hover:shadow-lg transition">
+            <div className="bg-white rounded-2xl overflow-hidden border border-[#ECE8E3] hover:shadow-lg transition flex flex-col h-full">
 
               <div className="relative">
 
@@ -34,40 +34,42 @@ export default function RecentlyViewed() {
   <img
     src={product.images?.[0]}
     alt={product.name}
-    className="w-full h-56 object-cover group-hover:scale-105 transition"
+    className="w-full h-72 object-cover group-hover:scale-105 transition duration-500"
   />
 
 </div>
 
-              <div className="p-4">
+              <div className="p-4 flex flex-col flex-1">
 
-                <h3 className="text-[#2E2A27] font-medium line-clamp-2">
+                <h3 className="font-serif text-xl text-[#2E2A27] leading-tight min-h-[56px] line-clamp-2">
                   {product.name}
                 </h3>
 
-                <div className="mt-2">
+                <div className="mt-2 min-h-[52px]">
   {product.discountActive ? (
     <>
       <p className="text-sm text-gray-400 line-through">
         ₹{product.price?.toLocaleString()}
       </p>
 
-      <p className="text-lg font-bold text-green-700">
+      <p className="text-xl font-bold text-green-600">
   ₹{product.discountedPrice?.toLocaleString()}
 </p>
 
-{product.discountType === "percentage" && (
-  <span className="inline-block mt-1 bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">
-    {product.discountValue}% OFF
-  </span>
-)}
+
     </>
   ) : (
-    <p className="text-[#465348] font-semibold">
+    <p className="text-xl font-semibold text-[#2E2A27]">
       ₹{product.price?.toLocaleString()}
     </p>
   )}
 </div>
+<button
+  type="button"
+  className="mt-auto w-full py-3 rounded-full bg-[#465348] text-white text-center cursor-pointer"
+>
+  View Product
+</button>
 
               </div>
 

@@ -21,7 +21,7 @@ export default function Nightwear() {
   }
 
   return (
-    <main className="bg-[#FAF8F5] pt-32 pb-24">
+    <main className="bg-[#FAF8F5] pt-10 pb-24">
 
       <section className="max-w-7xl mx-auto px-6 text-center">
 
