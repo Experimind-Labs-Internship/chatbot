@@ -109,6 +109,12 @@ export default function OrderDetail() {
 `
       )
       .join("");
+      console.log({
+  status: newStatus,
+  courier,
+  trackingId,
+  estimatedDelivery,
+});
 
     // Send Email
     await sendOrderStatusEmail({
