@@ -143,7 +143,7 @@ setWishlistDocId(docId);
 
       {/* Details */}
 
-      <div className="p-6">
+      <div className="p-6 flex flex-col h-[220px]">
 
         <h3 className="font-serif text-2xl text-[#2E2A27]">
           {title}
@@ -155,59 +155,53 @@ setWishlistDocId(docId);
   </p>
 )}
 
-        <div className="flex justify-between items-end mt-6">
-
-          
- 
-<div className="min-h-[76px]">
-  {discountActive ? (
-    <>
-      <p className="text-sm text-gray-400 line-through">
+    <div className="mt-auto">
+  <div className="mb-5">
+    {discountActive ? (
+      <>
+        <p className="text-sm text-gray-400 line-through">
+          ₹{price}
+        </p>
+        <p className="text-2xl font-bold text-green-600">
+          ₹{discountedPrice}
+        </p>
+      </>
+    ) : (
+      <p className="text-2xl font-semibold text-[#B89B72]">
         ₹{price}
       </p>
+    )}
+  </div>
 
-      <p className="text-2xl font-bold text-green-600">
-        ₹{discountedPrice}
-      </p>
+  {showDelete ? (
+    <div className="flex items-center gap-3 w-full">
+      <Link
+        to={`/product/${id}`}
+        className="flex-1 h-12 rounded-full bg-[#465348] text-white hover:bg-[#39443A] transition flex items-center justify-center text-sm font-semibold tracking-wide shadow-sm"
+      >
+        View Details
+      </Link>
 
-      
-    </>
+      <button
+        onClick={onDelete}
+        className="w-12 h-12 rounded-full border border-red-300 text-red-500 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all duration-300 flex items-center justify-center flex-shrink-0"
+      >
+        <FiTrash2 size={18} />
+      </button>
+    </div>
   ) : (
-    <p className="text-2xl font-semibold text-[#B89B72] pt-5">
-      ₹{price}
-    </p>
+    <div className="flex justify-end">
+      <Link
+        to={`/product/${id}`}
+        className="w-12 h-12 rounded-full bg-[#465348] text-white flex items-center justify-center hover:bg-[#39443A] transition"
+      >
+        <FiShoppingBag />
+      </Link>
+    </div>
   )}
 </div>
 
-        {showDelete ? (
-  <div className="flex items-center gap-3">
-    <Link
-      to={`/product/${id}`}
-      className="flex-1 px-5 py-3 rounded-full bg-[#465348] text-white text-center hover:bg-[#39443A] transition"
-    >
-      View Details
-    </Link>
-
-    <button
-      onClick={onDelete}
-      className="w-12 h-12 rounded-full border border-red-300 text-red-500 hover:bg-red-500 hover:text-white transition flex items-center justify-center"
-    >
-      <FiTrash2 />
-    </button>
-  </div>
-) : (
-  <Link
-    to={`/product/${id}`}
-    className="w-12 h-12 rounded-full bg-[#465348] text-white flex items-center justify-center hover:bg-[#39443A] transition"
-  >
-    <FiShoppingBag />
-  </Link>
-)}
-
-        </div>
-
       </div>
-
     </div>
   );
 }
