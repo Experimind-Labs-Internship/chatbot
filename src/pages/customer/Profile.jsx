@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { getUserProfile } from "../../firebase/profileService";
 
@@ -11,6 +12,8 @@ import AccountSettings from "../../components/customer/AccountSettings";
 export default function Profile() {
   const { user } = useAuth();
   const [profile, setProfile] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function loadProfile() {
@@ -50,9 +53,12 @@ export default function Profile() {
 
           </div>
 
-          <button className="mt-6 md:mt-0 px-8 py-3 rounded-full bg-[#465348] text-white hover:bg-[#39443A] transition">
-            Edit Profile
-          </button>
+          <button
+  onClick={() => setShowEditModal(true)}
+  className="mt-6 md:mt-0 px-8 py-3 rounded-full bg-[#465348] text-white hover:bg-[#39443A] transition"
+>
+  Edit Profile
+</button>
 
         </div>
 
@@ -60,9 +66,32 @@ export default function Profile() {
         <div className="grid lg:grid-cols-3 gap-8 mt-10">
 
           <div className="lg:col-span-2 space-y-8">
-            <ProfileInfo />
-            <AddressCard />
-          </div>
+
+  <div className="bg-white rounded-3xl shadow-sm p-8">
+    {/* Personal Information */}
+    ...
+  </div>
+
+  <div
+    onClick={() => navigate("/profile/orders")}
+    className="cursor-pointer rounded-3xl border border-[#ECE8E3] bg-white p-6 hover:shadow-lg transition flex items-center justify-between"
+  >
+    <div>
+      <h3 className="text-2xl font-serif text-[#2E2A27]">
+        📦 My Orders
+      </h3>
+
+      <p className="mt-2 text-[#6A625B]">
+        View your orders and track their delivery status.
+      </p>
+    </div>
+
+    <span className="text-3xl text-[#465348]">→</span>
+  </div>
+
+  <AddressCard />
+
+</div>
 
           <div className="space-y-8">
             <WishlistSection />
@@ -73,6 +102,30 @@ export default function Profile() {
         </div>
 
       </div>
+      {showEditModal && (
+  <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
+
+    <div className="bg-white rounded-3xl w-full max-w-3xl p-8 relative max-h-[90vh] overflow-y-auto">
+
+      <button
+        onClick={() => setShowEditModal(false)}
+        className="absolute top-5 right-5 text-3xl"
+      >
+        ×
+      </button>
+
+      <ProfileInfo
+  onClose={() => setShowEditModal(false)}
+  onProfileUpdated={async () => {
+    const data = await getUserProfile(user.uid);
+    setProfile(data);
+  }}
+/>
+
+    </div>
+
+  </div>
+)}
     </main>
   );
 }

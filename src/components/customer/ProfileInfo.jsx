@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
 import {
   getUserProfile,
   createUserProfile,
   updateUserProfile,
 } from "../../firebase/profileService";
 
-export default function ProfileInfo() {
+export default function ProfileInfo({ onClose, onProfileUpdated }) {
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -67,19 +69,30 @@ export default function ProfileInfo() {
   };
 
   const handleSave = async () => {
-    try {
-      await updateUserProfile(user.uid, {
-        name: profile.name,
-        phone: profile.phone,
-        gender: profile.gender,
-        dob: profile.dob,
-      });
+  try {
+    await updateUserProfile(user.uid, {
+      name: profile.name,
+      phone: profile.phone,
+      gender: profile.gender,
+      dob: profile.dob,
+    });
 
-      alert("Profile updated successfully!");
-    } catch (err) {
-      alert(err.message);
+    alert("Profile updated successfully!");
+
+    // Refresh profile on parent page
+    if (onProfileUpdated) {
+      onProfileUpdated();
     }
-  };
+
+    // Close modal
+    if (onClose) {
+      onClose();
+    }
+
+  } catch (err) {
+    alert(err.message);
+  }
+};
 
   if (loading) {
     return (
@@ -127,24 +140,23 @@ export default function ProfileInfo() {
         </div>
 
         <div>
-          <label className="block mb-2 text-[#6A625B]">
-            Phone Number
-          </label>
+  <label className="block mb-2 text-[#6A625B]">
+    Phone Number
+  </label>
 
-          <input
-            type="text"
-            value={profile.phone}
-            onChange={(e) =>
-              handleChange("phone", e.target.value)
-            }
-            className="w-full px-4 py-3 rounded-xl border border-[#E5DED7] outline-none focus:border-[#465348]"
-          />
-        </div>
+  <PhoneInput
+    defaultCountry="in"
+    value={profile.phone}
+    onChange={(phone) => handleChange("phone", phone)}
+  />
+</div>
 
-        <div>
-          <label className="block mb-2 text-[#6A625B]">
-            Gender
-          </label>
+<div>
+  <label className="block mb-2 text-[#6A625B]">
+    Gender
+  </label>
+
+  
 
           <select
             value={profile.gender}
@@ -185,24 +197,26 @@ export default function ProfileInfo() {
       </button>
       {/* My Orders */}
 
-<div
-  onClick={() => navigate("/profile/orders")}
-  className="mt-10 cursor-pointer rounded-3xl border border-[#ECE8E3] p-6 hover:shadow-lg transition flex items-center justify-between"
->
-  <div>
-    <h3 className="text-2xl font-serif text-[#2E2A27]">
-      📦 My Orders
-    </h3>
+{!onClose && (
+  <div
+    onClick={() => navigate("/profile/orders")}
+    className="mt-10 cursor-pointer rounded-3xl border border-[#ECE8E3] p-6 hover:shadow-lg transition flex items-center justify-between"
+  >
+    <div>
+      <h3 className="text-2xl font-serif text-[#2E2A27]">
+        📦 My Orders
+      </h3>
 
-    <p className="mt-2 text-[#6A625B]">
-      View your orders and track their delivery status.
-    </p>
+      <p className="mt-2 text-[#6A625B]">
+        View your orders and track their delivery status.
+      </p>
+    </div>
+
+    <span className="text-3xl text-[#465348]">
+      →
+    </span>
   </div>
-
-  <span className="text-3xl text-[#465348]">
-    →
-  </span>
-</div>
+)}
 
 </div>
   );
