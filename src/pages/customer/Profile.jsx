@@ -1,30 +1,27 @@
-import { useAuth } from "../../context/AuthContext";
-import ProfileInfo from "../../components/customer/ProfileInfo";
-import AddressCard from "../../components/customer/AddressSection";
-
-import WishlistSection from "../../components/customer/WishlistSection";
-import MyCoupons from "../../components/customer/MyCoupons";
-import AccountSettings from "../../components/customer/AccountSettings";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { getUserProfile } from "../../firebase/profileService";
 
+import ProfileInfo from "../../components/customer/ProfileInfo";
+import AddressCard from "../../components/customer/AddressSection";
+import WishlistSection from "../../components/customer/WishlistSection";
+import MyCoupons from "../../components/customer/MyCoupons";
+import AccountSettings from "../../components/customer/AccountSettings";
+
 export default function Profile() {
   const { user } = useAuth();
+  const [profile, setProfile] = useState(null);
 
-const [profile, setProfile] = useState(null);
+  useEffect(() => {
+    async function loadProfile() {
+      if (!user) return;
 
-useEffect(() => {
-  async function loadProfile() {
-    if (!user) return;
+      const data = await getUserProfile(user.uid);
+      setProfile(data);
+    }
 
-    const data = await getUserProfile(user.uid);
-    setProfile(data);
-  }
-
-  loadProfile();
-}, [user]);
-  const { user } = useAuth();
+    loadProfile();
+  }, [user]);
 
   return (
     <main className="bg-[#FAF8F5] min-h-screen pt-32 pb-20">
@@ -37,20 +34,18 @@ useEffect(() => {
 
             <div className="w-24 h-24 rounded-full bg-[#465348] text-white flex items-center justify-center text-4xl font-semibold">
               {profile?.name
-  ? profile.name.charAt(0).toUpperCase()
-  : user?.email?.charAt(0).toUpperCase()}
+                ? profile.name.charAt(0).toUpperCase()
+                : user?.email?.charAt(0).toUpperCase()}
             </div>
 
             <div>
-
               <h1 className="text-4xl font-serif text-[#2E2A27]">
-  {profile?.name || "Customer"}
-</h1>
+                {profile?.name || "Customer"}
+              </h1>
 
               <p className="mt-2 text-[#6A625B]">
                 {user?.email}
               </p>
-
             </div>
 
           </div>
@@ -62,28 +57,18 @@ useEffect(() => {
         </div>
 
         {/* Sections */}
-
         <div className="grid lg:grid-cols-3 gap-8 mt-10">
 
           <div className="lg:col-span-2 space-y-8">
-
             <ProfileInfo />
-
             <AddressCard />
-
-           
-
           </div>
 
           <div className="space-y-8">
-
-  <WishlistSection />
-
-  <MyCoupons />
-
-  <AccountSettings />
-
-</div>
+            <WishlistSection />
+            <MyCoupons />
+            <AccountSettings />
+          </div>
 
         </div>
 
