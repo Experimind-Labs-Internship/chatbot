@@ -52,15 +52,15 @@ export default function RecentlyViewed() {
         ₹{product.price?.toLocaleString()}
       </p>
 
-      <p className="text-lg font-bold text-red-600">
-        ₹{product.discountedPrice?.toLocaleString()}
-      </p>
+      <p className="text-lg font-bold text-green-600">
+  ₹{product.discountedPrice?.toLocaleString()}
+</p>
 
-      {product.discountType === "percentage" && (
-        <span className="inline-block mt-1 bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">
-          {product.discountValue}% OFF
-        </span>
-      )}
+{product.discountType === "percentage" && (
+  <span className="inline-block mt-1 bg-green-100 text-green-600 text-xs px-2 py-1 rounded-full">
+    {product.discountValue}% OFF
+  </span>
+)}
     </>
   ) : (
     <p className="text-[#465348] font-semibold">

@@ -150,14 +150,14 @@ async function loadWishlist() {
       ₹{price}
     </p>
 
-    <p className="text-2xl font-bold text-red-600">
-      ₹{discountedPrice}
-    </p>
+    <p className="text-2xl font-bold text-green-600">
+  ₹{discountedPrice}
+</p>
 
     {discountType === "percentage" && (
-      <span className="inline-block mt-2 bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">
-        {discountValue}% OFF
-      </span>
+      <span className="inline-block mt-2 bg-green-100 text-green-600 text-xs px-2 py-1 rounded-full">
+  {discountValue}% OFF
+</span>
     )}
   </div>
 ) : (
