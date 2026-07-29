@@ -18,7 +18,7 @@ import {
 import AnnouncementBar from "./AnnouncementBar";
 import SearchBar from "./SearchBar";
 import logo from "../../assets/images/logo/logo.png";
-
+import featuredCollection from "../../assets/images/collections/featured-collection.png";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -135,116 +135,84 @@ useEffect(() => {
 
                 </button>
 
-                {shopOpen && (
+              {shopOpen && (
+  <div className="absolute left-1/2 -translate-x-1/2 top-10 w-[760px] bg-white rounded-3xl shadow-2xl border border-[#ECE8E3] overflow-hidden">
 
-                  <div className="absolute left-1/2 -translate-x-1/2 top-10 w-[760px] bg-white rounded-3xl shadow-2xl border border-[#ECE8E3] overflow-hidden">
+    <div className="grid grid-cols-2">
 
-                    <div className="grid grid-cols-2">
+      {/* Left */}
+      <div className="p-10">
 
-                      {/* Left */}
+        <p className="uppercase tracking-[4px] text-xs text-[#8A8178] mb-6">
+          Shop Collections
+        </p>
 
-                      <div className="p-10">
+        <div className="space-y-5">
 
-                        <p className="uppercase tracking-[4px] text-xs text-[#8A8178] mb-6">
-                          Shop Collections
-                        </p>
+          <Link to="/shop" onClick={() => setShopOpen(false)} className="block hover:text-[#C3A274] transition">
+            All Products
+          </Link>
 
-                        <div className="space-y-5">
+          <Link to="/nightwear" onClick={() => setShopOpen(false)} className="block hover:text-[#C3A274] transition">
+            Nightwear
+          </Link>
 
-                          <Link
-                            to="/shop"
-                            onClick={() => setShopOpen(false)}
-                            className="block hover:text-[#C3A274] transition"
-                          >
-                            All Products
-                          </Link>
+          <Link to="/Abayas" onClick={() => setShopOpen(false)} className="block hover:text-[#C3A274] transition">
+            Abayas
+          </Link>
 
-                          <Link
-                            to="/nightwear"
-                            onClick={() => setShopOpen(false)}
-                            className="block hover:text-[#C3A274] transition"
-                          >
-                            Nightwear
-                          </Link>
+          <Link to="/Kaftans" onClick={() => setShopOpen(false)} className="block hover:text-[#C3A274] transition">
+            Kaftans
+          </Link>
 
-                          <Link
-                            to="/Abayas"
-                            onClick={() => setShopOpen(false)}
-                            className="block hover:text-[#C3A274] transition"
-                          >
-                            Abayas
-                          </Link>
+          <Link to="/coord-sets" onClick={() => setShopOpen(false)} className="block hover:text-[#C3A274] transition">
+            Co-ord Sets
+          </Link>
 
-                          <Link
-                            to="/Kaftans"
-                            onClick={() => setShopOpen(false)}
-                            className="block hover:text-[#C3A274] transition"
-                          >
-                            Kaftans
-                          </Link>
+          <Link to="/new-arrivals" onClick={() => setShopOpen(false)} className="block hover:text-[#C3A274] transition">
+            New Arrivals
+          </Link>
 
-                          <Link
-                            to="/coord-sets"
-                            onClick={() => setShopOpen(false)}
-                            className="block hover:text-[#C3A274] transition"
-                          >
-                            Co-ord Sets
-                          </Link>
+          <Link to="/best-sellers" onClick={() => setShopOpen(false)} className="block hover:text-[#C3A274] transition">
+            Best Sellers
+          </Link>
 
-                          <Link
-  to="/new-arrivals"
+        </div>
+
+      </div>
+
+      {/* Right */}
+      <div className="bg-[#F8F5F1] p-8">
+
+        <img
+          src={featuredCollection}
+          alt="Featured Collection"
+          className="w-full h-[220px] object-cover object-top rounded-2xl"
+        />
+
+        <h3 className="text-3xl font-serif mt-5 text-[#2E2A27]">
+          Featured Collection
+        </h3>
+
+        <p className="mt-3 text-[#6F6A65] leading-7">
+          Discover timeless silhouettes designed with comfort,
+          elegance and everyday luxury in mind.
+        </p>
+
+        <Link
+  to="/shop"
   onClick={() => setShopOpen(false)}
-  className="block hover:text-[#C3A274] transition"
+  className="inline-block mt-5 text-[#465348] font-medium hover:text-[#C3A274]"
 >
-  New Arrivals
+  Explore Collection →
 </Link>
 
-<Link
-  to="/best-sellers"
-  onClick={() => setShopOpen(false)}
-  className="block hover:text-[#C3A274] transition"
->
-  Best Sellers
-</Link>
+      </div>
 
-                        </div>
+    </div>
 
-                      </div>
-
-                      {/* Right */}
-
-                      <div className="bg-[#F8F5F1] p-8">
-
-                        <img
-                          src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=900"
-                          alt="Featured Collection"
-                          className="rounded-2xl h-72 w-full object-cover"
-                        />
-
-                        <h3 className="text-3xl font-serif mt-6 text-[#2E2A27]">
-                          Featured Collection
-                        </h3>
-
-                        <p className="mt-3 text-[#6F6A65] leading-7">
-                          Discover timeless silhouettes designed with
-                          comfort, elegance and everyday luxury in mind.
-                        </p>
-
-                        <Link
-                          to="/shop"
-                          className="inline-block mt-6 text-[#465348] font-medium hover:text-[#C3A274] transition"
-                        >
-                          Explore Collection →
-                        </Link>
-
-                      </div>
-
-                    </div>
-
-                  </div>
-
-                )}
-
+  </div>
+)}
               </div>
 
               <Link

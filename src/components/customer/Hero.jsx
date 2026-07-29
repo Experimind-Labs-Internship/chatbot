@@ -6,7 +6,7 @@ import discoverVideo from "../../assets/videos/discover.mp4";
 export default function Hero() {
   const [showVideo, setShowVideo] = useState(false);
   return (
-    <section className="relative min-h-screen bg-[#F8F4EF] overflow-hidden">
+    <section className="relative min-h-screen bg-[#FAF8F5] overflow-hidden">
 
       {/* Background */}
 
@@ -17,7 +17,9 @@ export default function Hero() {
           className="w-full h-full object-cover object-right"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-r from-[#F8F4EF] via-[#F8F4EF]/90 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#FAF8F5] via-[#FAF8F5]/80 to-transparent"></div>
+
+<div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-b from-transparent to-[#FAF8F5]" />
       </div>
 
       {/* Content */}
@@ -101,7 +103,7 @@ export default function Hero() {
 
           {/* Discover */}
 
-          <div className="mt-16 flex items-center gap-5">
+          <div className="mt-12 flex items-center gap-5">
 
             <button
   onClick={() => setShowVideo(true)}
@@ -124,7 +126,7 @@ export default function Hero() {
 
       {/* Scroll */}
 
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
 
         <div className="w-7 h-12 rounded-full border border-[#B89B72] flex justify-center">
 

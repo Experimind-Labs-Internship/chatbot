@@ -348,12 +348,10 @@ default:
             className="mt-2 w-full border rounded-lg p-2"
           >
             <option value="all">All</option>
-            <option value="XS">XS</option>
             <option value="S">S</option>
             <option value="M">M</option>
             <option value="L">L</option>
             <option value="XL">XL</option>
-            <option value="XXL">XXL</option>
           </select>
         </div>
 

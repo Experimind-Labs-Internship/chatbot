@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 
 const messages = [
-  "Free Shipping on Orders Above ₹1,500",
-  "Use Code WELCOME10 & Enjoy 10% Off Your First Order",
-  "Call / WhatsApp: +91 9591308536",
+  "Call / WhatsApp: +91 7340558926",
   "Follow Us @yumi_dxb on Instagram",
 ];
 
