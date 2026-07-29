@@ -68,9 +68,51 @@ export default function Profile() {
           <div className="lg:col-span-2 space-y-8">
 
   <div className="bg-white rounded-3xl shadow-sm p-8">
-    {/* Personal Information */}
-    ...
+
+  <h2 className="text-3xl font-serif text-[#2E2A27] mb-8">
+    Personal Information
+  </h2>
+
+  <div className="grid md:grid-cols-2 gap-6">
+
+    <div>
+      <p className="text-[#6A625B] text-sm">Full Name</p>
+      <p className="mt-2 text-lg font-medium">
+        {profile?.name || "-"}
+      </p>
+    </div>
+
+    <div>
+      <p className="text-[#6A625B] text-sm">Email</p>
+      <p className="mt-2 text-lg font-medium">
+        {user?.email}
+      </p>
+    </div>
+
+    <div>
+      <p className="text-[#6A625B] text-sm">Phone Number</p>
+      <p className="mt-2 text-lg font-medium">
+        {profile?.phone || "-"}
+      </p>
+    </div>
+
+    <div>
+      <p className="text-[#6A625B] text-sm">Gender</p>
+      <p className="mt-2 text-lg font-medium">
+        {profile?.gender || "-"}
+      </p>
+    </div>
+
+    <div>
+      <p className="text-[#6A625B] text-sm">Date of Birth</p>
+      <p className="mt-2 text-lg font-medium">
+        {profile?.dob || "-"}
+      </p>
+    </div>
+
   </div>
+
+</div>
 
   <div
     onClick={() => navigate("/profile/orders")}
