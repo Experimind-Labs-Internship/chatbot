@@ -7,7 +7,7 @@ import kaftan from "../../assets/images/collections/kaftan.jpeg";
 import coordSet from "../../assets/images/collections/coord-set.jpeg";
 export default function FeaturedCollections() {
   return (
-    <section className="py-28 bg-white">
+    <section className="py-15 bg-white">
 
       <div className="max-w-7xl mx-auto px-6">
 

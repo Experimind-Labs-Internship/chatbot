@@ -9,7 +9,7 @@ import insta6 from "../../assets/images/instagram/insta6.jpeg";
 
 export default function Instagram() {
   return (
-    <section className="py-24 bg-[#FAF8F5]">
+    <section className="py-10 bg-[#FAF8F5]">
 
       <div className="max-w-7xl mx-auto px-6">
 

@@ -7,7 +7,7 @@ export default function OurStory() {
   return (
     <section
       id="our-story"
-      className="py-24 bg-[#FAF8F5]"
+      className="py-15 bg-[#FAF8F5]"
     >
 
       <div className="max-w-7xl mx-auto px-6">
