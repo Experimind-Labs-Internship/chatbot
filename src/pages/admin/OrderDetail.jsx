@@ -64,11 +64,11 @@ export default function OrderDetail() {
   };
   const handleStatusChange = async (newStatus) => {
   setUpdating(true);
-  if (
-  newStatus === "Packed" &&
+ if (
+  newStatus === "Shipped" &&
   (!courier || !trackingId || !estimatedDelivery)
 ) {
-  alert("Please fill all shipping details before marking the order as Packed.");
+  alert("Please fill all shipping details before marking the order as Shipped.");
   setUpdating(false);
   return;
 }
@@ -220,8 +220,7 @@ return (
     </div>
 
     {/* Shipping Details */}
-    {(order.status === "Confirmed" ||
-  order.status === "Packed" ||
+    {(order.status === "Packed" ||
   order.status === "Shipped" ||
   order.status === "Delivered") && (
 
@@ -239,7 +238,7 @@ return (
       Courier Partner
     </label>
 
-    {order.status === "Confirmed" || order.status === "Packed" ? (
+    {order.status === "Packed" ? (
       <input
         type="text"
         value={courier}
@@ -262,7 +261,7 @@ return (
     Tracking ID
   </label>
 
-  {order.status === "Confirmed" || order.status === "Packed" ? (
+  {order.status === "Packed" ? (
     <input
       type="text"
       value={trackingId}
@@ -282,7 +281,7 @@ return (
     Estimated Delivery
   </label>
 
-  {order.status === "Confirmed" || order.status === "Packed" ? (
+  {order.status === "Packed" ? (
     <input
       type="date"
       value={estimatedDelivery}
