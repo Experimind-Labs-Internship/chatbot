@@ -30,7 +30,7 @@ export default function BestSellerPage() {
   if (loading) return <Loader />;
 
   return (
-    <main className="bg-[#FAF8F5] pt-32 pb-24">
+    <main className="bg-[#FAF8F5] pt-10 pb-24">
 
       {/* Hero */}
 
