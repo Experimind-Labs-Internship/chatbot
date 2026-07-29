@@ -5,8 +5,25 @@ import AddressCard from "../../components/customer/AddressSection";
 import WishlistSection from "../../components/customer/WishlistSection";
 import MyCoupons from "../../components/customer/MyCoupons";
 import AccountSettings from "../../components/customer/AccountSettings";
+import { useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { getUserProfile } from "../../firebase/profileService";
 
 export default function Profile() {
+  const { user } = useAuth();
+
+const [profile, setProfile] = useState(null);
+
+useEffect(() => {
+  async function loadProfile() {
+    if (!user) return;
+
+    const data = await getUserProfile(user.uid);
+    setProfile(data);
+  }
+
+  loadProfile();
+}, [user]);
   const { user } = useAuth();
 
   return (
@@ -19,16 +36,16 @@ export default function Profile() {
           <div className="flex items-center gap-6">
 
             <div className="w-24 h-24 rounded-full bg-[#465348] text-white flex items-center justify-center text-4xl font-semibold">
-              {user?.displayName
-                ? user.displayName.charAt(0).toUpperCase()
-                : user?.email?.charAt(0).toUpperCase()}
+              {profile?.name
+  ? profile.name.charAt(0).toUpperCase()
+  : user?.email?.charAt(0).toUpperCase()}
             </div>
 
             <div>
 
               <h1 className="text-4xl font-serif text-[#2E2A27]">
-                {user?.displayName || "Customer"}
-              </h1>
+  {profile?.name || "Customer"}
+</h1>
 
               <p className="mt-2 text-[#6A625B]">
                 {user?.email}
