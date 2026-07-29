@@ -146,31 +146,33 @@ async function loadWishlist() {
           Elegant • Comfortable • Premium
         </p>
 
-        <div className="flex justify-between items-center mt-6">
+        <div className="flex justify-between items-start mt-6">
 
           
  
-{discountActive ? (
-  <div>
-    <p className="text-sm text-gray-400 line-through">
+<div className="min-h-[76px]">
+  {discountActive ? (
+    <>
+      <p className="text-sm text-gray-400 line-through">
+        ₹{price}
+      </p>
+
+      <p className="text-2xl font-bold text-green-600">
+        ₹{discountedPrice}
+      </p>
+
+      {discountType === "percentage" && (
+        <span className="inline-block mt-2 bg-green-100 text-green-600 text-xs px-2 py-1 rounded-full">
+          {discountValue}% OFF
+        </span>
+      )}
+    </>
+  ) : (
+    <p className="text-2xl font-semibold text-[#B89B72] pt-5">
       ₹{price}
     </p>
-
-    <p className="text-2xl font-bold text-green-600">
-  ₹{discountedPrice}
-</p>
-
-    {discountType === "percentage" && (
-      <span className="inline-block mt-2 bg-green-100 text-green-600 text-xs px-2 py-1 rounded-full">
-  {discountValue}% OFF
-</span>
-    )}
-  </div>
-) : (
-  <span className="text-2xl font-semibold text-[#B89B72]">
-    ₹{price}
-  </span>
-)}
+  )}
+</div>
 
           <Link
             to={`/product/${id}`}

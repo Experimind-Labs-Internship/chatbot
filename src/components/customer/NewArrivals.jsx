@@ -85,11 +85,9 @@ export default function NewArrivals() {
 
                 </p>
 
-                <h3 className="font-serif text-2xl text-[#2E2A27] mt-3">
-
-                  {product.name}
-
-                </h3>
+                <h3 className="font-serif text-2xl text-[#2E2A27] mt-3 min-h-[64px] leading-tight">
+  {product.name}
+</h3>
 
                 <div className="flex justify-between items-center mt-6">
 
