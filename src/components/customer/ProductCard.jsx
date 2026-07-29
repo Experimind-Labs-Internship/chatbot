@@ -124,14 +124,7 @@ setWishlistDocId(docId);
   </button>
 )}
 
-{showDelete && (
-  <button
-    onClick={onDelete}
-    className="absolute top-4 right-4 w-11 h-11 rounded-full bg-white/90 text-red-500 hover:bg-red-500 hover:text-white transition flex items-center justify-center"
-  >
-    <FiTrash2 size={18} />
-  </button>
-)}
+
 
         {/* Quick View */}
 
@@ -162,7 +155,7 @@ setWishlistDocId(docId);
   </p>
 )}
 
-        <div className="flex justify-between items-start mt-6">
+        <div className="flex justify-between items-end mt-6">
 
           
  
@@ -186,7 +179,23 @@ setWishlistDocId(docId);
   )}
 </div>
 
-          {!showDelete && (
+        {showDelete ? (
+  <div className="flex items-center gap-3">
+    <Link
+      to={`/product/${id}`}
+      className="flex-1 px-5 py-3 rounded-full bg-[#465348] text-white text-center hover:bg-[#39443A] transition"
+    >
+      View Details
+    </Link>
+
+    <button
+      onClick={onDelete}
+      className="w-12 h-12 rounded-full border border-red-300 text-red-500 hover:bg-red-500 hover:text-white transition flex items-center justify-center"
+    >
+      <FiTrash2 />
+    </button>
+  </div>
+) : (
   <Link
     to={`/product/${id}`}
     className="w-12 h-12 rounded-full bg-[#465348] text-white flex items-center justify-center hover:bg-[#39443A] transition"
