@@ -93,7 +93,7 @@ async function loadWishlist() {
 
       <div className="relative overflow-hidden">
         {discountActive && (
-  <div className="absolute top-4 left-4 z-10 bg-green-600 text-white px-3 py-2 rounded-xl font-semibold text-sm shadow-lg">
+  <div className="absolute top-4 left-4 z-10 bg-[#2E7D32] text-white px-3 py-2 rounded-xl font-semibold text-sm shadow-lg">
     {discountType === "percentage"
       ? `${discountValue}% OFF`
       : "SALE"}
