@@ -220,9 +220,10 @@ return (
     </div>
 
     {/* Shipping Details */}
-    {(order.status === "Packed" ||
-      order.status === "Shipped" ||
-      order.status === "Delivered") && (
+    {(order.status === "Confirmed" ||
+  order.status === "Packed" ||
+  order.status === "Shipped" ||
+  order.status === "Delivered") && (
 
       <div className="bg-white rounded-2xl border border-[#ECE8E3] p-8 mb-8">
 
@@ -238,7 +239,7 @@ return (
       Courier Partner
     </label>
 
-    {order.status === "Packed" ? (
+    {order.status === "Confirmed" || order.status === "Packed" ? (
       <input
         type="text"
         value={courier}
@@ -261,7 +262,7 @@ return (
     Tracking ID
   </label>
 
-  {order.status === "Packed" ? (
+  {order.status === "Confirmed" || order.status === "Packed" ? (
     <input
       type="text"
       value={trackingId}
@@ -281,7 +282,7 @@ return (
     Estimated Delivery
   </label>
 
-  {order.status === "Packed" ? (
+  {order.status === "Confirmed" || order.status === "Packed" ? (
     <input
       type="date"
       value={estimatedDelivery}
