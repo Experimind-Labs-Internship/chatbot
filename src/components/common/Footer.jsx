@@ -144,10 +144,10 @@ const handleSubscribe = async () => {
               <div className="flex items-center gap-3">
                 <FiPhone />
                 <a
-                  href="tel:+919591308536"
+                  href="tel:+917340558926"
                   className="hover:text-[#C3A274] transition"
                 >
-                  +91 9591308536
+                  +917340558926
                 </a>
               </div>
 
@@ -196,7 +196,7 @@ const handleSubscribe = async () => {
     </a>
 
     <a
-      href="https://wa.me/919591308536"
+      href="https://wa.me/+917340558926"
       target="_blank"
       rel="noopener noreferrer"
       aria-label="WhatsApp"
