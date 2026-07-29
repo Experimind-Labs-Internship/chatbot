@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiHeart, FiShoppingBag } from "react-icons/fi";
+import { FiHeart, FiShoppingBag, FiTrash2 } from "react-icons/fi";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import {
@@ -7,6 +7,7 @@ import {
   getWishlist,
   removeWishlistItem,
 } from "../../firebase/wishlistService";
+
 
 export default function ProductCard({
   id,
@@ -17,6 +18,10 @@ export default function ProductCard({
   discountedPrice,
   discountType,
   discountValue,
+
+  showWishlist = true,
+  showDelete = false,
+  onDelete,
 }) {
   const [liked, setLiked] = useState(false);
   const { user } = useAuth();
@@ -61,26 +66,24 @@ async function loadWishlist() {
     return;
   }
 
-  await addToWishlist({
+const docId =
+await addToWishlist({
   userId: user.uid,
   productId: id,
   name: title,
   image,
-
-  // Original price
   price:
     typeof price === "string"
       ? Number(price.replace(/[₹,]/g, ""))
       : price,
 
-  // Discount details
-  discountActive,
-  discountedPrice,
-  discountType,
-  discountValue,
+  discountActive: discountActive ?? false,
+  discountedPrice: discountedPrice ?? null,
+  discountType: discountType ?? null,
+  discountValue: discountValue ?? null,
 });
-
-  loadWishlist();
+setLiked(true);
+setWishlistDocId(docId);
 };
 
   // ---------------- CART ----------------
@@ -108,29 +111,40 @@ async function loadWishlist() {
 
         {/* Wishlist */}
 
-        <button
-          onClick={handleWishlist}
-          className={`absolute top-4 right-4 w-11 h-11 rounded-full backdrop-blur flex items-center justify-center transition ${
-            liked
-              ? "bg-red-500 text-white"
-              : "bg-white/90 hover:bg-[#465348] hover:text-white"
-          }`}
-        >
-          <FiHeart size={18} />
-        </button>
+        {showWishlist && (
+  <button
+    onClick={handleWishlist}
+    className={`absolute top-4 right-4 w-11 h-11 rounded-full backdrop-blur flex items-center justify-center transition ${
+      liked
+        ? "bg-red-500 text-white"
+        : "bg-white/90 hover:bg-[#465348] hover:text-white"
+    }`}
+  >
+    <FiHeart size={18} />
+  </button>
+)}
+
+{showDelete && (
+  <button
+    onClick={onDelete}
+    className="absolute top-4 right-4 w-11 h-11 rounded-full bg-white/90 text-red-500 hover:bg-red-500 hover:text-white transition flex items-center justify-center"
+  >
+    <FiTrash2 size={18} />
+  </button>
+)}
 
         {/* Quick View */}
 
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition">
-
-          <Link
-            to={`/product/${id}`}
-            className="bg-[#465348] text-white px-6 py-3 rounded-full"
-          >
-            View Details
-          </Link>
-
-        </div>
+        {!showDelete && (
+  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition">
+    <Link
+      to={`/product/${id}`}
+      className="bg-[#465348] text-white px-6 py-3 rounded-full"
+    >
+      View Details
+    </Link>
+  </div>
+)}
 
       </div>
 
@@ -142,9 +156,11 @@ async function loadWishlist() {
           {title}
         </h3>
 
-        <p className="mt-3 text-[#6A625B]">
-          Elegant • Comfortable • Premium
-        </p>
+        {!showDelete && (
+  <p className="mt-3 text-[#6A625B]">
+    Elegant • Comfortable • Premium
+  </p>
+)}
 
         <div className="flex justify-between items-start mt-6">
 
@@ -170,12 +186,14 @@ async function loadWishlist() {
   )}
 </div>
 
-          <Link
-            to={`/product/${id}`}
-            className="w-12 h-12 rounded-full bg-[#465348] text-white flex items-center justify-center hover:bg-[#39443A] transition"
-          >
-  <FiShoppingBag />
-</Link>
+          {!showDelete && (
+  <Link
+    to={`/product/${id}`}
+    className="w-12 h-12 rounded-full bg-[#465348] text-white flex items-center justify-center hover:bg-[#39443A] transition"
+  >
+    <FiShoppingBag />
+  </Link>
+)}
 
         </div>
 

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import { FiHeart, FiTrash2 } from "react-icons/fi";
+import { FiHeart} from "react-icons/fi";
 import { useEffect, useState } from "react";
+import ProductCard from "../../components/customer/ProductCard";
 
 import { auth } from "../../firebase/firebase";
 import {
@@ -36,7 +37,7 @@ useEffect(() => {
 };
 
   return (
-    <main className="bg-[#FAF8F5] min-h-screen pt-24">
+    <main className="bg-[#FAF8F5] min-h-screen pt-0">
 
       {/* Hero */}
       <section className="text-center py-16 px-6">
@@ -81,76 +82,23 @@ useEffect(() => {
         ) : (
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-            {wishlist.map((product) => (
-
-              <div
-                key={product.id}
-                className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition"
-              >
-
-                <img
-                  src={product.image}
-                  alt={product.title}
-                  className="w-full h-[350px] object-cover"
-                />
-
-                <div className="p-6 flex flex-col h-[210px]">
-
-                  <h3 className="text-2xl font-serif text-[#2E2A27]">
-                    {product.title}
-                  </h3>
-                  <h3 className="text-2xl font-serif text-[#2E2A27] min-h-[64px] leading-tight">
-  {product.name}
-</h3>
-{product.discountActive ? (
-  <>
-    <p className="mt-2 text-sm text-gray-400 line-through">
-      ₹{product.price}
-    </p>
-
-    <p className="mt-2 text-2xl font-bold text-green-600">
-      ₹{product.discountedPrice}
-    </p>
-
-    {product.discountType === "percentage" && (
-      <span className="inline-block mt-2 bg-green-100 text-green-600 text-xs px-2 py-1 rounded-full">
-        {product.discountValue}% OFF
-      </span>
-    )}
-  </>
-) : (
-  <p className="mt-2 text-2xl font-semibold text-[#B89B72]">
-    ₹{product.price}
-  </p>
-)}
-  
-
-                  <div className="flex gap-4 mt-auto">
-
-                    <Link
-  to={`/product/${product.productId}`}
-                      className="flex-1 bg-[#465348] text-white py-3 rounded-full text-center hover:bg-[#39443A] transition"
-                    >
-                      View Product
-                    </Link>
-
-                    <button
-                      onClick={() => removeFromWishlist(product.id)}
-                      className="w-12 h-12 rounded-full border border-red-300 text-red-500 hover:bg-red-500 hover:text-white transition flex items-center justify-center"
-                    >
-                      <FiTrash2 />
-                    </button>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-            ))}
-
-          </div>
+  {wishlist.map((product) => (
+    <ProductCard
+      key={product.id}
+      id={product.productId}
+      image={product.image}
+      title={product.name}
+      price={product.price}
+      discountActive={product.discountActive}
+      discountedPrice={product.discountedPrice}
+      discountType={product.discountType}
+      discountValue={product.discountValue}
+      showWishlist={false}
+      showDelete={true}
+      onDelete={() => removeFromWishlist(product.id)}
+    />
+  ))}
+</div>
 
         )}
 

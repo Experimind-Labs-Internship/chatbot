@@ -16,10 +16,16 @@ const wishlistRef = collection(db, "wishlist");
 // ---------------- ADD ----------------
 
 export async function addToWishlist(item) {
-  await addDoc(wishlistRef, {
-    ...item,
+  const cleanedItem = Object.fromEntries(
+    Object.entries(item).filter(([_, value]) => value !== undefined)
+  );
+
+  const docRef = await addDoc(wishlistRef, {
+    ...cleanedItem,
     createdAt: serverTimestamp(),
   });
+
+  return docRef.id;
 }
 
 // ---------------- GET ----------------
