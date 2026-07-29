@@ -147,7 +147,7 @@ const handleSubscribe = async () => {
                   href="tel:+91 7340558926"
                   className="hover:text-[#C3A274] transition"
                 >
-                  +917340558926
+                  +91 7340558926
                 </a>
               </div>
 
