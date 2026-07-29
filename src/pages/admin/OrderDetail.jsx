@@ -112,31 +112,41 @@ export default function OrderDetail() {
 
     // Send Email
     await sendOrderStatusEmail({
-      email: order.shippingAddress?.email || order.guestEmail,
-      customer_name: order.shippingAddress?.fullName,
-      order_id: order.id,
-      status: newStatus,
+  email: order.shippingAddress?.email || order.guestEmail,
+  customer_name: order.shippingAddress?.fullName,
+  order_id: order.id,
+  status: newStatus,
 
-      courier,
-      trackingId,
-      estimatedDelivery,
+  courier:
+    newStatus === "Shipped" || newStatus === "Delivered"
+      ? courier
+      : "",
 
-      products: productHtml,
-      total: order.total,
+  trackingId:
+    newStatus === "Shipped" || newStatus === "Delivered"
+      ? trackingId
+      : "",
 
-      message:
-        newStatus === "Confirmed"
-          ? "Great news! Your order has been confirmed and is now being prepared."
-          : newStatus === "Packed"
-          ? "Your order has been packed and is ready for shipment."
-          : newStatus === "Shipped"
-          ? "Your order has been shipped and is on its way to you."
-          : newStatus === "Delivered"
-          ? "Your order has been delivered. We hope you enjoy your purchase!"
-          : newStatus === "Cancelled"
-          ? "Your order has been cancelled."
-          : "",
-    });
+  estimatedDelivery:
+    newStatus === "Shipped" || newStatus === "Delivered"
+      ? estimatedDelivery
+      : "",
+
+  products: productHtml,
+  total: order.total,
+  message:
+  newStatus === "Confirmed"
+    ? "Great news! Your order has been confirmed and is now being prepared."
+    : newStatus === "Packed"
+    ? "Your order has been packed and is ready for shipment."
+    : newStatus === "Shipped"
+    ? "Your order has been shipped and is on its way to you."
+    : newStatus === "Delivered"
+    ? "Your order has been delivered. We hope you enjoy your purchase!"
+    : newStatus === "Cancelled"
+    ? "Your order has been cancelled."
+    : "",
+});
 
     // Update local UI
     setOrder((prev) => ({
