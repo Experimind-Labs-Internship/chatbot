@@ -1,7 +1,8 @@
 import emailjs from "@emailjs/browser";
 
 const SERVICE_ID = "service_yumistore";
-const TEMPLATE_ID = "template_kqy9egg";
+const TEMPLATE_CONFIRMED = "template_kqy9egg"; // Confirmed/Packed
+const TEMPLATE_SHIPPED = "template_38o5enb"; // Replace with your new template ID
 const PUBLIC_KEY = "YnXngr7kxmzpWOIiq";
 
 export async function sendOrderStatusEmail({
@@ -20,9 +21,14 @@ export async function sendOrderStatusEmail({
   products,
   total,
 }) {
+  const templateId =
+    status === "Shipped" || status === "Delivered"
+      ? TEMPLATE_SHIPPED
+      : TEMPLATE_CONFIRMED;
+
   return emailjs.send(
     SERVICE_ID,
-    TEMPLATE_ID,
+    templateId,
     {
       email,
       customer_name,
@@ -33,28 +39,6 @@ export async function sendOrderStatusEmail({
       courier,
       trackingId,
       estimatedDelivery,
-
-      shipping_details:
-        status === "Shipped" || status === "Delivered"
-          ? `
-            <div
-              style="
-                background:#EEF6F3;
-                padding:20px;
-                border-radius:12px;
-                margin-bottom:25px;
-              "
-            >
-              <h3 style="margin-top:0;color:#465348;">
-                🚚 Shipping Details
-              </h3>
-
-              <p><strong>Courier Partner:</strong> ${courier}</p>
-              <p><strong>Tracking ID:</strong> ${trackingId}</p>
-              <p><strong>Estimated Delivery:</strong> ${estimatedDelivery}</p>
-            </div>
-          `
-          : "",
 
       // Order
       message,
