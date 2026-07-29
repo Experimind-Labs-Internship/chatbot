@@ -144,7 +144,9 @@ export default function ChatWidget() {
 
 setLastReply(data.reply);
 
-startSpeaking(data.reply);
+if (!recognitionRef.current || !listening) {
+  startSpeaking(data.reply);
+}
 
   } catch (error) {
     console.error(error);
@@ -199,17 +201,25 @@ function toggleSpeech() {
   }
 }
 function startListening() {
-  // Stop AI speaking
-  speechSynthesis.cancel();
+  if (!recognitionRef.current) return;
+
+  // Stop speaking
+  window.speechSynthesis.cancel();
   setIsSpeaking(false);
 
-  // Stop any previous recognition session
-  recognitionRef.current?.abort();
+  // Abort any previous recognition
+  recognitionRef.current.abort();
 
-  // Wait for speech synthesis to fully stop
-  setTimeout(() => {
-    recognitionRef.current?.start();
-  }, 500);
+  // Wait until speech has completely stopped
+  const waitUntilStopped = () => {
+    if (window.speechSynthesis.speaking) {
+      requestAnimationFrame(waitUntilStopped);
+    } else {
+      recognitionRef.current.start();
+    }
+  };
+
+  waitUntilStopped();
 }
   return (
     <div className="yumi-chat" aria-live="polite">
@@ -266,6 +276,11 @@ function startListening() {
               </button>
             ))}
           </div>
+          {listening && (
+  <div className="yumi-chat__listening">
+    🎤 Listening...
+  </div>
+)}
 
           <form className="yumi-chat__form" onSubmit={(event) => { event.preventDefault(); sendMessage(message); }}>
             <label className="sr-only" htmlFor="yumi-chat-input">Your message</label>
