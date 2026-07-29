@@ -206,7 +206,7 @@ const handleSubscribe = async () => {
     </a>
 
     <a
-      href="mailto:hello@yumidxb.com"
+      href="mailto:care.yumidxb@gimail.com"
       aria-label="Email"
       className="w-11 h-11 rounded-full border border-gray-500 flex items-center justify-center hover:bg-[#465348] hover:border-[#465348] hover:-translate-y-1 transition-all duration-300"
     >
