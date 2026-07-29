@@ -7,6 +7,7 @@ import {
   doc,
   query,
   orderBy,
+  serverTimestamp,
 } from "firebase/firestore";
 
 import { db } from "./firebase";
@@ -18,7 +19,7 @@ export const saveAddress = async (userId, address) => {
   const docRef = await addDoc(ref, {
     ...address,
     isDefault: address.isDefault ?? false,
-    createdAt: new Date(),
+    createdAt: serverTimestamp(),
   });
 
   return docRef.id;
@@ -46,7 +47,10 @@ export const updateAddress = async (
 ) => {
   const ref = doc(db, "users", userId, "addresses", addressId);
 
-  await updateDoc(ref, updatedData);
+  await updateDoc(ref, {
+  ...updatedData,
+  updatedAt: serverTimestamp(),
+});
 };
 
 // Delete Address

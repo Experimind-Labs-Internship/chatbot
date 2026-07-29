@@ -35,6 +35,19 @@ export async function getAllCoupons() {
     ...d.data(),
   }));
 }
+export async function getAvailableCoupons() {
+  const coupons = await getAllCoupons();
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  return coupons.filter((coupon) => {
+    const expiry = new Date(coupon.expiryDate);
+    expiry.setHours(0, 0, 0, 0);
+
+    return coupon.active && expiry >= today;
+  });
+}
 
 // Get Coupon by ID
 export async function getCouponById(id) {
@@ -74,10 +87,16 @@ export async function validateCoupon(code) {
 
   const coupon = snapshot.docs[0].data();
 
-  // Check expiry date
-  if (new Date(coupon.expiryDate) < new Date()) {
-    return null;
-  }
+ 
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const expiry = new Date(coupon.expiryDate);
+expiry.setHours(0, 0, 0, 0);
+
+if (expiry < today) {
+  return null;
+}
 
   return {
     id: snapshot.docs[0].id,

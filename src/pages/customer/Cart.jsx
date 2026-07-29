@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { validateCoupon } from "../../firebase/couponService";
 import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import {
@@ -16,8 +15,9 @@ export default function Cart() {
   removeFromCart,
   subtotal,
 } = useCart();
-  const [coupon, setCoupon] = useState("");
+  
   const [discount, setDiscount] = useState(0);
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
        
 
 const total = Math.max(subtotal - discount, 0);
@@ -45,6 +45,7 @@ const total = Math.max(subtotal - discount, 0);
   }
 
   setDiscount(discountAmount);
+  setAppliedCoupon(result);
 
   alert("Coupon Applied Successfully!");
 };
@@ -170,33 +171,7 @@ const total = Math.max(subtotal - discount, 0);
             </h2>
                         {/* Coupon */}
 
-            <div className="mt-8">
-
-              <label className="block mb-3 text-[#2E2A27] font-medium">
-                Coupon Code
-              </label>
-
-              <div className="flex gap-3">
-
-                <input
-                  type="text"
-                  value={coupon}
-                  onChange={(e) => setCoupon(e.target.value)}
-                  placeholder="Enter coupon"
-                  className="flex-1 border border-[#E5DED7] rounded-xl px-4 py-3 outline-none focus:border-[#465348]"
-                />
-
-                <button
-                  onClick={applyCoupon}
-                  className="px-5 rounded-xl bg-[#465348] text-white hover:bg-[#39443A] transition"
-                >
-                  Apply
-                </button>
-
-              </div>
-
-            </div>
-
+            <div className="mt-8"></div>
             {/* Price Summary */}
 
             <div className="mt-10 space-y-4">
@@ -234,6 +209,11 @@ const total = Math.max(subtotal - discount, 0);
 
            <Link
   to="/checkout"
+  state={{
+    discount,
+    total,
+    appliedCoupon,
+  }}
   className="block w-full mt-10 py-4 rounded-full bg-[#465348] text-white text-center hover:bg-[#39443A] transition"
 >
   Proceed to Checkout

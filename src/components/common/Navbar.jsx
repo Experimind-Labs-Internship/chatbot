@@ -192,20 +192,20 @@ useEffect(() => {
                           </Link>
 
                           <Link
-                            to="/NewArrivals"
-                            onClick={() => setShopOpen(false)}
-                            className="block hover:text-[#C3A274] transition"
-                          >
-                            New Arrivals
-                          </Link>
+  to="/new-arrivals"
+  onClick={() => setShopOpen(false)}
+  className="block hover:text-[#C3A274] transition"
+>
+  New Arrivals
+</Link>
 
-                          <Link
-                            to="/BestSellerPage"
-                            onClick={() => setShopOpen(false)}
-                            className="block hover:text-[#C3A274] transition"
-                          >
-                            Best Sellers
-                          </Link>
+<Link
+  to="/best-sellers"
+  onClick={() => setShopOpen(false)}
+  className="block hover:text-[#C3A274] transition"
+>
+  Best Sellers
+</Link>
 
                         </div>
 

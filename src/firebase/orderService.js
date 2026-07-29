@@ -31,11 +31,15 @@ export const ORDER_STATUSES = [
 /* ===============================
    CREATE ORDER
 ================================ */
-
 export async function createOrder(orderData) {
   const docRef = await addDoc(orderRef, {
     ...orderData,
+
     status: "Processing",
+
+    isCancelled: false,
+    isDelivered: false,
+
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
