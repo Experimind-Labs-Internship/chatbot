@@ -66,11 +66,17 @@ export default function ChatWidget() {
   useEffect(() => {
     if (isOpen) inputRef.current?.focus();
   }, [isOpen]);
+  useEffect(() => {
+  return () => {
+    speechSynthesis.cancel();
+  };
+}, []);
 
   useEffect(() => {
   const SpeechRecognition =
     window.SpeechRecognition ||
     window.webkitSpeechRecognition;
+
 
   if (!SpeechRecognition) return;
 
@@ -138,7 +144,7 @@ export default function ChatWidget() {
 
 setLastReply(data.reply);
 
-speak(data.reply);
+startSpeaking(data.reply);
 
   } catch (error) {
     console.error(error);
@@ -155,13 +161,8 @@ speak(data.reply);
     setIsSending(false);
   }
 }
-function speak(text) {
-  // If already speaking, stop
-  if (speechSynthesis.speaking) {
-    speechSynthesis.cancel();
-    setIsSpeaking(false);
-    return;
-  }
+function startSpeaking(text) {
+  speechSynthesis.cancel();
 
   const utterance = new SpeechSynthesisUtterance(text);
 
@@ -183,12 +184,18 @@ function speak(text) {
   utterance.volume = 1;
 
   utterance.onstart = () => setIsSpeaking(true);
-
   utterance.onend = () => setIsSpeaking(false);
-
   utterance.onerror = () => setIsSpeaking(false);
 
   speechSynthesis.speak(utterance);
+}
+function toggleSpeech() {
+  if (speechSynthesis.speaking) {
+    speechSynthesis.cancel();
+    setIsSpeaking(false);
+  } else if (lastReply) {
+    startSpeaking(lastReply);
+  }
 }
   return (
     <div className="yumi-chat" aria-live="polite">
@@ -261,7 +268,7 @@ function speak(text) {
 <button
   type="button"
   className="yumi-chat__voice"
-  onClick={() => lastReply && speak(lastReply)}
+  onClick={toggleSpeech}
   disabled={!lastReply}
   aria-label={isSpeaking ? "Stop speaking" : "Speak last reply"}
 >
@@ -291,7 +298,13 @@ function speak(text) {
         </section>
       )}
 
-      <button type="button" className="yumi-chat__launcher" onClick={() => setIsOpen((open) => !open)} aria-expanded={isOpen} aria-label={isOpen ? "Close Yumi Assistant" : "Open Yumi Assistant"}>
+      <button type="button" className="yumi-chat__launcher" onClick={() => {
+  if (isOpen) {
+    speechSynthesis.cancel();
+    setIsSpeaking(false);
+  }
+  setIsOpen((open) => !open);
+}} aria-expanded={isOpen} aria-label={isOpen ? "Close Yumi Assistant" : "Open Yumi Assistant"}>
         {isOpen ? <FiX /> : <img src={logo} alt="" />}
       </button>
     </div>
