@@ -34,6 +34,28 @@ export async function sendOrderStatusEmail({
       trackingId,
       estimatedDelivery,
 
+      shipping_details:
+        status === "Shipped" || status === "Delivered"
+          ? `
+            <div
+              style="
+                background:#EEF6F3;
+                padding:20px;
+                border-radius:12px;
+                margin-bottom:25px;
+              "
+            >
+              <h3 style="margin-top:0;color:#465348;">
+                🚚 Shipping Details
+              </h3>
+
+              <p><strong>Courier Partner:</strong> ${courier}</p>
+              <p><strong>Tracking ID:</strong> ${trackingId}</p>
+              <p><strong>Estimated Delivery:</strong> ${estimatedDelivery}</p>
+            </div>
+          `
+          : "",
+
       // Order
       message,
       products,
