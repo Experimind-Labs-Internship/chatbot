@@ -252,7 +252,7 @@ function speak(text) {
   disabled={!lastReply}
   aria-label="Speak last reply"
 >
-  <FiVolume2 />
+  <span>🔊</span>
 </button>
 
 <button
