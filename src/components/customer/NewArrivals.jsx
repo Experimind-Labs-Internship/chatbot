@@ -46,10 +46,10 @@ export default function NewArrivals() {
 
           {products.map((product) => (
 
-            <div
-              key={product.id}
-              className="group rounded-3xl overflow-hidden bg-[#FAF8F5] hover:shadow-xl transition duration-500"
-            >
+  <div
+  key={product.id}
+  className="group rounded-3xl overflow-hidden bg-[#FAF8F5] hover:shadow-xl transition duration-500 flex flex-col h-full"
+>
 
               {/* Image */}
 
@@ -77,7 +77,7 @@ export default function NewArrivals() {
 
               {/* Content */}
 
-              <div className="p-6">
+              <div className="p-6 flex flex-col flex-1">
 
                 <p className="text-sm uppercase tracking-widest text-[#B89B72]">
 
@@ -89,44 +89,36 @@ export default function NewArrivals() {
   {product.name}
 </h3>
 
-                <div className="flex justify-between items-center mt-6">
-
-  <div>
+<div className="flex justify-between items-center mt-6">
+  <div className="min-h-[52px]">
     {product.discountActive ? (
       <>
-        <p className="text-sm text-gray-400 line-through">
+        <p className="text-base text-gray-400 line-through">
           ₹{product.price}
         </p>
 
         <p className="text-xl font-bold text-green-600">
-  ₹{product.discountedPrice}
-</p>
-
-{product.discountType === "percentage" && (
-  <span className="inline-block mt-1 bg-green-100 text-green-600 text-xs px-2 py-1 rounded-full">
-    {product.discountValue}% OFF
-  </span>
-)}
+          ₹{product.discountedPrice}
+        </p>
       </>
     ) : (
-      <span className="text-xl font-semibold text-[#2E2A27]">
+      <p className="text-xl font-semibold text-[#2E2A27]">
         ₹{product.price}
-      </span>
+      </p>
     )}
   </div>
 
   <span className="text-[#B89B72]">
     ★ 4.9
   </span>
-
 </div>
 
                 <Link
-                  to={`/product/${product.id}`}
-                  className="block mt-8 w-full py-3 rounded-full bg-[#465348] text-white text-center hover:bg-[#39443A] transition"
-                  >
-                    View Product
-                </Link>
+  to={`/product/${product.id}`}
+  className="block mt-auto w-full py-3 rounded-full bg-[#465348] text-white text-center hover:bg-[#39443A] transition"
+>
+  View Product
+</Link>
 
               </div>
 
